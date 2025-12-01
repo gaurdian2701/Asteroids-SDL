@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "vec3.hpp"
+#include "SDL3/SDL_rect.h"
 
 namespace Assets::Components
 {
@@ -38,5 +39,6 @@ namespace Assets::Components
         }
 
         glm::vec<4, int> Color = glm::vec<4, int>(255, 255, 255, 255);
+        SDL_FRect RenderRectangle = SDL_FRect(0, 0, 10, 10);
     };
 }

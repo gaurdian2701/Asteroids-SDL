@@ -12,11 +12,7 @@ void EmptyApp::InitializeObjects()
 {
     m_MainScene = new Core::GameScene(100);
     int i = 0;
-    while (i < 100)
-    {
-        i++;
-        m_MainScene->AddGameObject<Assets::GameObjects::TestGameObject>();
-    }
+    m_MainScene->AddGameObject<Assets::GameObjects::TestGameObject>();
 }
 
 void EmptyApp::StartScene()

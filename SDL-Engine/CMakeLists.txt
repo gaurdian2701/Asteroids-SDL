@@ -13,7 +13,6 @@ add_library(
         ${ENGINE_BINARY_NAME}
             STATIC
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Application/Application.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/src/IO/FileSystem/FileHandler.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/Events/EventSystem.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/GameScene.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/ECSManager.cpp
