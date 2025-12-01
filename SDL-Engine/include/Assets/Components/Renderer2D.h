@@ -9,10 +9,9 @@ namespace Assets::Components
         Renderer2D() = default;
 
         template<int ArraySize>
-        Renderer2D(glm::vec3&& someColor, float (&someVertices)[ArraySize])
+        Renderer2D(glm::vec3&& someColor)
         {
             Color = someColor;
-            vertices = std::vector<float>(someVertices, someVertices + ArraySize);
         }
 
         //Move Constructor
@@ -39,6 +38,5 @@ namespace Assets::Components
         }
 
         glm::vec3 Color = glm::vec3(1.0f, 0.0f, 0.0f);
-        std::vector<float> vertices;
     };
 }

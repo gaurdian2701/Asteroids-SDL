@@ -16,6 +16,25 @@ void Core::GameScene::RegisterComponents()
 	m_ECSManager.RegisterComponent<Assets::Components::Renderer2D>();
 }
 
+void Core::GameScene::RegisterGameObject(Scene::GameObject *someGameObject)
+{
+	someGameObject->m_sceneReference = this;
+	someGameObject->m_entityID = GetECSManager().GenerateEntityID();
+}
+
+void Core::GameScene::Start()
+{
+	StartGameObjects();
+}
+
+void Core::GameScene::StartGameObjects()
+{
+	for (auto& gameObject : m_gameObjectsInScene)
+	{
+		gameObject->Start();
+	}
+}
+
 void Core::GameScene::Update(const float deltaTime)
 {
 	UpdateGameObjects(deltaTime);
@@ -40,13 +59,7 @@ Core::ECS::ECSManager& Core::GameScene::GetECSManager()
 	return m_ECSManager;
 }
 
-Scene::GameObject* Core::GameScene::CreateGameObject()
-{
-	m_gameObjectsInScene.push_back(new Scene::GameObject(m_ECSManager.GenerateEntityID(), this));
-	return m_gameObjectsInScene.back();
-}
-
-void Core::GameScene::DeleteGameObject(Scene::GameObject* gameObject)
+void Core::GameScene::UnTrackGameObject(Scene::GameObject* gameObject)
 {
 	m_ECSManager.FreeEntityID(gameObject->GetEntityID());
 }

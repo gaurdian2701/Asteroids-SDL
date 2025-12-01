@@ -2,6 +2,8 @@
 #include <vector>
 #include <memory>
 #include <concepts>
+
+#include "SDL3/SDL_render.h"
 #include "SDL3/SDL_video.h"
 
 
@@ -30,7 +32,8 @@ public:
 	void Run();
 
 	std::vector<std::unique_ptr<Core::Layer>>& GetLayerList();
-	Window* GetMainWindow();
+	SDL_Window* GetMainWindow() const;
+	SDL_Renderer* GetMainRenderer() const;
 
 	template<std::derived_from<Core::Layer> T, typename ... LayerArguments>
 	void PushLayer(LayerArguments&& ... layerArguments)
@@ -47,9 +50,8 @@ private:
 	void InitiateShutdown();
 
 protected:
-	static Application* m_applicationInstance;
 	SDL_Window* m_mainWindow = nullptr;
-	SDL_Surface* m_mainScreenSurface = nullptr;
+	SDL_Renderer* m_mainRenderer = nullptr;
 
 private:
 	std::vector<std::unique_ptr<Core::Layer>> LayerList;

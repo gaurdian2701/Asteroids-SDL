@@ -14,10 +14,12 @@ public:
     void Update(const float deltaTime);
     void End();
 
-    Core::GameScene* m_MainScene = nullptr;
-
 private:
-    Scene::GameObject* m_gameObject1 = nullptr;
+    void InitializeObjects();
+    void StartScene();
+
+public:
+    Core::GameScene* m_MainScene = nullptr;
 };
 
 static EmptyApp& GetApplicationInstance()

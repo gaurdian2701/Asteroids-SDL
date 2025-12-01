@@ -14,12 +14,14 @@ namespace Assets::Components
         //Default Constructor
         Transform()
         {
-            std::cout << "Transform default constructor called \n";
+            std::cout << "Transform default constructor called \n" << std::flush;
         }
 
         //Move Constructor
         Transform(Transform&& other) noexcept
         {
+            std::cout << "Transform move constructor called \n" << std::flush;
+
             PositionVector = other.PositionVector;
             RotationVector = other.RotationVector;
             ScaleVector = other.ScaleVector;
@@ -28,6 +30,8 @@ namespace Assets::Components
         //Move Assignment operator
         Transform& operator=(Transform&& other) noexcept
         {
+            std::cout << "Transform assignment operator called \n" << std::flush;
+
             if (this != &other)
             {
                 PositionVector = other.PositionVector;
@@ -39,6 +43,8 @@ namespace Assets::Components
         //Copy Constructor
         Transform(const Transform& other)
         {
+            std::cout << "Transform copy constructor called \n" << std::flush;
+
             PositionVector = other.PositionVector;
             RotationVector = other.RotationVector;
         }

@@ -12,12 +12,15 @@ namespace Scene
     class GameObject
     {
     public:
-        GameObject(std::uint32_t someEntityID, Core::GameScene* someSceneReference) : m_entityID(someEntityID), m_sceneReference(someSceneReference){}
+        //Making a default constructor grants some flexibility to create objects not tracked by the scene as well
+        GameObject() = default;
+
         virtual ~GameObject()
         {
-            m_sceneReference->DeleteGameObject(this);
             m_sceneReference = nullptr;
         }
+
+        virtual void Start(){}
 
         virtual void Update(const float deltaTime){}
         [[nodiscard]] std::uint32_t GetEntityID() const { return m_entityID;}
@@ -43,5 +46,7 @@ namespace Scene
     private:
         std::uint32_t m_entityID = -1;
         Core::GameScene* m_sceneReference = nullptr;
+
+        friend class Core::GameScene;
     };
 }

@@ -8,7 +8,9 @@ add_subdirectory(SDL-Engine)
 add_executable(
         ${PROJECT_NAME}
             ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/EmptyApp.cpp)
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/EmptyApp.cpp
+        include/Assets/GameObjects/TestGameObject.h
+        src/Assets/GameObjects/TestGameObject.cpp)
 
 target_include_directories(
         ${PROJECT_NAME}

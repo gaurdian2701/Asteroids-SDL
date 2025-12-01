@@ -5,23 +5,23 @@
 #include "Core/Layer.h"
 #include <iostream>
 
-#include "SDL3/SDL_init.h"
+#include <SDL3/SDL_init.h>
 #include "SDL3/SDL_log.h"
-#include "SDL3/SDL_oldnames.h"
 
-Application* Application::m_applicationInstance = nullptr;
+
+Application* MainApplicationInstance = nullptr;
 constexpr int SCREEN_WIDTH = 1000;
 constexpr int SCREEN_HEIGHT = 800;
 
 Application::Application()
 {
-    if (m_applicationInstance != nullptr)
+    if (MainApplicationInstance != nullptr)
     {
         std::cout << "Application already exists!" << "\n";
     }
     else
     {
-        m_applicationInstance = this;
+        MainApplicationInstance = this;
     }
 
     if (SDL_Init(SDL_INIT_VIDEO) == false)
@@ -35,23 +35,23 @@ Application::Application()
         SCREEN_HEIGHT,
         SDL_WINDOW_RESIZABLE);
 
+    m_mainRenderer = SDL_CreateRenderer(m_mainWindow, nullptr);
+
     assert(m_mainWindow != nullptr && "Window Creation Failed!");
-    m_mainScreenSurface = SDL_GetWindowSurface(m_mainWindow);
 }
 
 Application::~Application()
 {
-    SDL_DestroySurface(m_mainScreenSurface);
+    SDL_DestroyRenderer(m_mainRenderer);
     SDL_DestroyWindow(m_mainWindow);
     SDL_Quit();
 
-    m_mainScreenSurface = nullptr;
     m_mainWindow = nullptr;
 }
 
 Application* Application::GetInstance()
 {
-    return m_applicationInstance;
+    return MainApplicationInstance;
 }
 
 void Application::Init()
@@ -77,6 +77,7 @@ void Application::Run()
 {
     BeginApplication();
     auto lastFrameTime = std::chrono::high_resolution_clock::now();
+    SDL_SetRenderDrawColor(m_mainRenderer, 0, 0, 0,1);
 
     while (true)
     {
@@ -84,15 +85,14 @@ void Application::Run()
         std::chrono::duration<float> deltaTime = currentFrameTime - lastFrameTime;
         lastFrameTime = currentFrameTime;
 
-        UpdateApplication(deltaTime.count());
+        SDL_SetRenderDrawColor(m_mainRenderer, 0, 0, 0, 255);
+        SDL_RenderClear(m_mainRenderer);
 
-        //Pre Updates here
-        SDL_FillSurfaceRect(m_mainScreenSurface, nullptr, SDL_MapSurfaceRGB(m_mainScreenSurface, 5, 78, 1));
+        UpdateApplication(deltaTime.count());
 
         UpdateLayerList();
 
-        //Post Updates here
-        SDL_UpdateWindowSurface(m_mainWindow);
+        SDL_RenderPresent(m_mainRenderer);
     }
 
     EndApplication();
@@ -114,9 +114,14 @@ std::vector<std::unique_ptr<Core::Layer>>& Application::GetLayerList()
     return LayerList;
 }
 
-Window* Application::GetMainWindow()
+SDL_Window* Application::GetMainWindow() const
 {
-    return nullptr;
+    return m_mainWindow;
+}
+
+SDL_Renderer* Application::GetMainRenderer() const
+{
+    return m_mainRenderer;
 }
 
 void Application::DetachAllLayers()
