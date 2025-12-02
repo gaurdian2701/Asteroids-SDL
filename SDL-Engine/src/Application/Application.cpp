@@ -2,10 +2,11 @@
 
 #include <cassert>
 #include <chrono>
-#include "Core/Layer.h"
 #include <iostream>
 
 #include <SDL3/SDL_init.h>
+
+#include "Core/CoreSystems/CoreSystemsHolder.h"
 #include "SDL3/SDL_log.h"
 
 
@@ -42,10 +43,6 @@ Application::Application()
 
 Application::~Application()
 {
-    SDL_DestroyRenderer(m_mainRenderer);
-    SDL_DestroyWindow(m_mainWindow);
-    SDL_Quit();
-
     m_mainWindow = nullptr;
 }
 
@@ -56,21 +53,17 @@ Application* Application::GetInstance()
 
 void Application::Init()
 {
-    PushLayers();
-    AttachAllLayers();
-}
-
-void Application::PushLayers()
-{
-    //Push Layers here
-}
-
-void Application::AttachAllLayers() const
-{
-    for (auto& layer : m_layerList)
+    for (auto& system : Core::GetCoreSystems())
     {
-        layer->OnAttach();
+        system->Initialize();
     }
+}
+
+void Application::InitiateShutdown()
+{
+    SDL_DestroyRenderer(m_mainRenderer);
+    SDL_DestroyWindow(m_mainWindow);
+    SDL_Quit();
 }
 
 void Application::Run()
@@ -90,8 +83,8 @@ void Application::Run()
 
         RefreshBackground();
 
+        UpdateCoreSystems();
         UpdateApplication(deltaTime.count());
-        UpdateLayerList();
 
         SDL_RenderPresent(m_mainRenderer);
     }
@@ -99,6 +92,15 @@ void Application::Run()
     EndApplication();
     InitiateShutdown();
 }
+
+void Application::UpdateCoreSystems()
+{
+    for (auto& system : Core::GetCoreSystems())
+    {
+        system->Update();
+    }
+}
+
 
 void Application::CheckForQuitEvent()
 {
@@ -117,21 +119,6 @@ void Application::RefreshBackground()
     SDL_RenderClear(m_mainRenderer);
 }
 
-void Application::UpdateLayerList()
-{
-    for (auto& layer : m_layerList)
-    {
-        layer->Update();
-        layer->Render();
-        layer->ProcessInput();
-    }
-}
-
-std::vector<std::unique_ptr<Core::Layer>>& Application::GetLayerList()
-{
-    return m_layerList;
-}
-
 SDL_Window* Application::GetMainWindow() const
 {
     return m_mainWindow;
@@ -142,18 +129,6 @@ SDL_Renderer* Application::GetMainRenderer() const
     return m_mainRenderer;
 }
 
-void Application::DetachAllLayers()
-{
-    for (uint8_t i = 0; i < m_layerList.size(); i++)
-    {
-        if (m_layerList[i] != nullptr)
-        {
-            m_layerList[i]->OnDetach();
-        }
-    }
-}
 
-void Application::InitiateShutdown()
-{
-    DetachAllLayers();
-}
+
+

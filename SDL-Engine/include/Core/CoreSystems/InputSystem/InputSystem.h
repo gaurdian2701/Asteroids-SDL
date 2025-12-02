@@ -1,0 +1,19 @@
+﻿#pragma once
+#include "Core/CoreSystems/CoreSystem.h"
+#include "SDL3/SDL_keyboard.h"
+
+namespace Core::Input
+{
+    class InputSystem : public CoreSystem
+    {
+    public:
+        InputSystem() = default;
+        ~InputSystem() override = default;
+
+        void Update() override;
+        [[nodiscard]] bool CheckForKeyPress(SDL_Keycode someKeyCode) const;
+
+    private:
+        const bool* m_currentKeyBoardState = SDL_GetKeyboardState(nullptr);
+    };
+}

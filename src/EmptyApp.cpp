@@ -11,7 +11,6 @@ void EmptyApp::Begin()
 void EmptyApp::InitializeObjects()
 {
     m_MainScene = new Core::GameScene(100);
-    int i = 0;
     m_MainScene->AddGameObject<Assets::GameObjects::TestGameObject>();
 }
 

@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <functional>
 
+#include "Core/CoreSystems/CoreSystem.h"
+
 namespace Core::Events
 {
     struct ListenerFunctionData
@@ -29,11 +31,11 @@ namespace Core::Events
         InputEvent,
     };
 
-    class EventSystem
+    class EventSystem : public CoreSystem
     {
     public:
         EventSystem();
-        ~EventSystem() = default;
+        ~EventSystem() override = default;
 
         static EventSystem* GetInstance();
 

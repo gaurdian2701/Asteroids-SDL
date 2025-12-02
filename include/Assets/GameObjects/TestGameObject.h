@@ -11,6 +11,10 @@ namespace Assets::GameObjects
 		void Update(const float deltaTime) override;
 
 	private:
-		float m_moveSpeed = 10;
+		void EvaluateMovementInput();
+
+	private:
+		float m_moveSpeed = 50;
+		glm::vec<2, int> m_movementVector = glm::vec<2, int>(0);
 	};
 }
