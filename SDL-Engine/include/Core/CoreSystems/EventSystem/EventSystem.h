@@ -33,11 +33,16 @@ namespace Core::Events
 
     class EventSystem : public CoreSystem
     {
-    public:
-        EventSystem();
+    private:
+        EventSystem() = default;
         ~EventSystem() override = default;
 
-        static EventSystem* GetInstance();
+    public:
+        static EventSystem& GetInstance()
+        {
+            static EventSystem* instance = new EventSystem();
+            return *instance;
+        }
 
         template<typename T>
         void RegisterEvent(const EventType someEventType)

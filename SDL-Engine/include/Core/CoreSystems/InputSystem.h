@@ -6,9 +6,16 @@ namespace Core::Input
 {
     class InputSystem : public CoreSystem
     {
-    public:
+    private:
         InputSystem() = default;
         ~InputSystem() override = default;
+
+    public:
+        static InputSystem& GetInstance()
+        {
+            static InputSystem* instance = new InputSystem();
+            return *instance;
+        }
 
         void Update() override;
         [[nodiscard]] bool CheckForKeyPress(SDL_Keycode someKeyCode) const;

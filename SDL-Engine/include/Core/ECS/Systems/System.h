@@ -6,7 +6,7 @@ namespace Core::ECS
 	{
 	public:
 		System() = default;
-		virtual ~System() {}
+		virtual ~System() = default;
 		virtual void BeginSystem() = 0;
 		virtual void UpdateSystem() = 0;
 		virtual void EndSystem() = 0;

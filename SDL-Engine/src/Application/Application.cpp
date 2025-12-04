@@ -5,7 +5,6 @@
 #include <iostream>
 
 #include <SDL3/SDL_init.h>
-
 #include "Core/CoreSystems/CoreSystemsHolder.h"
 #include "SDL3/SDL_log.h"
 
@@ -13,6 +12,7 @@
 Application* MainApplicationInstance = nullptr;
 constexpr int SCREEN_WIDTH = 1000;
 constexpr int SCREEN_HEIGHT = 800;
+const char* WINDOW_NAME = "Asteroids";
 
 Application::Application()
 {
@@ -31,7 +31,7 @@ Application::Application()
     }
 
     m_mainWindow = SDL_CreateWindow(
-        "Asteroids?",
+        WINDOW_NAME,
         SCREEN_WIDTH,
         SCREEN_HEIGHT,
         SDL_WINDOW_RESIZABLE);
@@ -46,9 +46,9 @@ Application::~Application()
     m_mainWindow = nullptr;
 }
 
-Application* Application::GetInstance()
+Application& Application::GetInstance()
 {
-    return MainApplicationInstance;
+    return *MainApplicationInstance;
 }
 
 void Application::Init()

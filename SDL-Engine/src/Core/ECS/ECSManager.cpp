@@ -22,9 +22,9 @@ void Core::ECS::ECSManager::InitializeSystems()
 	m_SystemsList[0]->BeginSystem();
 }
 
-Core::ECS::ECSManager* Core::ECS::ECSManager::GetInstance()
+Core::ECS::ECSManager& Core::ECS::ECSManager::GetInstance()
 {
-	return ECSManagerInstance;
+	return *ECSManagerInstance;
 }
 
 void Core::ECS::ECSManager::UpdateManager()

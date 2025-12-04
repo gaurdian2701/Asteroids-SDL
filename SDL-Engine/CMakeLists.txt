@@ -13,13 +13,12 @@ add_library(
         ${ENGINE_BINARY_NAME}
             STATIC
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Application/Application.cpp
-        src/Core/CoreSystems/EventSystem/EventSystem.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/GameScene.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/ECSManager.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/Systems/RenderingSystem.cpp
-        include/Core/CoreSystems/InputSystem/InputSystem.h
-        src/Core/CoreSystems/InputSystem/InputSystem.cpp
-        include/Core/CoreSystems/CoreSystem.h)
+                ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/CoreSystems/TextureResourceManager.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/CoreSystems/InputSystem.cpp
+        include/Core/AssetPathHolder.h)
 
 target_include_directories(
         ${ENGINE_BINARY_NAME}

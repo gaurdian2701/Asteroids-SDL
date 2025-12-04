@@ -7,17 +7,9 @@ namespace Assets::Components
     {
         //Default Constructor
         Renderer2D() = default;
-
-        void Initialize(const int VertexArraySize, const SDL_FColor someColor)
+        ~Renderer2D()
         {
-            vertexDataArraySize = VertexArraySize;
-            vertexDataArray = new SDL_Vertex[VertexArraySize];
-            Color = someColor;
-
-            for (int i = 0; i < VertexArraySize; i++)
-            {
-                vertexDataArray[i].color = someColor;
-            }
+            RenderTexture = nullptr;
         }
 
         //Move Constructor
@@ -44,7 +36,7 @@ namespace Assets::Components
         }
 
         SDL_FColor Color = SDL_FColor(255, 255, 255, 255);
-        SDL_Vertex* vertexDataArray = nullptr;
-        int vertexDataArraySize = 0;
+        SDL_FRect RenderRectangle = SDL_FRect(0, 0, 5, 5);
+        SDL_Texture* RenderTexture = nullptr;
     };
 }

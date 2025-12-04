@@ -16,7 +16,7 @@ public:
 	virtual ~Application();
 	Application(const Application& other) = delete;
 
-	static Application* GetInstance();
+	static Application& GetInstance();
 
 	void Init();
 	void Run();

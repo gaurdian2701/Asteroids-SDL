@@ -22,7 +22,7 @@ namespace Core::ECS
         void InitializeManager();
         void UpdateManager();
 
-        static ECSManager* GetInstance();
+        static ECSManager& GetInstance();
 
         template <typename T>
         SparseSet<T>* GetComponentPool()
@@ -117,6 +117,9 @@ namespace Core::ECS
 
         std::vector<System*> m_SystemsList;
         std::vector<std::uint32_t> m_entityFreeList;
+
+        //Wrap sparse set in a class and have functions like HasComponent, TryGetComponent, etc.
+
         std::unordered_map<std::type_index, ISparseSet*> m_componentPoolMap;
         Components::ComponentFactory m_ComponentFactory;
     };

@@ -18,6 +18,9 @@ namespace Scene
         virtual ~GameObject()
         {
             m_sceneReference = nullptr;
+            //TODO: YOU DO NOT REMOVE COMPONENTS HERE.
+            //TODO: YOU HAVE TO INCLUDE FUNCTIONALITY TO REMOVE COMPONENTS ASSOCIATED WITH THIS GAMEOBJECT.
+            //TODO: MAYBE STORE A BITSET SOMEWHERE TO CALL THE RESPECTIVE REMOVE COMPONENT FUNCTIONS.
         }
 
         virtual void Start(){}

@@ -1,4 +1,4 @@
-#include "EmptyApp.h"
+#include "AsteroidsApp.h"
 
 int main()
 {

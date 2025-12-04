@@ -1,4 +1,4 @@
-﻿#include "Core/CoreSystems/InputSystem/InputSystem.h"
+﻿#include "Core/CoreSystems/InputSystem.h"
 #include "SDL3/SDL_events.h"
 
 void Core::Input::InputSystem::Update()

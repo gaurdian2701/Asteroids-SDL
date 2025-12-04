@@ -23,8 +23,7 @@ namespace Assets::Components
             std::cout << "Transform move constructor called \n" << std::flush;
 
             PositionVector = other.PositionVector;
-            RotationVector = other.RotationVector;
-            ScaleVector = other.ScaleVector;
+            ScaleFactor = other.ScaleFactor;
         }
 
         //Move Assignment operator
@@ -35,7 +34,7 @@ namespace Assets::Components
             if (this != &other)
             {
                 PositionVector = other.PositionVector;
-                RotationVector = other.RotationVector;
+                ScaleFactor = other.ScaleFactor;
             }
             return *this;
         }
@@ -44,26 +43,11 @@ namespace Assets::Components
         Transform(const Transform& other)
         {
             std::cout << "Transform copy constructor called \n" << std::flush;
-
             PositionVector = other.PositionVector;
-            RotationVector = other.RotationVector;
+            ScaleFactor = other.ScaleFactor;
         }
 
-        glm::mat4 GetModelMatrix()
-        {
-            glm::mat4 translationMatrix = glm::mat4(1.0f);
-            glm::mat4 rotationMatrix = glm::mat4(1.0f);
-            glm::mat4 scaleMatrix = glm::mat4(1.0f);
-
-            translationMatrix = glm::translate(translationMatrix, glm::vec3(PositionVector.x, PositionVector.y, PositionVector.z));
-            rotationMatrix = glm::toMat4(glm::quat(glm::vec3(RotationVector.x, RotationVector.y, RotationVector.z)));
-            scaleMatrix = glm::scale(scaleMatrix, glm::vec3(ScaleVector.x, ScaleVector.y, ScaleVector.z));
-
-            return translationMatrix * rotationMatrix * scaleMatrix;
-        }
-
-        glm::vec3 PositionVector = glm::vec3(0.0f);
-        glm::vec3 RotationVector = glm::vec3(0.0f);
-        glm::vec3 ScaleVector = glm::vec3(1.0f);
+        glm::vec2 PositionVector = glm::vec2(0.0f);
+        glm::vec2 ScaleFactor = glm::vec2(1.0f);
     };
 }

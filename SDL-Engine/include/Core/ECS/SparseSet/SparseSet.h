@@ -11,6 +11,7 @@ namespace Core::ECS
 	public:
 		SparseSet(const std::uint32_t someMaxEntityCount) : m_maxEntityCount(someMaxEntityCount)
 		{
+			//Do not need to reserve too much space? Or at all?
 			m_sparseEntityArray.resize(m_maxEntityCount, -1);
 			m_denseEntityArray.reserve(m_maxEntityCount/2);
 		}
@@ -19,6 +20,10 @@ namespace Core::ECS
 
 		void AddComponentToEntity(const std::uint32_t entityID, ComponentTypeUsedBySparseSet&& component)
 		{
+			//Does not handle existing components case?
+			//No dangling references
+			//Emplace?
+
 			m_denseEntityArray.push_back(entityID);
 			m_denseComponentArray.push_back(std::forward<ComponentTypeUsedBySparseSet>(component));
 

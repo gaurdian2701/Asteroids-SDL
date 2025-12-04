@@ -4,17 +4,18 @@
 
 class Application;
 
-class EmptyApp : public Application
+class AsteroidsApp : public Application
 {
 public:
-    EmptyApp() = default;
-    ~EmptyApp() = default;
+    AsteroidsApp() = default;
+    ~AsteroidsApp() = default;
 
     void Begin();
     void Update(const float deltaTime);
     void End();
 
 private:
+    void InitializeSystems();
     void InitializeObjects();
     void StartScene();
 
@@ -22,9 +23,9 @@ public:
     Core::GameScene* m_MainScene = nullptr;
 };
 
-static EmptyApp& GetApplicationInstance()
+static AsteroidsApp& GetApplicationInstance()
 {
-    static EmptyApp app;
+    static AsteroidsApp app;
     return app;
 }
 
