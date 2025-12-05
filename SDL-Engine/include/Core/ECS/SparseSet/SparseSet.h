@@ -5,6 +5,8 @@
 
 namespace Core::ECS
 {
+	const inline int INVALID_ENTITY_INDEX = -1;
+
 	template<typename ComponentTypeUsedBySparseSet>
 	class SparseSet : public ISparseSet
 	{
@@ -12,8 +14,7 @@ namespace Core::ECS
 		SparseSet(const std::uint32_t someMaxEntityCount) : m_maxEntityCount(someMaxEntityCount)
 		{
 			//Do not need to reserve too much space? Or at all?
-			m_sparseEntityArray.resize(m_maxEntityCount, -1);
-			m_denseEntityArray.reserve(m_maxEntityCount/2);
+			m_sparseEntityArray.resize(m_maxEntityCount, INVALID_ENTITY_INDEX);
 		}
 
 		~SparseSet() = default;
@@ -24,14 +25,18 @@ namespace Core::ECS
 			//No dangling references
 			//Emplace?
 
-			m_denseEntityArray.push_back(entityID);
-			m_denseComponentArray.push_back(std::forward<ComponentTypeUsedBySparseSet>(component));
-
 			if (m_sparseEntityArray.size()-1 < entityID)
 			{
 				m_sparseEntityArray.resize(entityID);
 			}
 
+			if (m_sparseEntityArray[entityID] != INVALID_ENTITY_INDEX)
+			{
+				return;
+			}
+
+			m_denseEntityArray.push_back(entityID);
+			m_denseComponentArray.push_back(std::forward<ComponentTypeUsedBySparseSet>(component));
 			m_sparseEntityArray[entityID] = static_cast<std::uint32_t>(m_denseEntityArray.size()-1);
 		}
 
@@ -45,7 +50,7 @@ namespace Core::ECS
 
 			m_denseEntityArray.pop_back();
 			m_denseComponentArray.pop_back();
-			m_sparseEntityArray[entityID] = -1;
+			m_sparseEntityArray[entityID] = INVALID_ENTITY_INDEX;
 		}
 
 		std::vector<std::uint32_t>& GetSparseEntityArray() override

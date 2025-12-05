@@ -4,8 +4,14 @@
 
 Core::CoreSystems::TextureResourceManager::~TextureResourceManager()
 {
-	for (const auto& surface : m_surfacesMap) {
+	for (const auto& surface : m_surfacesMap)
+	{
 		SDL_DestroySurface(surface.second);
+	}
+
+	for (const auto& texture : m_textureMap)
+	{
+		SDL_DestroyTexture(texture.second);
 	}
 }
 

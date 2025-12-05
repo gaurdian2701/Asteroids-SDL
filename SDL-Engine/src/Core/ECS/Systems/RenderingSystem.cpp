@@ -29,10 +29,10 @@ void Core::ECS::Systems::RenderingSystem::UpdateSystem()
 		renderer2D.RenderRectangle.y = transform.PositionVector.y - transform.ScaleFactor.y / 2;
 		renderer2D.RenderRectangle.w = transform.ScaleFactor.x;
 		renderer2D.RenderRectangle.h = transform.ScaleFactor.y;
-		SDL_RenderTexture(Application::GetInstance().GetMainRenderer(),
-			renderer2D.RenderTexture, nullptr, &renderer2D.RenderRectangle);
 
-		// SDL_RenderRect(Application::GetInstance().GetMainRenderer(), &renderer2D.RenderRectangle);
+		SDL_RenderTextureRotated(Application::GetInstance().GetMainRenderer(),
+			renderer2D.RenderTexture, nullptr, &renderer2D.RenderRectangle,
+			transform.Rotation, nullptr, SDL_FLIP_NONE);
 	}
 }
 

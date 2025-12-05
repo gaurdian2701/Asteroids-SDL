@@ -1,6 +1,5 @@
 ﻿#include "GameObjects/SpaceShip.h"
 
-#include "FolderPaths.h"
 #include "Application/Application.h"
 #include "Assets/Components/Renderer2D.h"
 #include "Core/CoreSystems/CoreSystemsHolder.h"
@@ -34,6 +33,7 @@ void Assets::GameObjects::SpaceShip::Update(const float deltaTime)
 
 	t.PositionVector.x += m_movementVector.x * m_moveSpeed * deltaTime;
 	t.PositionVector.y += m_movementVector.y * m_moveSpeed * deltaTime;
+	t.Rotation = m_rotationAngle;
 
 	UpdateAimPosition();
 }
@@ -41,8 +41,8 @@ void Assets::GameObjects::SpaceShip::Update(const float deltaTime)
 void Assets::GameObjects::SpaceShip::UpdateAimPosition()
 {
 	auto& transform = GetComponent<Components::Transform>();
-	float xCoordinate = transform.PositionVector.x + (m_aimCircleRadius * std::cos(m_aimAngle));
-	float yCoordinate = transform.PositionVector.y + (m_aimCircleRadius * std::sin(m_aimAngle));
+	float xCoordinate = transform.PositionVector.x + m_aimCircleRadius * std::cos(glm::radians(m_rotationAngle - 90));
+	float yCoordinate = transform.PositionVector.y + m_aimCircleRadius * std::sin(glm::radians(m_rotationAngle - 90));
 
 	SDL_SetRenderDrawColor(Application::GetInstance().GetMainRenderer(), 0, 255, 0, 255);
 	SDL_RenderPoint(Application::GetInstance().GetMainRenderer(), xCoordinate, yCoordinate);
@@ -71,11 +71,11 @@ void Assets::GameObjects::SpaceShip::EvaluateMovementInput(const float deltaTime
 	}
 	if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_LEFT))
 	{
-		m_aimAngle -= m_rotationSpeed * deltaTime;
+		m_rotationAngle -= m_rotationSpeed * deltaTime;
 	}
 	if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_RIGHT))
 	{
-		m_aimAngle += m_rotationSpeed * deltaTime;
+		m_rotationAngle += m_rotationSpeed * deltaTime;
 	}
 }
 

@@ -49,5 +49,6 @@ namespace Assets::Components
 
         glm::vec2 PositionVector = glm::vec2(0.0f);
         glm::vec2 ScaleFactor = glm::vec2(1.0f);
+        float Rotation = 0.0f;
     };
 }
