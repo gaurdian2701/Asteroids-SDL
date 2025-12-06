@@ -4,9 +4,10 @@
 #include <vector>
 #include <bitset>
 #include <iostream>
-#include "Components/ComponentBitset.h"
+
 #include "Components/ComponentFactory.h"
 #include "SparseSet/SparseSet.h"
+#include "Core/Misc.h"
 
 namespace Core::ECS
 {
@@ -24,6 +25,8 @@ namespace Core::ECS
 
         static ECSManager& GetInstance();
 
+        std::vector<void(*)(ECSManager &, const std::uint32_t)>& GetComponentRemovalHandlesArray();
+
         template <typename T>
         SparseSet<T>* GetComponentPool()
         {
@@ -33,7 +36,7 @@ namespace Core::ECS
         template<typename T>
         void RegisterComponent()
         {
-            m_ComponentFactory.RegisterComponent<T>();
+            m_componentFactory.RegisterComponent<T>();
             m_componentPoolMap[std::type_index(typeid(T))] = new SparseSet<T>(m_maxEntities);
         }
 
@@ -41,7 +44,7 @@ namespace Core::ECS
         void AddComponent(const std::uint32_t someEntityID)
         {
             dynamic_cast<SparseSet<T>*>(m_componentPoolMap[std::type_index(typeid(T))])
-            ->AddComponentToEntity(someEntityID, std::forward<T>(m_ComponentFactory.CreateComponent<T>()));
+            ->AddComponentToEntity(someEntityID, std::forward<T>(m_componentFactory.CreateComponent<T>()));
         }
 
         template<typename T>
@@ -93,16 +96,36 @@ namespace Core::ECS
                 GetComponentPool<OtherComponentTypes>()->GetSparseEntityArray() ...);
         }
 
-        static std::size_t GenerateIndex()
+        [[nodiscard]] static std::size_t GenerateIndex()
         {
             static std::size_t index = 0;
             return index++;
         }
 
         template<typename T>
-        static std::size_t GetComponentTypeIndex()
+        [[nodiscard]] static bool RegisterComponentRemovalFunctionHandle(ECSManager& someManager,
+            std::size_t componentTypeIndex)
+        {
+            someManager.GetComponentRemovalHandlesArray()[componentTypeIndex] =
+                [](ECSManager& manager, const std::uint32_t someEntityID)
+                {
+                    manager.RemoveComponent<T>(someEntityID);
+                };
+
+            return true;
+        }
+
+        template<typename T>
+        static std::size_t GetComponentTypeIndex(ECSManager& someManager)
         {
             static std::size_t componentTypeIndex = GenerateIndex();
+            static bool TryGenerateComponentRemovalFunctionHandle =
+                RegisterComponentRemovalFunctionHandle<T>(someManager, componentTypeIndex);
+
+            if (componentTypeIndex == MAX_COMPONENT_TYPES)
+            {
+                return INVALID_INDEX;
+            }
             return componentTypeIndex;
         }
 
@@ -118,9 +141,10 @@ namespace Core::ECS
         std::vector<System*> m_SystemsList;
         std::vector<std::uint32_t> m_entityFreeList;
 
-        //Wrap sparse set in a class and have functions like HasComponent, TryGetComponent, etc.
+        //TODO: Wrap sparse set in a class and have functions like HasComponent, TryGetComponent, etc.
 
         std::unordered_map<std::type_index, ISparseSet*> m_componentPoolMap;
-        Components::ComponentFactory m_ComponentFactory;
+        Components::ComponentFactory m_componentFactory;
+        std::vector<void(*)(ECSManager&, const std::uint32_t)> m_componentRemovalHandles;
     };
 }

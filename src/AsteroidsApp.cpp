@@ -1,5 +1,4 @@
 ﻿#include "AsteroidsApp.h"
-
 #include "Core/AssetPathHolder.h"
 #include "GameObjects/SpaceShip.h"
 #include "Scene/GameObject.h"
@@ -34,5 +33,5 @@ void AsteroidsApp::Update(const float deltaTime)
 
 void AsteroidsApp::End()
 {
-
+    m_MainScene->CleanupScene();
 }

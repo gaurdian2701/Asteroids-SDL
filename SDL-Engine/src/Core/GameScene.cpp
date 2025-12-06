@@ -22,6 +22,25 @@ void Core::GameScene::RegisterGameObject(Scene::GameObject *someGameObject)
 	someGameObject->m_entityID = GetECSManager().GenerateEntityID();
 }
 
+void Core::GameScene::RemoveComponentFromEntityUsingTypeIndex(const std::uint32_t someEntityID,
+	const std::size_t someComponentTypeIndex)
+{
+	m_ECSManager.GetComponentRemovalHandlesArray()[someComponentTypeIndex](m_ECSManager, someEntityID);
+}
+
+void Core::GameScene::AddComponentToGameObjectData(Scene::GameObject &someGameObject,
+	const std::size_t someComponentTypeIndex)
+{
+	someGameObject.m_componentBitSet[someComponentTypeIndex] = true;
+}
+
+void Core::GameScene::RemoveComponentFromGameObjectData(Scene::GameObject &someGameObject,
+	const std::size_t someComponentTypeIndex)
+{
+	someGameObject.m_componentBitSet[someComponentTypeIndex] = false;
+}
+
+
 void Core::GameScene::Start()
 {
 	StartGameObjects();
@@ -59,7 +78,16 @@ Core::ECS::ECSManager& Core::GameScene::GetECSManager()
 	return m_ECSManager;
 }
 
-void Core::GameScene::UnTrackGameObject(Scene::GameObject* gameObject)
+void Core::GameScene::UnTrackGameObject(Scene::GameObject* someGameObject)
 {
-	m_ECSManager.FreeEntityID(gameObject->GetEntityID());
+	m_ECSManager.FreeEntityID(someGameObject->GetEntityID());
 }
+
+void Core::GameScene::CleanupScene()
+{
+	for (const auto& gameObject : m_gameObjectsInScene)
+	{
+		delete gameObject;
+	}
+}
+

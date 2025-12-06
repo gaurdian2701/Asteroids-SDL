@@ -18,7 +18,8 @@ add_library(
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/Systems/RenderingSystem.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/CoreSystems/TextureResourceManager.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/CoreSystems/InputSystem.cpp
-        include/Core/AssetPathHolder.h)
+        include/Core/AssetPathHolder.h
+        include/Core/Misc.h)
 
 target_include_directories(
         ${ENGINE_BINARY_NAME}

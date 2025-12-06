@@ -2,10 +2,10 @@
 #include <cstdint>
 #include <vector>
 #include "ISparseSet.h"
+#include "Core/Misc.h"
 
 namespace Core::ECS
 {
-	const inline int INVALID_ENTITY_INDEX = -1;
 
 	template<typename ComponentTypeUsedBySparseSet>
 	class SparseSet : public ISparseSet
@@ -13,15 +13,14 @@ namespace Core::ECS
 	public:
 		SparseSet(const std::uint32_t someMaxEntityCount) : m_maxEntityCount(someMaxEntityCount)
 		{
-			//Do not need to reserve too much space? Or at all?
-			m_sparseEntityArray.resize(m_maxEntityCount, INVALID_ENTITY_INDEX);
+			m_sparseEntityArray.resize(m_maxEntityCount, INVALID_INDEX);
 		}
 
 		~SparseSet() = default;
 
 		void AddComponentToEntity(const std::uint32_t entityID, ComponentTypeUsedBySparseSet&& component)
 		{
-			//Does not handle existing components case?
+			//TODO: Does not handle existing components case?
 			//No dangling references
 			//Emplace?
 
@@ -30,7 +29,7 @@ namespace Core::ECS
 				m_sparseEntityArray.resize(entityID);
 			}
 
-			if (m_sparseEntityArray[entityID] != INVALID_ENTITY_INDEX)
+			if (m_sparseEntityArray[entityID] != INVALID_INDEX)
 			{
 				return;
 			}
@@ -50,7 +49,7 @@ namespace Core::ECS
 
 			m_denseEntityArray.pop_back();
 			m_denseComponentArray.pop_back();
-			m_sparseEntityArray[entityID] = INVALID_ENTITY_INDEX;
+			m_sparseEntityArray[entityID] = INVALID_INDEX;
 		}
 
 		std::vector<std::uint32_t>& GetSparseEntityArray() override

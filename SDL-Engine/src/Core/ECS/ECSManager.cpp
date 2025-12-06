@@ -9,6 +9,13 @@ Core::ECS::ECSManager::ECSManager(const std::uint32_t maxEntities) : m_maxEntiti
 	{
 		ECSManagerInstance = this;
 	}
+	m_componentRemovalHandles.resize(MAX_COMPONENT_TYPES);
+}
+
+std::vector<void(*)(Core::ECS::ECSManager &, const std::uint32_t)>&
+Core::ECS::ECSManager::GetComponentRemovalHandlesArray()
+{
+	return m_componentRemovalHandles;
 }
 
 void Core::ECS::ECSManager::InitializeManager()
@@ -34,7 +41,6 @@ void Core::ECS::ECSManager::UpdateManager()
 		system->UpdateSystem();
 	}
 }
-
 
 std::uint32_t Core::ECS::ECSManager::GenerateEntityID()
 {
