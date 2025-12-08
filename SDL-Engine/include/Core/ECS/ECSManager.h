@@ -57,7 +57,8 @@ namespace Core::ECS
         template<typename T>
         T& GetComponent(std::uint32_t someEntityID)
         {
-            return GetComponentPool<T>()->GetDenseComponentArray()[someEntityID];
+            auto componentPool = GetComponentPool<T>();
+            return componentPool->GetDenseComponentArray()[componentPool->GetSparseEntityArray()[someEntityID]];
         }
 
         template<typename FirstComponentType, typename ... OtherComponentTypes>
@@ -94,6 +95,17 @@ namespace Core::ECS
             return std::forward_as_tuple(
                 GetComponentPool<FirstComponentType>()->GetSparseEntityArray(),
                 GetComponentPool<OtherComponentTypes>()->GetSparseEntityArray() ...);
+        }
+
+        template<typename FirstComponentType, typename ... OtherComponentTypes, typename Functor>
+        void ForEach(const Functor& someFunctor)
+        {
+            const auto& entities = GetSmallestDenseEntityArray<FirstComponentType, OtherComponentTypes ...>();
+
+            for (const auto& entity : entities)
+            {
+                someFunctor(GetComponent<FirstComponentType>(entity), GetComponent<OtherComponentTypes>(entity) ...);
+            }
         }
 
         [[nodiscard]] static std::size_t GenerateIndex()
