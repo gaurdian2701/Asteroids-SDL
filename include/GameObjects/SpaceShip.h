@@ -2,7 +2,7 @@
 #include "Assets/Components/Transform.h"
 #include "Scene/GameObject.h"
 
-namespace Assets::GameObjects
+namespace Asteroids::GameObjects
 {
 	class SpaceShip : public Scene::GameObject
 	{
@@ -19,7 +19,5 @@ namespace Assets::GameObjects
 		float m_rotationSpeed = 100.0f;
 		float m_rotationAngle = 0.0f;
 		float m_aimCircleRadius = 0.0f;
-
-		glm::vec<2, int> m_movementVector = glm::vec<2, int>(0);
 	};
 }

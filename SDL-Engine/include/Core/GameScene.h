@@ -48,6 +48,8 @@ namespace Core
             RegisterGameObject(m_gameObjectsInScene.back());
         }
 
+        void DeleteGameObject(Scene::GameObject* someGameObject);
+
         void UnTrackGameObject(Scene::GameObject* someGameObject);
         void CleanupScene();
 

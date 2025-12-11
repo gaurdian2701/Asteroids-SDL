@@ -78,6 +78,35 @@ Core::ECS::ECSManager& Core::GameScene::GetECSManager()
 	return m_ECSManager;
 }
 
+void Core::GameScene::DeleteGameObject(Scene::GameObject* someGameObject)
+{
+	//Use Component ID to remove components from gameobject, hence untracking them in the ECS
+	for (std::size_t typeIndex = 0; typeIndex < Core::ECS::MAX_COMPONENT_TYPES; typeIndex++)
+	{
+		if (someGameObject->m_componentBitSet[typeIndex])
+		{
+			RemoveComponentFromEntityUsingTypeIndex(someGameObject->m_entityID, typeIndex);
+		}
+	}
+
+	m_ECSManager.FreeEntityID(someGameObject->GetEntityID()); //Untrack entityID
+	someGameObject->m_sceneReference = nullptr;
+
+	//Remove from scene list
+	int gameObjectIndexInSceneList = 0;
+	for (const auto gameObject : m_gameObjectsInScene)
+	{
+		if (gameObject->GetEntityID() == someGameObject->GetEntityID())
+		{
+			break;
+		}
+		gameObjectIndexInSceneList++;
+	}
+	m_gameObjectsInScene.erase(m_gameObjectsInScene.begin() + gameObjectIndexInSceneList);
+
+	delete someGameObject;
+}
+
 void Core::GameScene::UnTrackGameObject(Scene::GameObject* someGameObject)
 {
 	m_ECSManager.FreeEntityID(someGameObject->GetEntityID());
@@ -85,9 +114,9 @@ void Core::GameScene::UnTrackGameObject(Scene::GameObject* someGameObject)
 
 void Core::GameScene::CleanupScene()
 {
-	for (const auto& gameObject : m_gameObjectsInScene)
+	for (const auto gameObject : m_gameObjectsInScene)
 	{
-		delete gameObject;
+		DeleteGameObject(gameObject);
 	}
 }
 

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <cstdint>
 #include "Core/GameScene.h"
+#include "glm.hpp"
 
 namespace Scene
 {
@@ -9,24 +10,7 @@ namespace Scene
     public:
         //Making a default constructor grants some flexibility to create objects not tracked by the scene as well
         GameObject() = default;
-
-        virtual ~GameObject()
-        {
-            for (std::size_t typeIndex = 0; typeIndex < Core::ECS::MAX_COMPONENT_TYPES; typeIndex++)
-            {
-                if (m_componentBitSet[typeIndex])
-                {
-                    m_sceneReference->RemoveComponentFromEntityUsingTypeIndex(m_entityID, typeIndex);
-                }
-            }
-
-            m_sceneReference->UnTrackGameObject(this);
-            m_sceneReference = nullptr;
-            
-            //TODO: YOU DO NOT REMOVE COMPONENTS HERE.
-            //TODO: YOU HAVE TO INCLUDE FUNCTIONALITY TO REMOVE COMPONENTS ASSOCIATED WITH THIS GAMEOBJECT.
-            //TODO: MAYBE STORE A BITSET SOMEWHERE TO CALL THE RESPECTIVE REMOVE COMPONENT FUNCTIONS.
-        }
+        virtual ~GameObject() = default;
 
         virtual void Start(){}
 
@@ -50,6 +34,8 @@ namespace Scene
         {
             return m_sceneReference->GetECSManager().GetComponent<T>(m_entityID);
         }
+
+        glm::vec2 m_translationVector = glm::vec2(0, 0);
 
     private:
         std::uint32_t m_entityID = Core::INVALID_INDEX;

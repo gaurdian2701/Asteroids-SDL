@@ -1,37 +1,37 @@
-﻿#include "AsteroidsApp.h"
+﻿#include "Asteroids_App.h"
 #include "Core/AssetPathHolder.h"
 #include "GameObjects/SpaceShip.h"
 #include "Scene/GameObject.h"
 
-void AsteroidsApp::Begin()
+void Asteroids_App::Begin()
 {
     InitializeSystems();
     InitializeObjects();
     StartScene();
 }
 
-void AsteroidsApp::InitializeSystems()
+void Asteroids_App::InitializeSystems()
 {
     Core::AssetPathHolder::GetInstance().UpdateAssetFolderPath("Assets/");
 }
 
-void AsteroidsApp::InitializeObjects()
+void Asteroids_App::InitializeObjects()
 {
     m_MainScene = new Core::GameScene(100);
-    m_MainScene->AddGameObject<Assets::GameObjects::SpaceShip>();
+    m_MainScene->AddGameObject<Asteroids::GameObjects::SpaceShip>();
 }
 
-void AsteroidsApp::StartScene()
+void Asteroids_App::StartScene()
 {
     m_MainScene->Start();
 }
 
-void AsteroidsApp::Update(const float deltaTime)
+void Asteroids_App::Update(const float deltaTime)
 {
     m_MainScene->Update(deltaTime);
 }
 
-void AsteroidsApp::End()
+void Asteroids_App::End()
 {
     m_MainScene->CleanupScene();
 }

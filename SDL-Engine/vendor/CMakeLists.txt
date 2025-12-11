@@ -16,5 +16,5 @@ set(SDLTTF_VENDORED ON)
 target_link_libraries(
         vendor
             INTERFACE
-                SDL3::SDL3
+                SDL3::SDL3-static
                 SDL3_ttf::SDL3_ttf)
