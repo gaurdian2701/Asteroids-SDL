@@ -44,8 +44,8 @@ void Asteroids::GameObjects::SpaceShip::UpdateAimPosition()
 	float xCoordinate = transform.PositionVector.x + m_aimCircleRadius * std::cos(glm::radians(m_rotationAngle - 90));
 	float yCoordinate = transform.PositionVector.y + m_aimCircleRadius * std::sin(glm::radians(m_rotationAngle - 90));
 
-	SDL_SetRenderDrawColor(Application::GetInstance().GetMainRenderer(), 0, 255, 0, 255);
-	SDL_RenderPoint(Application::GetInstance().GetMainRenderer(), xCoordinate, yCoordinate);
+	SDL_SetRenderDrawColor(Application::GetCoreInstance().GetMainRenderer(), 0, 255, 0, 255);
+	SDL_RenderPoint(Application::GetCoreInstance().GetMainRenderer(), xCoordinate, yCoordinate);
 }
 
 void Asteroids::GameObjects::SpaceShip::EvaluateMovementInput(const float deltaTime)

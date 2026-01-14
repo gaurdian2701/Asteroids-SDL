@@ -3,7 +3,7 @@
 #include "GameObjects/SpaceShip.h"
 #include "Scene/GameObject.h"
 
-void Asteroids_App::Begin()
+void Asteroids_App::BeginApplication()
 {
     InitializeSystems();
     InitializeObjects();
@@ -26,12 +26,12 @@ void Asteroids_App::StartScene()
     m_MainScene->Start();
 }
 
-void Asteroids_App::Update(const float deltaTime)
+void Asteroids_App::UpdateApplication(const float deltaTime)
 {
     m_MainScene->Update(deltaTime);
 }
 
-void Asteroids_App::End()
+void Asteroids_App::EndApplication()
 {
     m_MainScene->CleanupScene();
 }

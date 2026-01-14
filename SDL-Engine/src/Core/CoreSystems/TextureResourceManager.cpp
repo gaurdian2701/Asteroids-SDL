@@ -21,7 +21,7 @@ SDL_Texture* Core::CoreSystems::TextureResourceManager::TryLoadAndGetTexture(con
 	{
 		m_surfacesMap[someImageFilePath] = SDL_LoadPNG(
 			AssetPathHolder::GetInstance().GetAssetPath(someImageFilePath).c_str());
-		m_textureMap[someImageFilePath] = SDL_CreateTextureFromSurface(Application::GetInstance().GetMainRenderer(),
+		m_textureMap[someImageFilePath] = SDL_CreateTextureFromSurface(Application::GetCoreInstance().GetMainRenderer(),
 			m_surfacesMap[someImageFilePath]);
 	}
 

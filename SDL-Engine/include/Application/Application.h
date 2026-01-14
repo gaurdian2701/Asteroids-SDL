@@ -5,9 +5,6 @@
 class Renderer;
 class Window;
 
-extern void BeginApplication();
-extern void UpdateApplication(const float deltaTime);
-extern void EndApplication();
 
 class Application
 {
@@ -15,8 +12,11 @@ public:
 	Application();
 	virtual ~Application();
 	Application(const Application& other) = delete;
+	virtual void BeginApplication() = 0;
+	virtual void UpdateApplication(const float deltaTime) = 0;
+	virtual void EndApplication() = 0;
 
-	static Application& GetInstance();
+	static Application& GetCoreInstance();
 
 	void Init();
 	void Run();
@@ -45,7 +45,8 @@ private:
 	SDL_Event m_mainEventCatcher = SDL_Event {};
 };
 
-Application& CreateApplication();
+extern Application* GetApplicationInstance();
+
 
 
 

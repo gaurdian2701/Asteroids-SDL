@@ -9,7 +9,7 @@
 #include "SDL3/SDL_log.h"
 
 
-Application* MainApplicationInstance = nullptr;
+static Application* CoreApplicationInstance = nullptr;
 constexpr int SCREEN_WIDTH = 1000;
 constexpr int SCREEN_HEIGHT = 800;
 const char* WINDOW_NAME = "Asteroids";
@@ -17,13 +17,13 @@ const char* WINDOW_NAME = "Asteroids";
 
 Application::Application()
 {
-    if (MainApplicationInstance != nullptr)
+    if (CoreApplicationInstance != nullptr)
     {
         std::cout << "Application already exists!" << "\n";
     }
     else
     {
-        MainApplicationInstance = this;
+        CoreApplicationInstance = this;
     }
 
     if (SDL_Init(SDL_INIT_VIDEO) == false)
@@ -47,9 +47,9 @@ Application::~Application()
     m_mainWindow = nullptr;
 }
 
-Application& Application::GetInstance()
+Application& Application::GetCoreInstance()
 {
-    return *MainApplicationInstance;
+    return *CoreApplicationInstance;
 }
 
 void Application::Init()
@@ -69,7 +69,7 @@ void Application::InitiateShutdown()
 
 void Application::Run()
 {
-    BeginApplication();
+    GetApplicationInstance()->BeginApplication();
     auto lastFrameTime = std::chrono::high_resolution_clock::now();
 
     SDL_zero(m_mainEventCatcher);
@@ -85,12 +85,12 @@ void Application::Run()
         RefreshBackground();
 
         UpdateCoreSystems();
-        UpdateApplication(deltaTime.count());
+        GetApplicationInstance()->UpdateApplication(deltaTime.count());
 
         SDL_RenderPresent(m_mainRenderer);
     }
 
-    EndApplication();
+    GetApplicationInstance()->EndApplication();
     InitiateShutdown();
 }
 

@@ -6,6 +6,16 @@ project(${PROJECT_NAME})
 
 set(ENGINE_BINARY_NAME SDLEngineLib)
 set(VENDOR_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor/include)
+set(BUILD_SHARED_LIBS ON)
+
+function(EnableASANCompileOptions targetProject)
+    if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
+        target_compile_options(
+                ${targetProject}
+                    PRIVATE
+                        $<$<CONFIG:Debug>:/fsanitize=address>)
+    endif()
+endfunction()
 
 add_subdirectory(vendor)
 
@@ -17,9 +27,9 @@ add_library(
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/ECSManager.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/Systems/RenderingSystem.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/CoreSystems/TextureResourceManager.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/CoreSystems/InputSystem.cpp
-        include/Core/AssetPathHolder.h
-        include/Core/Misc.h)
+                ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/CoreSystems/InputSystem.cpp)
+
+EnableASANCompileOptions(${ENGINE_BINARY_NAME})
 
 target_include_directories(
         ${ENGINE_BINARY_NAME}

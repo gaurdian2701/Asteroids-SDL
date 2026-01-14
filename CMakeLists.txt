@@ -1,22 +1,28 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 23)
-set(PROJECT_NAME Asteroids_App)
-project(${PROJECT_NAME})
+set(EXE_NAME Asteroids_App)
+project(${EXE_NAME})
 
 add_subdirectory(SDL-Engine)
 
 add_executable(
-        ${PROJECT_NAME}
+        ${EXE_NAME}
             ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/Asteroids_App.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SpaceShip.cpp)
 
+EnableASANCompileOptions(${EXE_NAME})
+
 target_include_directories(
-        ${PROJECT_NAME}
+        ${EXE_NAME}
             PRIVATE
                 ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 target_link_libraries(
-        ${PROJECT_NAME}
+        ${EXE_NAME}
             PRIVATE
                 SDLEngineLib)
+
+
+
+
