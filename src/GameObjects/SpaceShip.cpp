@@ -5,7 +5,7 @@
 #include "Core/CoreSystems/CoreSystemsHolder.h"
 #include "Core/CoreSystems/TextureResourceManager.h"
 
-constexpr inline glm::vec2 SPACESHIP_STARTING_POINT = glm::vec2(500, 500);
+constexpr inline glm::vec2 SPACESHIP_STARTING_POINT = glm::vec2(-50, 50);
 const inline std::string SPACESHIP_IMAGE_FILEPATH = "images/img_spaceship.png";
 
 void Asteroids::GameObjects::SpaceShip::Start()
@@ -63,11 +63,11 @@ void Asteroids::GameObjects::SpaceShip::EvaluateMovementInput(const float deltaT
 	}
 	if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_W))
 	{
-		m_translationVector.y = -1;
+		m_translationVector.y = 1;
 	}
 	if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_S))
 	{
-		m_translationVector.y = 1;
+		m_translationVector.y = -1;
 	}
 	if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_LEFT))
 	{

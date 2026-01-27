@@ -10,10 +10,8 @@
 
 
 static Application* CoreApplicationInstance = nullptr;
-constexpr int SCREEN_WIDTH = 1000;
-constexpr int SCREEN_HEIGHT = 800;
-const char* WINDOW_NAME = "Asteroids";
 
+const char* WINDOW_NAME = "Asteroids";
 
 Application::Application()
 {

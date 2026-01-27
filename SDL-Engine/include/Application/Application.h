@@ -35,6 +35,10 @@ private:
 	void CheckForQuitEvent();
 	void UpdateCoreSystems();
 
+public:
+	static const int SCREEN_WIDTH = 800;
+	static const int SCREEN_HEIGHT = 800;
+
 protected:
 	SDL_Window* m_mainWindow = nullptr;
 	SDL_Renderer* m_mainRenderer = nullptr;
