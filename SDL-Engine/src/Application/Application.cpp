@@ -5,8 +5,9 @@
 #include <iostream>
 
 #include <SDL3/SDL_init.h>
+
+#include "PrintDebug.h"
 #include "Core/CoreSystems/CoreSystemsHolder.h"
-#include "SDL3/SDL_log.h"
 
 
 static Application* CoreApplicationInstance = nullptr;
@@ -17,16 +18,16 @@ Application::Application()
 {
     if (CoreApplicationInstance != nullptr)
     {
-        std::cout << "Application already exists!" << "\n";
+        PrintDebug("Application already exists!");
+        return;
     }
-    else
-    {
-        CoreApplicationInstance = this;
-    }
+
+    CoreApplicationInstance = this;
 
     if (SDL_Init(SDL_INIT_VIDEO) == false)
     {
-        SDL_Log("SDL Initialization failed! Error Log: \n %s", SDL_GetError());
+        PrintDebug("SDL_Init Error: %s", SDL_GetError());
+        return;
     }
 
     m_mainWindow = SDL_CreateWindow(
@@ -34,6 +35,8 @@ Application::Application()
         SCREEN_WIDTH,
         SCREEN_HEIGHT,
         SDL_WINDOW_RESIZABLE);
+
+    SDL_SetWindowMinimumSize(m_mainWindow, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     m_mainRenderer = SDL_CreateRenderer(m_mainWindow, nullptr);
 
@@ -71,6 +74,7 @@ void Application::Run()
     auto lastFrameTime = std::chrono::high_resolution_clock::now();
 
     SDL_zero(m_mainEventCatcher);
+    SDL_SetRenderDrawBlendMode(m_mainRenderer, SDL_BLENDMODE_BLEND);
 
     while (m_isRunning)
     {

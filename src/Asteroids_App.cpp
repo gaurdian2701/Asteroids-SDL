@@ -1,5 +1,6 @@
 ﻿#include "Asteroids_App.h"
 #include "Core/AssetPathHolder.h"
+#include "GameObjects/LoneParticleEmitter.h"
 #include "GameObjects/SpaceShip.h"
 #include "Scene/GameObject.h"
 
@@ -19,6 +20,7 @@ void Asteroids_App::InitializeObjects()
 {
     m_MainScene = new Core::GameScene(100);
     m_MainScene->AddGameObject<Asteroids::GameObjects::SpaceShip>();
+    m_MainScene->AddGameObject<Asteroids::GameObjects::LoneParticleEmitter>();
 }
 
 void Asteroids_App::StartScene()

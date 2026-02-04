@@ -1,11 +1,12 @@
 ﻿#include "GameObjects/SpaceShip.h"
-
+#include "Assets/Components/Transform.h"
 #include "Application/Application.h"
 #include "Assets/Components/Renderer2D.h"
 #include "Core/CoreSystems/CoreSystemsHolder.h"
 #include "Core/CoreSystems/TextureResourceManager.h"
+#include "Core/ECS/Systems/System.h"
 
-constexpr inline glm::vec2 SPACESHIP_STARTING_POINT = glm::vec2(-50, 50);
+constexpr inline glm::vec2 SPACESHIP_STARTING_POINT = glm::vec2(0, 0);
 const inline std::string SPACESHIP_IMAGE_FILEPATH = "images/img_spaceship.png";
 
 void Asteroids::GameObjects::SpaceShip::Start()
@@ -14,7 +15,6 @@ void Asteroids::GameObjects::SpaceShip::Start()
 	AddComponent<Assets::Components::Renderer2D>();
 
 	auto& renderer = GetComponent<Assets::Components::Renderer2D>();
-	renderer.Color = SDL_FColor(255, 0, 0, 255);
 
 	renderer.RenderTexture = Core::CoreSystems::TextureResourceManager::GetInstance()
 	.TryLoadAndGetTexture(SPACESHIP_IMAGE_FILEPATH);
@@ -23,7 +23,7 @@ void Asteroids::GameObjects::SpaceShip::Start()
 	transform.PositionVector = SPACESHIP_STARTING_POINT;
 	transform.ScaleFactor = glm::vec2(50.0f);
 
-	m_aimCircleRadius = std::max(transform.ScaleFactor.x, transform.ScaleFactor.y);
+	m_aimCircleRadius = 60.0f;
 }
 
 void Asteroids::GameObjects::SpaceShip::Update(const float deltaTime)
@@ -41,11 +41,13 @@ void Asteroids::GameObjects::SpaceShip::Update(const float deltaTime)
 void Asteroids::GameObjects::SpaceShip::UpdateAimPosition()
 {
 	auto& transform = GetComponent<Assets::Components::Transform>();
-	float xCoordinate = transform.PositionVector.x + m_aimCircleRadius * std::cos(glm::radians(m_rotationAngle - 90));
-	float yCoordinate = transform.PositionVector.y + m_aimCircleRadius * std::sin(glm::radians(m_rotationAngle - 90));
+	float xCoordinate = transform.PositionVector.x + m_aimCircleRadius * std::cos(glm::radians(-m_rotationAngle + 90));
+	float yCoordinate = transform.PositionVector.y + m_aimCircleRadius * std::sin(glm::radians(-m_rotationAngle + 90));
+
+	glm::vec2 coords = Core::ECS::ConvertToScreenCoordinates(glm::vec2(xCoordinate, yCoordinate));
 
 	SDL_SetRenderDrawColor(Application::GetCoreInstance().GetMainRenderer(), 0, 255, 0, 255);
-	SDL_RenderPoint(Application::GetCoreInstance().GetMainRenderer(), xCoordinate, yCoordinate);
+	SDL_RenderPoint(Application::GetCoreInstance().GetMainRenderer(), coords.x, coords.y);
 }
 
 void Asteroids::GameObjects::SpaceShip::EvaluateMovementInput(const float deltaTime)

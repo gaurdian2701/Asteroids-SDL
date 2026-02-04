@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "Assets/Components/Transform.h"
 #include "Scene/GameObject.h"
 
 namespace Asteroids::GameObjects

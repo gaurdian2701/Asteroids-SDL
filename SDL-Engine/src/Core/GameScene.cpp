@@ -1,4 +1,5 @@
 ﻿#include "Core/GameScene.h"
+#include "Assets/Components/ParticleEmitter.h"
 #include "Scene/GameObject.h"
 #include "Assets/Components/Transform.h"
 #include "Assets/Components/Renderer2D.h"
@@ -14,6 +15,7 @@ void Core::GameScene::RegisterComponents()
 {
 	m_ECSManager.RegisterComponent<Assets::Components::Transform>();
 	m_ECSManager.RegisterComponent<Assets::Components::Renderer2D>();
+	m_ECSManager.RegisterComponent<Assets::Components::ParticleEmitter>();
 }
 
 void Core::GameScene::RegisterGameObject(Scene::GameObject *someGameObject)
@@ -43,35 +45,29 @@ void Core::GameScene::RemoveComponentFromGameObjectData(Scene::GameObject &someG
 
 void Core::GameScene::Start()
 {
-	StartGameObjects();
-}
-
-void Core::GameScene::StartGameObjects()
-{
+	//Start GameObjects
 	for (auto& gameObject : m_gameObjectsInScene)
 	{
 		gameObject->Start();
 	}
+
+	//Start ECS Systems
+	m_ECSManager.BeginSystems();
 }
 
 void Core::GameScene::Update(const float deltaTime)
 {
-	UpdateGameObjects(deltaTime);
-	UpdateECSManager();
-}
-
-void Core::GameScene::UpdateGameObjects(const float deltaTime)
-{
+	//Update GameObjects
 	for (auto& gameObject : m_gameObjectsInScene)
 	{
 		gameObject->Update(deltaTime);
 	}
+
+	//Update ECS Manager
+	m_ECSManager.UpdateManager(deltaTime);
 }
 
-void Core::GameScene::UpdateECSManager()
-{
-	m_ECSManager.UpdateManager();
-}
+
 
 Core::ECS::ECSManager& Core::GameScene::GetECSManager()
 {

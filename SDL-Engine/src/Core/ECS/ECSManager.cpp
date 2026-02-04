@@ -1,4 +1,6 @@
 ﻿#include "Core/ECS/ECSManager.h"
+
+#include "Core/ECS/Systems/ParticleSystem.h"
 #include "Core/ECS/Systems/RenderingSystem.h"
 
 static Core::ECS::ECSManager* ECSManagerInstance = nullptr;
@@ -26,19 +28,28 @@ void Core::ECS::ECSManager::InitializeManager()
 void Core::ECS::ECSManager::InitializeSystems()
 {
 	m_SystemsList.push_back(new Systems::RenderingSystem());
-	m_SystemsList[0]->BeginSystem();
+	m_SystemsList.push_back(new Systems::ParticleSystem());
 }
+
+void Core::ECS::ECSManager::BeginSystems()
+{
+	for (auto& system : m_SystemsList)
+	{
+		system->BeginSystem();
+	}
+}
+
 
 Core::ECS::ECSManager& Core::ECS::ECSManager::GetInstance()
 {
 	return *ECSManagerInstance;
 }
 
-void Core::ECS::ECSManager::UpdateManager()
+void Core::ECS::ECSManager::UpdateManager(const float deltaTime)
 {
 	for (auto& system : m_SystemsList)
 	{
-		system->UpdateSystem();
+		system->UpdateSystem(deltaTime);
 	}
 }
 

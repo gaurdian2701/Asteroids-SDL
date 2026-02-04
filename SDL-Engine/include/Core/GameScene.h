@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include "vec2.hpp"
+#include "Application/Application.h"
 #include "Core/ECS/ECSManager.h"
 
 namespace Scene
@@ -18,6 +20,20 @@ namespace Core
         void Update(const float deltaTime);
 
         ECS::ECSManager& GetECSManager();
+
+        static inline const glm::vec2& GetMaxCartesianLimits()
+        {
+            static glm::vec2 limits = glm::vec2(Application::SCREEN_WIDTH - Application::SCREEN_WIDTH/2,
+                -Application::SCREEN_HEIGHT + Application::SCREEN_HEIGHT/2);
+            return limits;
+        }
+
+        static inline const glm::vec2& GetMinCartesianLimits()
+        {
+            static glm::vec2 limits = glm::vec2(-Application::SCREEN_WIDTH/2,Application::SCREEN_HEIGHT/2);
+            return limits;
+        }
+
 
         template<typename T>
         void AddComponentToEntity(Scene::GameObject& someGameObject, const std::uint32_t someEntityID)
@@ -55,10 +71,7 @@ namespace Core
 
     private:
         void RegisterGameObject(Scene::GameObject* someGameObject);
-        void StartGameObjects();
         void RegisterComponents();
-        void UpdateGameObjects(const float deltaTime);
-        void UpdateECSManager();
 
     private:
         ECS::ECSManager m_ECSManager;

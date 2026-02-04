@@ -21,7 +21,8 @@ namespace Core::ECS
         explicit ECSManager(const std::uint32_t maxEntities);
         ~ECSManager() = default;
         void InitializeManager();
-        void UpdateManager();
+        void UpdateManager(const float deltaTime);
+        void BeginSystems();
 
         static ECSManager& GetInstance();
 

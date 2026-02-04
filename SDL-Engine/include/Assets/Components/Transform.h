@@ -1,11 +1,8 @@
 ﻿#pragma once
-#include <iostream>
-#include <mat4x4.hpp>
-#include "gtc/quaternion.hpp"
-
 #define GLM_ENABLE_EXPERIMENTAL
+#include "gtc/quaternion.hpp"
 #include "gtx/quaternion.hpp"
-#include "ext/matrix_transform.hpp"
+#include "PrintDebug.h"
 
 namespace Assets::Components
 {
@@ -14,13 +11,13 @@ namespace Assets::Components
         //Default Constructor
         Transform()
         {
-            std::cout << "Transform default constructor called \n" << std::flush;
+            PrintDebug("Transform default constructor called \n");
         }
 
         //Move Constructor
         Transform(Transform&& other) noexcept
         {
-            std::cout << "Transform move constructor called \n" << std::flush;
+            PrintDebug("Transform move constructor called \n");
 
             PositionVector = other.PositionVector;
             ScaleFactor = other.ScaleFactor;
@@ -29,7 +26,7 @@ namespace Assets::Components
         //Move Assignment operator
         Transform& operator=(Transform&& other) noexcept
         {
-            std::cout << "Transform assignment operator called \n" << std::flush;
+            PrintDebug("Transform move assignment constructor called \n");
 
             if (this != &other)
             {
@@ -42,7 +39,8 @@ namespace Assets::Components
         //Copy Constructor
         Transform(const Transform& other)
         {
-            std::cout << "Transform copy constructor called \n" << std::flush;
+            PrintDebug("Transform copy constructor called \n");
+
             PositionVector = other.PositionVector;
             ScaleFactor = other.ScaleFactor;
         }
