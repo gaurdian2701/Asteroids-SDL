@@ -14,7 +14,7 @@ public:
     void EndApplication() override;
 
 private:
-    void InitializeSystems();
+    void InitializeAppSystems();
     void InitializeScene();
     void StartScene();
 

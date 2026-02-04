@@ -16,7 +16,6 @@ void Asteroids::GameObjects::SpaceShip::Start()
 {
 	AddComponent<Assets::Components::Transform>();
 	AddComponent<Assets::Components::Renderer2D>();
-	AddComponent<Assets::Components::ParticleEmitter>();
 
 	auto& renderer = GetComponent<Assets::Components::Renderer2D>();
 
@@ -24,23 +23,9 @@ void Asteroids::GameObjects::SpaceShip::Start()
 	.TryLoadAndGetTexture(SPACESHIP_IMAGE_FILEPATH);
 
 	auto& transform = GetComponent<Assets::Components::Transform>();
-	transform.WorldPosition = SPACESHIP_STARTING_POINT;
-	transform.WorldScale = glm::vec2(50.0f);
-
-	auto& particleEmitter = GetComponent<Assets::Components::ParticleEmitter>();
-
-	particleEmitter.InitializeEmitter(6,
-		std::forward<glm::vec2>(glm::vec2(0.0f)),
-		8,
-		std::forward<glm::vec2>(glm::vec2(0.05f, -0.05f)),
-		0.1f,
-		5.0f);
-
-	particleEmitter.Color = SDL_FColor(255, 0, 0, 255);
-	particleEmitter.RenderTexture = Core::CoreSystems::TextureResourceManager::GetInstance()
-	.TryLoadAndGetTexture(ROCKET_BOOSTER_PARTICLE_FILEPATH);
-	particleEmitter.Owner = this;
-
+	transform.LocalPosition = SPACESHIP_STARTING_POINT;
+	transform.LocalScale = glm::vec2(50.0f);
+	transform.Owner = this;
 
 	m_aimCircleRadius = 60.0f;
 }
@@ -50,9 +35,9 @@ void Asteroids::GameObjects::SpaceShip::Update(const float deltaTime)
 	auto& t = GetComponent<Assets::Components::Transform>();
 	EvaluateMovementInput(deltaTime);
 
-	t.WorldPosition.x += m_translationVector.x * m_moveSpeed * deltaTime;
-	t.WorldPosition.y += m_translationVector.y * m_moveSpeed * deltaTime;
-	t.WorldRotation = m_rotationAngle;
+	t.LocalPosition.x += m_translationVector.x * m_moveSpeed * deltaTime;
+	t.LocalPosition.y += m_translationVector.y * m_moveSpeed * deltaTime;
+	t.LocalRotation = m_rotationAngle;
 
 	UpdateAimPosition();
 }
@@ -60,8 +45,8 @@ void Asteroids::GameObjects::SpaceShip::Update(const float deltaTime)
 void Asteroids::GameObjects::SpaceShip::UpdateAimPosition()
 {
 	auto& transform = GetComponent<Assets::Components::Transform>();
-	float xCoordinate = transform.WorldPosition.x + m_aimCircleRadius * std::cos(glm::radians(-m_rotationAngle + 90));
-	float yCoordinate = transform.WorldPosition.y + m_aimCircleRadius * std::sin(glm::radians(-m_rotationAngle + 90));
+	float xCoordinate = transform.LocalPosition.x + m_aimCircleRadius * std::cos(glm::radians(-m_rotationAngle + 90));
+	float yCoordinate = transform.LocalPosition.y + m_aimCircleRadius * std::sin(glm::radians(-m_rotationAngle + 90));
 
 	glm::vec2 coords = Core::ECS::ConvertToScreenCoordinates(glm::vec2(xCoordinate, yCoordinate));
 

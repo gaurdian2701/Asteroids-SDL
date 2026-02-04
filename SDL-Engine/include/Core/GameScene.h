@@ -59,10 +59,11 @@ namespace Core
         void RemoveComponentFromGameObjectData(Scene::GameObject& someGameObject, std::size_t someComponentTypeIndex);
 
         template<std::derived_from<Scene::GameObject> GameObjectType>
-        void AddGameObject()
+        GameObjectType* AddGameObject()
         {
             m_gameObjectsInScene.push_back(new GameObjectType());
             RegisterGameObject(m_gameObjectsInScene.back());
+            return static_cast<GameObjectType*>(m_gameObjectsInScene.back());
         }
 
         void DeleteGameObject(Scene::GameObject* someGameObject);

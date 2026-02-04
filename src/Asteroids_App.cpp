@@ -7,12 +7,12 @@
 
 void Asteroids_App::BeginApplication()
 {
-    InitializeSystems();
+    InitializeAppSystems();
     InitializeScene();
     StartScene();
 }
 
-void Asteroids_App::InitializeSystems()
+void Asteroids_App::InitializeAppSystems()
 {
     Core::AssetPathHolder::GetInstance().UpdateAssetFolderPath("Assets/");
 }

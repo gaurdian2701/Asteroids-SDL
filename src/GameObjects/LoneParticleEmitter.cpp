@@ -11,7 +11,12 @@ void Asteroids::GameObjects::LoneParticleEmitter::Start()
 	AddComponent<Assets::Components::ParticleEmitter>();
 
 	auto& transform = GetComponent<Assets::Components::Transform>();
-	transform.WorldPosition = glm::vec2(0.0f, 100.0f);
+
+	if (m_parent != nullptr)
+	{
+		transform.Parent = &m_parent->GetComponent<Assets::Components::Transform>();
+		transform.LocalPosition = glm::vec2(0.0f, -20.0f);
+	}
 
 	auto& particleEmitter = GetComponent<Assets::Components::ParticleEmitter>();
 
@@ -26,8 +31,6 @@ void Asteroids::GameObjects::LoneParticleEmitter::Start()
 	particleEmitter.RenderTexture = Core::CoreSystems::TextureResourceManager::GetInstance()
 	.TryLoadAndGetTexture(ROCKET_BOOSTER_PARTICLE_FILEPATH);
 	particleEmitter.Owner = this;
-
-
 }
 
 void Asteroids::GameObjects::LoneParticleEmitter::Update(float deltaTime)

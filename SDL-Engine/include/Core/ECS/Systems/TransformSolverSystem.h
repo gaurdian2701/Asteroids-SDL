@@ -15,5 +15,8 @@ namespace Core::ECS::Systems
         void BeginSystem() override;
         void UpdateSystem(const float deltaTime) override;
         void EndSystem() override;
+
+    private:
+        inline void SolveTransform(Assets::Components::Transform& someTransform);
     };
 }

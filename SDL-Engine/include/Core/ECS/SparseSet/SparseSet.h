@@ -6,7 +6,6 @@
 
 namespace Core::ECS
 {
-
 	template<typename ComponentTypeUsedBySparseSet>
 	class SparseSet : public ISparseSet
 	{

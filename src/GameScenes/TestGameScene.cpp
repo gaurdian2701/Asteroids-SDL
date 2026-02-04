@@ -5,6 +5,8 @@
 
 void Asteroids::GameScenes::TestGameScene::AddGameObjectsToScene()
 {
-    AddGameObject<GameObjects::SpaceShip>();
-    AddGameObject<GameObjects::LoneParticleEmitter>();
+    Scene::GameObject* spaceShip = AddGameObject<GameObjects::SpaceShip>();
+    GameObjects::LoneParticleEmitter* emitter = AddGameObject<GameObjects::LoneParticleEmitter>();
+
+    emitter->m_parent = spaceShip;
 }

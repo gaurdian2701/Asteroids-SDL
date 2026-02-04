@@ -1,8 +1,8 @@
 ﻿#pragma once
 #define GLM_ENABLE_EXPERIMENTAL
 #include "gtc/quaternion.hpp"
-#include "gtx/quaternion.hpp"
 #include "PrintDebug.h"
+#include "Scene/GameObject.h"
 
 namespace Assets::Components
 {
@@ -27,6 +27,13 @@ namespace Assets::Components
             WorldPosition = other.WorldPosition;
             WorldScale = other.WorldScale;
             WorldRotation = other.WorldRotation;
+
+            LocalPosition = other.LocalPosition;
+            LocalScale = other.LocalScale;
+            LocalRotation = other.LocalRotation;
+
+            Parent = other.Parent;
+            Owner = other.Owner;
         }
 
         //Move Constructor
@@ -37,6 +44,13 @@ namespace Assets::Components
             WorldPosition = other.WorldPosition;
             WorldScale = other.WorldScale;
             WorldRotation = other.WorldRotation;
+
+            LocalPosition = other.LocalPosition;
+            LocalScale = other.LocalScale;
+            LocalRotation = other.LocalRotation;
+
+            Parent = other.Parent;
+            Owner = other.Owner;
         }
 
         //Copy Assignment operator
@@ -45,6 +59,13 @@ namespace Assets::Components
             WorldPosition = other.WorldPosition;
             WorldScale = other.WorldScale;
             WorldRotation = other.WorldRotation;
+
+            LocalPosition = other.LocalPosition;
+            LocalScale = other.LocalScale;
+            LocalRotation = other.LocalRotation;
+
+            Parent = other.Parent;
+            Owner = other.Owner;
         }
 
         //Move Assignment operator
@@ -57,6 +78,13 @@ namespace Assets::Components
                 WorldPosition = other.WorldPosition;
                 WorldScale = other.WorldScale;
                 WorldRotation = other.WorldRotation;
+
+                LocalPosition = other.LocalPosition;
+                LocalScale = other.LocalScale;
+                LocalRotation = other.LocalRotation;
+
+                Parent = other.Parent;
+                Owner = other.Owner;
             }
             return *this;
         }
@@ -70,6 +98,8 @@ namespace Assets::Components
         glm::vec2 LocalPosition = glm::vec2(0.0f);
         glm::vec2 LocalScale = glm::vec2(1.0f);
         float LocalRotation = 0.0f;
+
+        Scene::GameObject* Owner = nullptr;
 
     };
 }
