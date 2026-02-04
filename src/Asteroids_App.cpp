@@ -3,11 +3,12 @@
 #include "GameObjects/LoneParticleEmitter.h"
 #include "GameObjects/SpaceShip.h"
 #include "Scene/GameObject.h"
+#include "GameScenes/TestGameScene.h"
 
 void Asteroids_App::BeginApplication()
 {
     InitializeSystems();
-    InitializeObjects();
+    InitializeScene();
     StartScene();
 }
 
@@ -16,11 +17,10 @@ void Asteroids_App::InitializeSystems()
     Core::AssetPathHolder::GetInstance().UpdateAssetFolderPath("Assets/");
 }
 
-void Asteroids_App::InitializeObjects()
+void Asteroids_App::InitializeScene()
 {
-    m_MainScene = new Core::GameScene(100);
-    m_MainScene->AddGameObject<Asteroids::GameObjects::SpaceShip>();
-    m_MainScene->AddGameObject<Asteroids::GameObjects::LoneParticleEmitter>();
+    m_MainScene = new Asteroids::GameScenes::TestGameScene(100);
+    m_MainScene->AddGameObjectsToScene();
 }
 
 void Asteroids_App::StartScene()

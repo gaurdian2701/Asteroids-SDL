@@ -42,7 +42,6 @@ void Core::GameScene::RemoveComponentFromGameObjectData(Scene::GameObject &someG
 	someGameObject.m_componentBitSet[someComponentTypeIndex] = false;
 }
 
-
 void Core::GameScene::Start()
 {
 	//Start GameObjects

@@ -11,7 +11,9 @@ add_executable(
             ${CMAKE_CURRENT_SOURCE_DIR}/src/Asteroids_App.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SpaceShip.cpp
         include/GameObjects/LoneParticleEmitter.h
-        src/GameObjects/LoneParticleEmitter.cpp)
+        src/GameObjects/LoneParticleEmitter.cpp
+        include/GameScenes/TestGameScene.h
+        src/GameScenes/TestGameScene.cpp)
 
 EnableASANCompileOptions(${EXE_NAME})
 

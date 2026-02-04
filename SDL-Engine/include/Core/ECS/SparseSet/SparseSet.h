@@ -20,8 +20,6 @@ namespace Core::ECS
 
 		void AddComponentToEntity(const std::uint32_t entityID, ComponentTypeUsedBySparseSet&& component)
 		{
-			//No dangling references
-
 			if (m_sparseEntityArray.size()-1 < entityID)
 			{
 				m_sparseEntityArray.resize(entityID);

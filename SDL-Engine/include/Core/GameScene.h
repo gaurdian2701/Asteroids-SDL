@@ -14,8 +14,9 @@ namespace Core
     {
     public:
         explicit GameScene(const std::uint32_t maxEntitiesInScene);
-        ~GameScene() = default;
+        virtual ~GameScene() = default;
 
+        virtual void AddGameObjectsToScene(){}
         void Start();
         void Update(const float deltaTime);
 

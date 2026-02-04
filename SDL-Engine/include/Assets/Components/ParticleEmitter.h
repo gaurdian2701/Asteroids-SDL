@@ -3,6 +3,11 @@
 #include "SDL3/SDL_render.h"
 #include "glm.hpp"
 
+namespace Scene
+{
+	class GameObject;
+}
+
 namespace Assets::Components
 {
 	struct Particle
@@ -18,6 +23,7 @@ namespace Assets::Components
 			InitialVelocity = other.InitialVelocity;
 			CurrentPosition = other.CurrentPosition;
 			CurrentLifeTime = other.CurrentLifeTime;
+			ParticleSize = other.ParticleSize;
 		}
 
 		//Move Constructor
@@ -26,6 +32,20 @@ namespace Assets::Components
 			InitialVelocity = other.InitialVelocity;
 			CurrentPosition = other.CurrentPosition;
 			CurrentLifeTime = other.CurrentLifeTime;
+			ParticleSize = other.ParticleSize;
+		}
+
+		//Copy Assignment Operator
+		Particle& operator=(const Particle& other)
+		{
+			if (this != &other)
+			{
+				InitialVelocity = other.InitialVelocity;
+				CurrentPosition = other.CurrentPosition;
+				CurrentLifeTime = other.CurrentLifeTime;
+				ParticleSize = other.ParticleSize;
+			}
+			return *this;
 		}
 
 		//Move Assignment operator
@@ -36,11 +56,10 @@ namespace Assets::Components
 				InitialVelocity = other.InitialVelocity;
 				CurrentPosition = other.CurrentPosition;
 				CurrentLifeTime = other.CurrentLifeTime;
+				ParticleSize = other.ParticleSize;
 			}
 			return *this;
 		}
-
-		bool IsDead = false;
 
 		glm::vec2 InitialVelocity = glm::vec2(0.0f);
 		glm::vec2 CurrentPosition = glm::vec2(0.0f);
@@ -60,33 +79,78 @@ namespace Assets::Components
 		}
 
 		void InitializeEmitter(uint8_t numberOfParticles,
-			glm::vec2&& someStartingPosition,
+			glm::vec2&& someStartingOffset,
+			uint16_t someMaxDeviation,
 			glm::vec2&& someInitialVelocity,
 			float someLifetime,
 			float someParticleSize)
 		{
 			Particles.resize(numberOfParticles);
+			StartingOffset = someStartingOffset;
+			MaxDeviation = someMaxDeviation;
+			ParticleLifetime = someLifetime;
 
 			for (auto& particle : Particles)
 			{
-				particle.CurrentPosition = someStartingPosition;
 				particle.InitialVelocity = someInitialVelocity;
 				particle.CurrentLifeTime = someLifetime;
 				particle.ParticleSize = someParticleSize;
 			}
 		}
 
-		//Move Constructor
-		ParticleEmitter(ParticleEmitter&& other) noexcept
+		//Copy Constructor
+		ParticleEmitter(const ParticleEmitter& other)
 		{
+			StartingOffset = other.StartingOffset;
+			MaxDeviation = other.MaxDeviation;
+			ParticleLifetime = other.ParticleLifetime;
+			Owner = other.Owner;
+
 			Friction = other.Friction;
 			Bounciness = other.Bounciness;
 			Color = other.Color;
 			RenderRectangle = other.RenderRectangle;
 			RenderTexture = other.RenderTexture;
+			Particles.assign(other.Particles.begin(), other.Particles.end());
+		}
+
+		//Move Constructor
+		ParticleEmitter(ParticleEmitter&& other) noexcept
+		{
+			StartingOffset = other.StartingOffset;
+			MaxDeviation = other.MaxDeviation;
+			ParticleLifetime = other.ParticleLifetime;
+			Owner = other.Owner;
+
+			Friction = other.Friction;
+			Bounciness = other.Bounciness;
+			Color = other.Color;
+			RenderRectangle = other.RenderRectangle;
+			RenderTexture = other.RenderTexture;
+			Particles.assign(other.Particles.begin(), other.Particles.end());
 
 			other.RenderTexture = nullptr;
 			other.Particles.clear();
+		}
+
+		//Copy Assignment operator
+		ParticleEmitter& operator=(const ParticleEmitter& other)
+		{
+			if (this != &other)
+			{
+				StartingOffset = other.StartingOffset;
+				MaxDeviation = other.MaxDeviation;
+				ParticleLifetime = other.ParticleLifetime;
+				Owner = other.Owner;
+
+				Friction = other.Friction;
+				Bounciness = other.Bounciness;
+				Color = other.Color;
+				RenderRectangle = other.RenderRectangle;
+				RenderTexture = other.RenderTexture;
+				Particles.assign(other.Particles.begin(), other.Particles.end());
+			}
+			return *this;
 		}
 
 		//Move Assignment operator
@@ -94,11 +158,17 @@ namespace Assets::Components
 		{
 			if (this != &other)
 			{
+				StartingOffset = other.StartingOffset;
+				MaxDeviation = other.MaxDeviation;
+				ParticleLifetime = other.ParticleLifetime;
+				Owner = other.Owner;
+
 				Friction = other.Friction;
 				Bounciness = other.Bounciness;
 				Color = other.Color;
 				RenderRectangle = other.RenderRectangle;
 				RenderTexture = other.RenderTexture;
+				Particles.assign(other.Particles.begin(), other.Particles.end());
 
 				other.RenderTexture = nullptr;
 				other.Particles.clear();
@@ -106,22 +176,18 @@ namespace Assets::Components
 			return *this;
 		}
 
-		//Copy Constructor
-		ParticleEmitter(const ParticleEmitter& other)
-		{
-			Friction = other.Friction;
-			Bounciness = other.Bounciness;
-			Color = other.Color;
-			RenderRectangle = other.RenderRectangle;
-			RenderTexture = other.RenderTexture;
-		}
+		glm::vec2 StartingOffset = glm::vec2(0.0f);
+		uint16_t MaxDeviation = 1;
 
 		float Friction = 0.0f;
 		float Bounciness = 0.0f;
+		float ParticleLifetime = 0.1f;
 
 		SDL_FColor Color = SDL_FColor(255, 255, 255, 255);
 		SDL_FRect RenderRectangle = SDL_FRect(0, 0, 5, 5);
 		SDL_Texture* RenderTexture = nullptr;
+
+		Scene::GameObject* Owner = nullptr;
 
 		std::vector<Particle> Particles = std::vector<Particle>(5);
 	};

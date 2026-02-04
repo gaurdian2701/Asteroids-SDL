@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include <random>
+
 #include "System.h"
 
 namespace Assets::Components
@@ -25,6 +27,9 @@ namespace Core::ECS::Systems
 			const glm::vec2& someParticleVelocity);
 
 	private:
+		std::default_random_engine m_randomOffsetGenerator;
+
+
 		glm::vec2 m_minCartesianLimits = glm::vec2(0.0f, 0.0f);
 		glm::vec2 m_maxCartesianLimits = glm::vec2(0.0f, 0.0f);
 	};

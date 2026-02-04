@@ -8,10 +8,25 @@ namespace Assets::Components
 {
     struct Transform
     {
+        ~Transform()
+        {
+            Parent = nullptr;
+        }
+
         //Default Constructor
         Transform()
         {
             PrintDebug("Transform default constructor called \n");
+        }
+
+        //Copy Constructor
+        Transform(const Transform& other)
+        {
+            PrintDebug("Transform copy constructor called \n");
+
+            WorldPosition = other.WorldPosition;
+            WorldScale = other.WorldScale;
+            WorldRotation = other.WorldRotation;
         }
 
         //Move Constructor
@@ -19,8 +34,17 @@ namespace Assets::Components
         {
             PrintDebug("Transform move constructor called \n");
 
-            PositionVector = other.PositionVector;
-            ScaleFactor = other.ScaleFactor;
+            WorldPosition = other.WorldPosition;
+            WorldScale = other.WorldScale;
+            WorldRotation = other.WorldRotation;
+        }
+
+        //Copy Assignment operator
+        Transform& operator=(const Transform& other)
+        {
+            WorldPosition = other.WorldPosition;
+            WorldScale = other.WorldScale;
+            WorldRotation = other.WorldRotation;
         }
 
         //Move Assignment operator
@@ -30,23 +54,22 @@ namespace Assets::Components
 
             if (this != &other)
             {
-                PositionVector = other.PositionVector;
-                ScaleFactor = other.ScaleFactor;
+                WorldPosition = other.WorldPosition;
+                WorldScale = other.WorldScale;
+                WorldRotation = other.WorldRotation;
             }
             return *this;
         }
 
-        //Copy Constructor
-        Transform(const Transform& other)
-        {
-            PrintDebug("Transform copy constructor called \n");
+        Transform* Parent = nullptr;
 
-            PositionVector = other.PositionVector;
-            ScaleFactor = other.ScaleFactor;
-        }
+        glm::vec2 WorldPosition = glm::vec2(0.0f);
+        glm::vec2 WorldScale = glm::vec2(1.0f);
+        float WorldRotation = 0.0f;
 
-        glm::vec2 PositionVector = glm::vec2(0.0f);
-        glm::vec2 ScaleFactor = glm::vec2(1.0f);
-        float Rotation = 0.0f;
+        glm::vec2 LocalPosition = glm::vec2(0.0f);
+        glm::vec2 LocalScale = glm::vec2(1.0f);
+        float LocalRotation = 0.0f;
+
     };
 }

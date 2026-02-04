@@ -1,5 +1,4 @@
 ﻿#include "GameObjects/LoneParticleEmitter.h"
-
 #include "Assets/Components/ParticleEmitter.h"
 #include "Assets/Components/Transform.h"
 #include "Core/CoreSystems/TextureResourceManager.h"
@@ -12,19 +11,23 @@ void Asteroids::GameObjects::LoneParticleEmitter::Start()
 	AddComponent<Assets::Components::ParticleEmitter>();
 
 	auto& transform = GetComponent<Assets::Components::Transform>();
-	transform.PositionVector = glm::vec2(10.0f, 0.0f);
+	transform.WorldPosition = glm::vec2(0.0f, 100.0f);
 
-	auto& emitter = GetComponent<Assets::Components::ParticleEmitter>();
+	auto& particleEmitter = GetComponent<Assets::Components::ParticleEmitter>();
 
-	emitter.InitializeEmitter(5,
-		std::forward<glm::vec2>(GetComponent<Assets::Components::Transform>().PositionVector),
+	particleEmitter.InitializeEmitter(5,
+		std::forward<glm::vec2>(glm::vec2(0.0f)),
+		10,
 		std::forward<glm::vec2>(glm::vec2(0.05f, -0.05f)),
-		5.0f,
+		0.1f,
 		5.0f);
 
-	emitter.Color = SDL_FColor(255, 0, 0, 255);
-	emitter.RenderTexture = Core::CoreSystems::TextureResourceManager::GetInstance()
+	particleEmitter.Color = SDL_FColor(255, 0, 0, 255);
+	particleEmitter.RenderTexture = Core::CoreSystems::TextureResourceManager::GetInstance()
 	.TryLoadAndGetTexture(ROCKET_BOOSTER_PARTICLE_FILEPATH);
+	particleEmitter.Owner = this;
+
+
 }
 
 void Asteroids::GameObjects::LoneParticleEmitter::Update(float deltaTime)

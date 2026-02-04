@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "SDLEngine.h"
 #include "Core/GameScene.h"
 
 class Application;
@@ -16,7 +15,7 @@ public:
 
 private:
     void InitializeSystems();
-    void InitializeObjects();
+    void InitializeScene();
     void StartScene();
 
 public:

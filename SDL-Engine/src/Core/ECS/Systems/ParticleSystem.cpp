@@ -10,19 +10,21 @@ void Core::ECS::Systems::ParticleSystem::BeginSystem()
 {
 	m_maxCartesianLimits = GameScene::GetMaxCartesianLimits();
 	m_minCartesianLimits = GameScene::GetMinCartesianLimits();
-	// m_maxCartesianLimits.y = -m_maxCartesianLimits.y;
-	// m_minCartesianLimits.y = -m_minCartesianLimits.y;
 
 	ECSManager::GetInstance().ForEach<Assets::Components::Transform, Assets::Components::ParticleEmitter>(
 		[&](const Assets::Components::Transform &transform, Assets::Components::ParticleEmitter &particleEmitter)
 		{
+			std::uniform_int_distribution<int> randomDistribution(0, particleEmitter.MaxDeviation);
+
 			for (auto &particle: particleEmitter.Particles)
 			{
 				//Simulation
 				//Set particle's initial position according to the initial velocity.
 				//The positions are relative to the particle emitter's world position
-				//TODO: Each particle will be in the exact same position, therefore you have to add some randomization to simulate them properly.
-				particle.PreviousPosition = transform.PositionVector + particle.CurrentPosition;
+				particle.PreviousPosition = transform.WorldPosition + particleEmitter.StartingOffset +
+					glm::vec2(randomDistribution(m_randomOffsetGenerator),
+					randomDistribution(m_randomOffsetGenerator));
+
 				particle.CurrentPosition = particle.PreviousPosition;
 				particle.CurrentPosition += particle.InitialVelocity;
 
@@ -40,6 +42,8 @@ void Core::ECS::Systems::ParticleSystem::UpdateSystem(const float deltaTime)
 	ECSManager::GetInstance().ForEach<Assets::Components::Transform, Assets::Components::ParticleEmitter>(
 		[&, this](Assets::Components::Transform &transform, Assets::Components::ParticleEmitter &particleEmitter)
 		{
+			std::uniform_int_distribution<int> randomDistribution(0, particleEmitter.MaxDeviation);
+
 			for (auto &particle: particleEmitter.Particles)
 			{
 				//Simulation
@@ -48,11 +52,25 @@ void Core::ECS::Systems::ParticleSystem::UpdateSystem(const float deltaTime)
 
 				//Verlet integration implicitly stores the right velocity since we are keeping track of previous frame's position as well.
 				//Hence we don't need to divide by deltatime to calculate the velocity.
-
 				particle.CurrentPosition += particleVelocity;
 				particle.PreviousPosition = particleCurrentPosition;
 
+				if (particle.CurrentLifeTime < 0.0f)
+				{
+					//Reset particle position next to particle emitter
+					particle.PreviousPosition = transform.WorldPosition + particleEmitter.StartingOffset +
+					glm::vec2(randomDistribution(m_randomOffsetGenerator),
+					randomDistribution(m_randomOffsetGenerator));
+
+					particle.CurrentPosition = particle.PreviousPosition;
+					particle.CurrentPosition += particle.InitialVelocity;
+					particle.CurrentLifeTime = particleEmitter.ParticleLifetime;
+				}
+
+				//Bounds Check For Bouncing
 				this->DoBoundsCheck(particle, particleVelocity);
+
+				particle.CurrentLifeTime -= deltaTime;
 
 				//Rendering
 				this->RenderParticle(particleEmitter, particle);

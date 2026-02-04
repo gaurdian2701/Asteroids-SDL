@@ -2,6 +2,7 @@
 
 #include "Core/ECS/Systems/ParticleSystem.h"
 #include "Core/ECS/Systems/RenderingSystem.h"
+#include "Core/ECS/Systems/TransformSolverSystem.h"
 
 static Core::ECS::ECSManager* ECSManagerInstance = nullptr;
 
@@ -27,8 +28,9 @@ void Core::ECS::ECSManager::InitializeManager()
 
 void Core::ECS::ECSManager::InitializeSystems()
 {
-	m_SystemsList.push_back(new Systems::RenderingSystem());
+	m_SystemsList.push_back(new Systems::TransformSolverSystem());
 	m_SystemsList.push_back(new Systems::ParticleSystem());
+	m_SystemsList.push_back(new Systems::RenderingSystem());
 }
 
 void Core::ECS::ECSManager::BeginSystems()
@@ -38,7 +40,6 @@ void Core::ECS::ECSManager::BeginSystems()
 		system->BeginSystem();
 	}
 }
-
 
 Core::ECS::ECSManager& Core::ECS::ECSManager::GetInstance()
 {

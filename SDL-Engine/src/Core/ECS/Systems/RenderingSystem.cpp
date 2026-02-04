@@ -17,15 +17,15 @@ void Core::ECS::Systems::RenderingSystem::UpdateSystem(const float deltaTime)
 			SDL_SetRenderDrawColor(Application::GetCoreInstance().GetMainRenderer(),
 			                       renderer2D.Color.r, renderer2D.Color.g, renderer2D.Color.b, renderer2D.Color.a);
 
-			glm::vec2 screenCoordinates = ConvertToScreenCoordinates(transform.PositionVector);
-			renderer2D.RenderRectangle.x = screenCoordinates.x - transform.ScaleFactor.x / 2;
-			renderer2D.RenderRectangle.y = screenCoordinates.y - transform.ScaleFactor.y / 2;
-			renderer2D.RenderRectangle.w = transform.ScaleFactor.x;
-			renderer2D.RenderRectangle.h = transform.ScaleFactor.y;
+			glm::vec2 screenCoordinates = ConvertToScreenCoordinates(transform.WorldPosition);
+			renderer2D.RenderRectangle.x = screenCoordinates.x - transform.WorldScale.x / 2;
+			renderer2D.RenderRectangle.y = screenCoordinates.y - transform.WorldScale.y / 2;
+			renderer2D.RenderRectangle.w = transform.WorldScale.x;
+			renderer2D.RenderRectangle.h = transform.WorldScale.y;
 
 			SDL_RenderTextureRotated(Application::GetCoreInstance().GetMainRenderer(),
 			                         renderer2D.RenderTexture, nullptr, &renderer2D.RenderRectangle,
-			                         transform.Rotation, nullptr, SDL_FLIP_NONE);
+			                         transform.WorldRotation, nullptr, SDL_FLIP_NONE);
 		});
 }
 
