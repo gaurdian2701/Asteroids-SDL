@@ -28,11 +28,8 @@ add_library(
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/Systems/RenderingSystem.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/CoreSystems/TextureResourceManager.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/CoreSystems/InputSystem.cpp
-        include/PrintDebug.h
-        include/Core/ECS/Systems/ParticleSystem.h
-        src/Core/ECS/Systems/ParticleSystem.cpp
-        include/Core/ECS/Systems/TransformSolverSystem.h
-        src/Core/ECS/Systems/TransformSolverSystem.cpp)
+                ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/Systems/ParticleSystem.cpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/Systems/TransformSolverSystem.cpp)
 
 EnableASANCompileOptions(${ENGINE_BINARY_NAME})
 

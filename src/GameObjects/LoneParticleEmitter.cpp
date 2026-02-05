@@ -11,11 +11,12 @@ void Asteroids::GameObjects::LoneParticleEmitter::Start()
 	AddComponent<Assets::Components::ParticleEmitter>();
 
 	auto& transform = GetComponent<Assets::Components::Transform>();
+	transform.Owner = this;
 
 	if (m_parent != nullptr)
 	{
 		transform.Parent = &m_parent->GetComponent<Assets::Components::Transform>();
-		transform.LocalPosition = glm::vec2(0.0f, -20.0f);
+		transform.LocalPosition = glm::vec2(0.0f, -2.0f);
 	}
 
 	auto& particleEmitter = GetComponent<Assets::Components::ParticleEmitter>();

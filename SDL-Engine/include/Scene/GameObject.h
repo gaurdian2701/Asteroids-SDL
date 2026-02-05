@@ -37,6 +37,11 @@ namespace Scene
 
         glm::vec2 m_translationVector = glm::vec2(0, 0);
 
+    public:
+#ifdef _DEBUG
+        std::string m_name = "GameObject";
+#endif
+
     private:
         std::uint32_t m_entityID = Core::INVALID_INDEX;
         Core::GameScene* m_sceneReference = nullptr;

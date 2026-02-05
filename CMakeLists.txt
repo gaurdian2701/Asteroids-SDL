@@ -13,7 +13,9 @@ add_executable(
         include/GameObjects/LoneParticleEmitter.h
         src/GameObjects/LoneParticleEmitter.cpp
         include/GameScenes/TestGameScene.h
-        src/GameScenes/TestGameScene.cpp)
+        src/GameScenes/TestGameScene.cpp
+        include/GameObjects/SimpleChild.h
+        src/GameObjects/SimpleChild.cpp)
 
 EnableASANCompileOptions(${EXE_NAME})
 

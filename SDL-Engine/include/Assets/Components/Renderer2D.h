@@ -12,6 +12,12 @@ namespace Assets::Components
             RenderTexture = nullptr;
         }
 
+        //Copy Constructor
+        Renderer2D(const Renderer2D& other)
+        {
+            Color = other.Color;
+        }
+
         //Move Constructor
         Renderer2D(Renderer2D&& other) noexcept
         {
@@ -25,14 +31,7 @@ namespace Assets::Components
             {
                 Color = other.Color;
             }
-
             return *this;
-        }
-
-        //Copy Constructor
-        Renderer2D(const Renderer2D& other)
-        {
-            Color = other.Color;
         }
 
         SDL_FColor Color = SDL_FColor(255, 255, 255, 255);

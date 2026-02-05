@@ -20,7 +20,7 @@ void Asteroids_App::InitializeAppSystems()
 void Asteroids_App::InitializeScene()
 {
     m_MainScene = new Asteroids::GameScenes::TestGameScene(100);
-    m_MainScene->AddGameObjectsToScene();
+    m_MainScene->InitializeGameObjects();
 }
 
 void Asteroids_App::StartScene()

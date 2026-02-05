@@ -11,6 +11,13 @@ Core::GameScene::GameScene(const std::uint32_t maxEntitiesInScene) : m_ECSManage
 	m_ECSManager.InitializeManager();
 }
 
+void Core::GameScene::InitializeGameObjects()
+{
+#ifdef _DEBUG
+	SetDebugNames();
+#endif
+}
+
 void Core::GameScene::RegisterComponents()
 {
 	m_ECSManager.RegisterComponent<Assets::Components::Transform>();

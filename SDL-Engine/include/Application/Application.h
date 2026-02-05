@@ -5,7 +5,6 @@
 class Renderer;
 class Window;
 
-
 class Application
 {
 public:
@@ -34,6 +33,11 @@ private:
 	void RefreshBackground();
 	void CheckForQuitEvent();
 	void UpdateCoreSystems();
+
+#ifdef _DEBUG
+	void StartNewImGUIFrame();
+	void PresentImGuiFrame();
+#endif
 
 public:
 	static const int SCREEN_WIDTH = 1000;

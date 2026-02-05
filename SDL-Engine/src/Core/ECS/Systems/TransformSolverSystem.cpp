@@ -33,7 +33,7 @@ inline void Core::ECS::Systems::TransformSolverSystem::SolveTransform(Assets::Co
 
 		//Solve Position last, you do:
 		//1. Scale local position by parent scale
-		glm::vec2 scaledTransform = someTransform.LocalPosition * someTransform.Parent->WorldScale;
+		glm::vec2 scaledPositionVector = someTransform.LocalPosition * someTransform.Parent->WorldScale;
 
 		//2. Rotate position vector by parent rotation:
 		//(xrot, yrot) = (xcost - ysint, xsint + ycost)
@@ -41,12 +41,12 @@ inline void Core::ECS::Systems::TransformSolverSystem::SolveTransform(Assets::Co
 		float cosAngle = std::cos(someTransform.Parent->WorldRotation);
 		float sinAngle = std::sin(someTransform.Parent->WorldRotation);
 
-		glm::vec2 rotatedTransform = glm::vec2(
-			scaledTransform.x * cosAngle - scaledTransform.y * sinAngle,
-			scaledTransform.x * sinAngle + scaledTransform.y * cosAngle);
+		glm::vec2 rotatedPositionVector = glm::vec2(
+			scaledPositionVector.x * cosAngle - scaledPositionVector.y * sinAngle,
+			scaledPositionVector.x * sinAngle + scaledPositionVector.y * cosAngle);
 
 		//3. Add parent position to the position vector
-		someTransform.WorldPosition = rotatedTransform + someTransform.Parent->WorldPosition;
+		someTransform.WorldPosition = rotatedPositionVector + someTransform.Parent->WorldPosition;
 	}
 	else
 	{

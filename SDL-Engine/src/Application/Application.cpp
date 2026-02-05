@@ -1,17 +1,20 @@
 #include "Application/Application.h"
-
 #include <cassert>
 #include <chrono>
 #include <iostream>
-
 #include <SDL3/SDL_init.h>
-
 #include "PrintDebug.h"
 #include "Core/CoreSystems/CoreSystemsHolder.h"
 
+#ifdef _DEBUG
+    #include "imgui.h"
+    #include "imgui_impl_sdl3.h"
+    #include "imgui_impl_sdlrenderer3.h"
+#endif
+
+
 
 static Application* CoreApplicationInstance = nullptr;
-
 const char* WINDOW_NAME = "Asteroids";
 
 Application::Application()
@@ -37,10 +40,16 @@ Application::Application()
         SDL_WINDOW_RESIZABLE);
 
     SDL_SetWindowMinimumSize(m_mainWindow, SCREEN_WIDTH, SCREEN_HEIGHT);
-
     m_mainRenderer = SDL_CreateRenderer(m_mainWindow, nullptr);
-
     assert(m_mainWindow != nullptr && "Window Creation Failed!");
+
+#ifdef _DEBUG
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    ImGui_ImplSDL3_InitForSDLRenderer(m_mainWindow, m_mainRenderer);
+    ImGui_ImplSDLRenderer3_Init(m_mainRenderer);
+#endif
 }
 
 Application::~Application()
@@ -63,6 +72,12 @@ void Application::Init()
 
 void Application::InitiateShutdown()
 {
+#ifdef _DEBUG
+    ImGui_ImplSDLRenderer3_Shutdown();
+    ImGui_ImplSDL3_Shutdown();
+    ImGui::DestroyContext();
+#endif
+
     SDL_DestroyRenderer(m_mainRenderer);
     SDL_DestroyWindow(m_mainWindow);
     SDL_Quit();
@@ -84,10 +99,17 @@ void Application::Run()
         std::chrono::duration<float> deltaTime = currentFrameTime - lastFrameTime;
         lastFrameTime = currentFrameTime;
 
+#ifdef _DEBUG
+        StartNewImGUIFrame();
+#endif
         RefreshBackground();
 
         UpdateCoreSystems();
         GetApplicationInstance()->UpdateApplication(deltaTime.count());
+
+#ifdef _DEBUG
+        PresentImGuiFrame();
+#endif
 
         SDL_RenderPresent(m_mainRenderer);
     }
@@ -113,6 +135,10 @@ void Application::CheckForQuitEvent()
         {
             m_isRunning = false;
         }
+
+#ifdef _DEBUG
+        ImGui_ImplSDL3_ProcessEvent(&m_mainEventCatcher);
+#endif
     }
 }
 
@@ -121,6 +147,21 @@ void Application::RefreshBackground()
     SDL_SetRenderDrawColor(m_mainRenderer, m_backgroundColor.r, m_backgroundColor.g, m_backgroundColor.b, m_backgroundColor.a);
     SDL_RenderClear(m_mainRenderer);
 }
+
+#ifdef _DEBUG
+void Application::StartNewImGUIFrame()
+{
+    ImGui_ImplSDLRenderer3_NewFrame();
+    ImGui_ImplSDL3_NewFrame();
+    ImGui::NewFrame();
+}
+
+void Application::PresentImGuiFrame()
+{
+    ImGui::Render();
+    ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), m_mainRenderer);
+}
+#endif
 
 SDL_Window* Application::GetMainWindow() const
 {

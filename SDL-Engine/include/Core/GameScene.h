@@ -16,9 +16,9 @@ namespace Core
         explicit GameScene(const std::uint32_t maxEntitiesInScene);
         virtual ~GameScene() = default;
 
-        virtual void AddGameObjectsToScene(){}
+        virtual void InitializeGameObjects();
         void Start();
-        void Update(const float deltaTime);
+        virtual void Update(const float deltaTime);
 
         ECS::ECSManager& GetECSManager();
 
@@ -71,12 +71,19 @@ namespace Core
         void UnTrackGameObject(Scene::GameObject* someGameObject);
         void CleanupScene();
 
+    protected:
+#ifdef _DEBUG
+        virtual void SetDebugNames(){}
+#endif
+
     private:
         void RegisterGameObject(Scene::GameObject* someGameObject);
         void RegisterComponents();
 
+    protected:
+        std::vector<Scene::GameObject*> m_gameObjectsInScene;
+
     private:
         ECS::ECSManager m_ECSManager;
-        std::vector<Scene::GameObject*> m_gameObjectsInScene;
     };
 }
