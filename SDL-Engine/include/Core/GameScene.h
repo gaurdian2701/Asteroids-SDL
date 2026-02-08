@@ -16,11 +16,22 @@ namespace Core
         explicit GameScene(const std::uint32_t maxEntitiesInScene);
         virtual ~GameScene() = default;
 
-        virtual void InitializeGameObjects();
-        void Start();
+        virtual void CreateGameObjects();
+        virtual void InitializeGameObjects(){}
+        virtual void Start();
         virtual void Update(const float deltaTime);
 
         ECS::ECSManager& GetECSManager();
+
+        void DeleteGameObject(Scene::GameObject* someGameObject);
+        inline void UnTrackGameObject(Scene::GameObject* someGameObject);
+        void GarbageCollect();
+        void CleanupScene();
+
+#ifdef _DEBUG
+        virtual void SetGameObjectDebugNames(){}
+#endif
+
 
         static inline const glm::vec2& GetMaxCartesianLimits()
         {
@@ -34,7 +45,6 @@ namespace Core
             static glm::vec2 limits = glm::vec2(-Application::SCREEN_WIDTH/2,Application::SCREEN_HEIGHT/2);
             return limits;
         }
-
 
         template<typename T>
         void AddComponentToEntity(Scene::GameObject& someGameObject, const std::uint32_t someEntityID)
@@ -66,14 +76,10 @@ namespace Core
             return static_cast<GameObjectType*>(m_gameObjectsInScene.back());
         }
 
-        void DeleteGameObject(Scene::GameObject* someGameObject);
-
-        void UnTrackGameObject(Scene::GameObject* someGameObject);
-        void CleanupScene();
 
     protected:
 #ifdef _DEBUG
-        virtual void SetDebugNames(){}
+        virtual void UpdateImGuiDebugs();
 #endif
 
     private:

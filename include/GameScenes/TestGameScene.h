@@ -16,16 +16,14 @@ namespace Asteroids::GameScenes
     public:
         explicit TestGameScene(int maxGameObjects) : GameScene(maxGameObjects) {}
         ~TestGameScene() override  = default;
+        void Start() override;
         void Update(const float deltaTime) override;
+        void CreateGameObjects() override;
         void InitializeGameObjects() override;
 
         protected:
 #ifdef _DEBUG
-        void SetDebugNames() override;
-#endif
-    private:
-#ifdef _DEBUG
-        void UpdateImGuiDebugs();
+        void SetGameObjectDebugNames() override;
 #endif
 
     private:

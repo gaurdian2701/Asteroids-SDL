@@ -25,8 +25,7 @@ void Core::ECS::Systems::ParticleSystem::BeginSystem()
 					glm::vec2(randomDistribution(m_randomOffsetGenerator),
 					randomDistribution(m_randomOffsetGenerator));
 
-				particle.CurrentPosition = particle.PreviousPosition;
-				particle.CurrentPosition += particle.InitialVelocity;
+				particle.CurrentPosition = particle.PreviousPosition - transform.Up * particle.InitialVelocity;
 
 				//Rendering
 				RenderParticle(particleEmitter, particle);
@@ -62,8 +61,7 @@ void Core::ECS::Systems::ParticleSystem::UpdateSystem(const float deltaTime)
 					glm::vec2(randomDistribution(m_randomOffsetGenerator),
 					randomDistribution(m_randomOffsetGenerator));
 
-					particle.CurrentPosition = particle.PreviousPosition;
-					particle.CurrentPosition += particle.InitialVelocity;
+					particle.CurrentPosition = particle.PreviousPosition - transform.Up * particle.InitialVelocity;
 					particle.CurrentLifeTime = particleEmitter.ParticleLifetime;
 				}
 

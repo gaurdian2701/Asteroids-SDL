@@ -7,10 +7,10 @@ namespace Asteroids::GameObjects
 	class LoneParticleEmitter : public Scene::GameObject
 	{
 	public:
+		LoneParticleEmitter() = default;
+		~LoneParticleEmitter() override = default;
+
 		void Start() override;
 		void Update(float deltaTime) override;
-
-	public:
-		GameObject* m_parent = nullptr;
 	};
 }

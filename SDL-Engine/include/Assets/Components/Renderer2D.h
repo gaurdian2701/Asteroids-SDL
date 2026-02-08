@@ -16,12 +16,28 @@ namespace Assets::Components
         Renderer2D(const Renderer2D& other)
         {
             Color = other.Color;
+            RenderRectangle = other.RenderRectangle;
+            RenderTexture = other.RenderTexture;
         }
 
         //Move Constructor
         Renderer2D(Renderer2D&& other) noexcept
         {
             Color = other.Color;
+            RenderRectangle = other.RenderRectangle;
+            RenderTexture = other.RenderTexture;
+        }
+
+        //Copy Assignment Operator
+        Renderer2D& operator=(const Renderer2D& other)
+        {
+            if (this != &other)
+            {
+                Color = other.Color;
+                RenderRectangle = other.RenderRectangle;
+                RenderTexture = other.RenderTexture;
+            }
+            return *this;
         }
 
         //Move Assignment Operator
@@ -30,6 +46,8 @@ namespace Assets::Components
             if (this != &other)
             {
                 Color = other.Color;
+                RenderRectangle = other.RenderRectangle;
+                RenderTexture = other.RenderTexture;
             }
             return *this;
         }

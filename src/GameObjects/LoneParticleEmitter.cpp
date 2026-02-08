@@ -3,7 +3,7 @@
 #include "Assets/Components/Transform.h"
 #include "Core/CoreSystems/TextureResourceManager.h"
 
-const inline std::string ROCKET_BOOSTER_PARTICLE_FILEPATH = "images/img_fireCircle.png";
+const inline std::string PARTICLE_TEXTURE_FILEPATH = "images/img_fireCircle.png";
 
 void Asteroids::GameObjects::LoneParticleEmitter::Start()
 {
@@ -12,25 +12,26 @@ void Asteroids::GameObjects::LoneParticleEmitter::Start()
 
 	auto& transform = GetComponent<Assets::Components::Transform>();
 	transform.Owner = this;
+	transform.LocalPosition = glm::vec2(0.0f, -0.5f);
+	transform.LocalScale = glm::vec2(1.0f, 1.0f);
 
 	if (m_parent != nullptr)
 	{
-		transform.Parent = &m_parent->GetComponent<Assets::Components::Transform>();
-		transform.LocalPosition = glm::vec2(0.0f, -2.0f);
+		transform.SetParent(m_parent);
 	}
 
 	auto& particleEmitter = GetComponent<Assets::Components::ParticleEmitter>();
 
-	particleEmitter.InitializeEmitter(5,
+	particleEmitter.InitializeEmitter(10,
 		std::forward<glm::vec2>(glm::vec2(0.0f)),
-		10,
-		std::forward<glm::vec2>(glm::vec2(0.05f, -0.05f)),
+		5,
+		0.05f,
 		0.1f,
 		5.0f);
 
 	particleEmitter.Color = SDL_FColor(255, 0, 0, 255);
 	particleEmitter.RenderTexture = Core::CoreSystems::TextureResourceManager::GetInstance()
-	.TryLoadAndGetTexture(ROCKET_BOOSTER_PARTICLE_FILEPATH);
+	.TryLoadAndGetTexture(PARTICLE_TEXTURE_FILEPATH);
 	particleEmitter.Owner = this;
 }
 

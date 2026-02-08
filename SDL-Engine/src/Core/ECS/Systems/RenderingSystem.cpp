@@ -25,7 +25,7 @@ void Core::ECS::Systems::RenderingSystem::UpdateSystem(const float deltaTime)
 
 			SDL_RenderTextureRotated(Application::GetCoreInstance().GetMainRenderer(),
 			                         renderer2D.RenderTexture, nullptr, &renderer2D.RenderRectangle,
-			                         transform.WorldRotation, nullptr, SDL_FLIP_NONE);
+			                         -glm::degrees(transform.WorldRotation), nullptr, SDL_FLIP_NONE);
 		});
 }
 

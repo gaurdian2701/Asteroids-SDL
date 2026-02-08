@@ -8,10 +8,6 @@ namespace Asteroids::GameObjects
     public:
         SimpleChild() = default;
         ~SimpleChild() override = default;
-
         void Start() override;
-
-    public:
-        GameObject* m_parent = nullptr;
     };
 }

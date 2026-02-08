@@ -20,7 +20,11 @@ void Asteroids_App::InitializeAppSystems()
 void Asteroids_App::InitializeScene()
 {
     m_MainScene = new Asteroids::GameScenes::TestGameScene(100);
+    m_MainScene->CreateGameObjects();
     m_MainScene->InitializeGameObjects();
+#ifdef _DEBUG
+    m_MainScene->SetGameObjectDebugNames();
+#endif
 }
 
 void Asteroids_App::StartScene()
@@ -31,6 +35,7 @@ void Asteroids_App::StartScene()
 void Asteroids_App::UpdateApplication(const float deltaTime)
 {
     m_MainScene->Update(deltaTime);
+    m_MainScene->GarbageCollect();
 }
 
 void Asteroids_App::EndApplication()

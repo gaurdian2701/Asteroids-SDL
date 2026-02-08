@@ -61,12 +61,12 @@ namespace Assets::Components
 			return *this;
 		}
 
-		glm::vec2 InitialVelocity = glm::vec2(0.0f);
 		glm::vec2 CurrentPosition = glm::vec2(0.0f);
 		glm::vec2 PreviousPosition = glm::vec2(0.0f);
 
 		float CurrentLifeTime = 0.0f;
 		float ParticleSize = 0.0f;
+		float InitialVelocity = 0.0f;
 	};
 
 	struct ParticleEmitter
@@ -81,7 +81,7 @@ namespace Assets::Components
 		void InitializeEmitter(uint8_t numberOfParticles,
 			glm::vec2&& someStartingOffset,
 			uint16_t someMaxDeviation,
-			glm::vec2&& someInitialVelocity,
+			float someInitialVelocity,
 			float someLifetime,
 			float someParticleSize)
 		{

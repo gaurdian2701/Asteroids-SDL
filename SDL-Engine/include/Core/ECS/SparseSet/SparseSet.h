@@ -12,7 +12,7 @@ namespace Core::ECS
 	public:
 		SparseSet(const std::uint32_t someMaxEntityCount) : m_maxEntityCount(someMaxEntityCount)
 		{
-			m_sparseEntityArray.resize(m_maxEntityCount, INVALID_INDEX);
+			m_sparseEntityArray.resize(m_maxEntityCount, INVALID_ENTITY_ID);
 		}
 
 		~SparseSet() = default;
@@ -24,7 +24,7 @@ namespace Core::ECS
 				m_sparseEntityArray.resize(entityID);
 			}
 
-			if (m_sparseEntityArray[entityID] != INVALID_INDEX)
+			if (m_sparseEntityArray[entityID] != INVALID_ENTITY_ID)
 			{
 				return;
 			}
@@ -44,7 +44,7 @@ namespace Core::ECS
 
 			m_denseEntityArray.pop_back();
 			m_denseComponentArray.pop_back();
-			m_sparseEntityArray[entityID] = INVALID_INDEX;
+			m_sparseEntityArray[entityID] = INVALID_ENTITY_ID;
 		}
 
 		std::vector<std::uint32_t>& GetSparseEntityArray() override

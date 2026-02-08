@@ -1,8 +1,12 @@
 ﻿#include "Core/GameScene.h"
+#include <filesystem>
 #include "Assets/Components/ParticleEmitter.h"
 #include "Scene/GameObject.h"
 #include "Assets/Components/Transform.h"
 #include "Assets/Components/Renderer2D.h"
+#include "imgui.h"
+
+const inline float LOCAL_SCALING_FACTOR = 0.01f;
 
 Core::GameScene::GameScene(const std::uint32_t maxEntitiesInScene) : m_ECSManager(maxEntitiesInScene)
 {
@@ -11,10 +15,10 @@ Core::GameScene::GameScene(const std::uint32_t maxEntitiesInScene) : m_ECSManage
 	m_ECSManager.InitializeManager();
 }
 
-void Core::GameScene::InitializeGameObjects()
+void Core::GameScene::CreateGameObjects()
 {
 #ifdef _DEBUG
-	SetDebugNames();
+	SetGameObjectDebugNames();
 #endif
 }
 
@@ -71,9 +75,11 @@ void Core::GameScene::Update(const float deltaTime)
 
 	//Update ECS Manager
 	m_ECSManager.UpdateManager(deltaTime);
+
+#ifdef _DEBUG
+	UpdateImGuiDebugs();
+#endif
 }
-
-
 
 Core::ECS::ECSManager& Core::GameScene::GetECSManager()
 {
@@ -88,24 +94,26 @@ void Core::GameScene::DeleteGameObject(Scene::GameObject* someGameObject)
 		if (someGameObject->m_componentBitSet[typeIndex])
 		{
 			RemoveComponentFromEntityUsingTypeIndex(someGameObject->m_entityID, typeIndex);
+			someGameObject->m_componentBitSet[typeIndex] = false;
 		}
 	}
 
-	m_ECSManager.FreeEntityID(someGameObject->GetEntityID()); //Untrack entityID
+	UnTrackGameObject(someGameObject); //Untrack entityID
 	someGameObject->m_sceneReference = nullptr;
 
 	//Remove from scene list
 	int gameObjectIndexInSceneList = 0;
 	for (const auto gameObject : m_gameObjectsInScene)
 	{
-		if (gameObject->GetEntityID() == someGameObject->GetEntityID())
+		if (gameObject != nullptr && gameObject->GetEntityID() == someGameObject->GetEntityID())
 		{
 			break;
 		}
 		gameObjectIndexInSceneList++;
 	}
-	m_gameObjectsInScene.erase(m_gameObjectsInScene.begin() + gameObjectIndexInSceneList);
 
+	//Set gameobject reference to nullptr and cleanup after
+	m_gameObjectsInScene[gameObjectIndexInSceneList] = nullptr;
 	delete someGameObject;
 }
 
@@ -114,11 +122,56 @@ void Core::GameScene::UnTrackGameObject(Scene::GameObject* someGameObject)
 	m_ECSManager.FreeEntityID(someGameObject->GetEntityID());
 }
 
+void Core::GameScene::GarbageCollect()
+{
+	int gameObjectIndexInSceneList = 0;
+	std::vector<Scene::GameObject*>::const_iterator first = m_gameObjectsInScene.begin();
+
+	for (auto& gameObject : m_gameObjectsInScene)
+	{
+		if (gameObject == nullptr)
+		{
+			m_gameObjectsInScene.erase(first + gameObjectIndexInSceneList, first + gameObjectIndexInSceneList + 1);
+		}
+		gameObjectIndexInSceneList++;
+	}
+}
+
 void Core::GameScene::CleanupScene()
 {
-	for (const auto gameObject : m_gameObjectsInScene)
+	for (auto& gameObject : m_gameObjectsInScene)
 	{
 		DeleteGameObject(gameObject);
 	}
+
+	m_gameObjectsInScene.erase(m_gameObjectsInScene.begin(), m_gameObjectsInScene.end());
 }
+
+#ifdef _DEBUG
+void Core::GameScene::UpdateImGuiDebugs()
+{
+	ImGui::Begin("Debug");
+	ImGui::Text("FRAME RATE:");
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)\n",
+	1000.0f / ImGui::GetIO().Framerate,
+	ImGui::GetIO().Framerate);
+
+	ImGui::Text("CHANGEABLE DEBUGS: ");
+
+	for (auto& gameObject: m_gameObjectsInScene)
+	{
+		auto& transform = gameObject->GetComponent<Assets::Components::Transform>();
+
+		ImGui::PushID(gameObject->m_name.c_str());
+		ImGui::Text(gameObject->m_name.c_str());
+		ImGui::SliderFloat2("Local Position", &transform.LocalPosition.x, -1000.0f, 1000.0f);
+		ImGui::SliderFloat2("Local Scale", &transform.LocalScale.x, -100.0f, 100.0f);
+		ImGui::SliderFloat("Local Rotation", &transform.LocalRotation, -1000.0f, 1000.0f);
+		ImGui::Separator();
+		ImGui::PopID();
+	}
+	ImGui::End();
+}
+#endif
+
 

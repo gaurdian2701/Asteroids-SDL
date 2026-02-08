@@ -10,7 +10,7 @@ namespace Assets::Components
     {
         ~Transform()
         {
-            Parent = nullptr;
+            ParentEntity = -1;
         }
 
         //Default Constructor
@@ -32,7 +32,7 @@ namespace Assets::Components
             LocalScale = other.LocalScale;
             LocalRotation = other.LocalRotation;
 
-            Parent = other.Parent;
+            ParentEntity = other.ParentEntity;
             Owner = other.Owner;
         }
 
@@ -49,7 +49,7 @@ namespace Assets::Components
             LocalScale = other.LocalScale;
             LocalRotation = other.LocalRotation;
 
-            Parent = other.Parent;
+            ParentEntity = other.ParentEntity;
             Owner = other.Owner;
         }
 
@@ -64,7 +64,7 @@ namespace Assets::Components
             LocalScale = other.LocalScale;
             LocalRotation = other.LocalRotation;
 
-            Parent = other.Parent;
+            ParentEntity = other.ParentEntity;
             Owner = other.Owner;
         }
 
@@ -83,23 +83,29 @@ namespace Assets::Components
                 LocalScale = other.LocalScale;
                 LocalRotation = other.LocalRotation;
 
-                Parent = other.Parent;
+                ParentEntity = other.ParentEntity;
                 Owner = other.Owner;
             }
             return *this;
         }
 
-        Transform* Parent = nullptr;
+        void SetParent(Scene::GameObject* parent)
+        {
+            ParentEntity = parent->GetEntityID();
+        }
+
+        Scene::GameObject* Owner = nullptr;
 
         glm::vec2 WorldPosition = glm::vec2(0.0f);
         glm::vec2 WorldScale = glm::vec2(1.0f);
-        float WorldRotation = 0.0f;
-
         glm::vec2 LocalPosition = glm::vec2(0.0f);
         glm::vec2 LocalScale = glm::vec2(1.0f);
-        float LocalRotation = 0.0f;
+        glm::vec2 Up = glm::vec2(0.0f);
+        glm::vec2 Right = glm::vec2(0.0f);
 
-        Scene::GameObject* Owner = nullptr;
+        float LocalRotation = 0.0f;
+        float WorldRotation = 0.0f;
+        std::uint32_t ParentEntity = -1;
 
     };
 }

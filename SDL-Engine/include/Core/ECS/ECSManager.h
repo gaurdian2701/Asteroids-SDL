@@ -13,7 +13,7 @@ namespace Core::ECS
 {
     class System;
 
-    constexpr std::size_t MAX_COMPONENT_TYPES = 32;
+    constexpr std::size_t MAX_COMPONENT_TYPES = 3;
 
     class ECSManager
     {
@@ -137,7 +137,7 @@ namespace Core::ECS
 
             if (componentTypeIndex == MAX_COMPONENT_TYPES)
             {
-                return INVALID_INDEX;
+                return INVALID_ENTITY_ID;
             }
             return componentTypeIndex;
         }

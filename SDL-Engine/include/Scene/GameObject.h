@@ -41,9 +41,10 @@ namespace Scene
 #ifdef _DEBUG
         std::string m_name = "GameObject";
 #endif
+        GameObject* m_parent = nullptr;
 
     private:
-        std::uint32_t m_entityID = Core::INVALID_INDEX;
+        std::uint32_t m_entityID = Core::INVALID_ENTITY_ID;
         Core::GameScene* m_sceneReference = nullptr;
         std::bitset<Core::ECS::MAX_COMPONENT_TYPES> m_componentBitSet;
 
