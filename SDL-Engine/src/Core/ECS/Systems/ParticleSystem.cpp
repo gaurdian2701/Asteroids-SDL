@@ -14,18 +14,18 @@ void Core::ECS::Systems::ParticleSystem::BeginSystem()
 	ECSManager::GetInstance().ForEach<Assets::Components::Transform, Assets::Components::ParticleEmitter>(
 		[&](const Assets::Components::Transform &transform, Assets::Components::ParticleEmitter &particleEmitter)
 		{
-			std::uniform_int_distribution<int> randomDistribution(0, particleEmitter.MaxDeviation);
+			std::uniform_int_distribution<int> randomDistribution(-particleEmitter.MaxDeviation, particleEmitter.MaxDeviation);
 
 			for (auto &particle: particleEmitter.Particles)
 			{
 				//Simulation
 				//Set particle's initial position according to the initial velocity.
 				//The positions are relative to the particle emitter's world position
-				particle.PreviousPosition = transform.WorldPosition + particleEmitter.StartingOffset +
+				particle.CurrentPosition = transform.WorldPosition + particleEmitter.StartingOffset +
 					glm::vec2(randomDistribution(m_randomOffsetGenerator),
 					randomDistribution(m_randomOffsetGenerator));
 
-				particle.CurrentPosition = particle.PreviousPosition - transform.Up * particle.InitialVelocity;
+				particle.PreviousPosition = particle.CurrentPosition + transform.Up * particle.InitialVelocity;
 
 				//Rendering
 				RenderParticle(particleEmitter, particle);
@@ -41,7 +41,7 @@ void Core::ECS::Systems::ParticleSystem::UpdateSystem(const float deltaTime)
 	ECSManager::GetInstance().ForEach<Assets::Components::Transform, Assets::Components::ParticleEmitter>(
 		[&, this](Assets::Components::Transform &transform, Assets::Components::ParticleEmitter &particleEmitter)
 		{
-			std::uniform_int_distribution<int> randomDistribution(0, particleEmitter.MaxDeviation);
+			std::uniform_int_distribution<int> randomDistribution(-particleEmitter.MaxDeviation, particleEmitter.MaxDeviation);
 
 			for (auto &particle: particleEmitter.Particles)
 			{
@@ -57,11 +57,11 @@ void Core::ECS::Systems::ParticleSystem::UpdateSystem(const float deltaTime)
 				if (particle.CurrentLifeTime < 0.0f)
 				{
 					//Reset particle position next to particle emitter
-					particle.PreviousPosition = transform.WorldPosition + particleEmitter.StartingOffset +
+					particle.CurrentPosition = transform.WorldPosition + particleEmitter.StartingOffset +
 					glm::vec2(randomDistribution(m_randomOffsetGenerator),
 					randomDistribution(m_randomOffsetGenerator));
 
-					particle.CurrentPosition = particle.PreviousPosition - transform.Up * particle.InitialVelocity;
+					particle.PreviousPosition = particle.CurrentPosition + transform.Up * particle.InitialVelocity;
 					particle.CurrentLifeTime = particleEmitter.ParticleLifetime;
 				}
 
