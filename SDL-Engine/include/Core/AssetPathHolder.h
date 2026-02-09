@@ -7,8 +7,6 @@
 
 namespace Core
 {
-	const inline std::string ROOT_PATH = "../../";
-
 	class AssetPathHolder
 	{
 	private:
@@ -24,17 +22,18 @@ namespace Core
 
 		void UpdateAssetFolderPath(const std::string someAssetFolderPath)
 		{
-			m_assetFolderPath = ROOT_PATH + someAssetFolderPath;
+			m_assetFolderPath = someAssetFolderPath;
 		}
 
 		std::string GetAssetPath(const std::string someAssetFilePath)
 		{
-			std::filesystem::path fullPath = std::filesystem::absolute(m_assetFolderPath + someAssetFilePath);
-			PrintDebug(reinterpret_cast<char const *>(fullPath.c_str()), "\n");
+			std::filesystem::path fullPath = std::filesystem::current_path() / m_assetFolderPath / someAssetFilePath;
+			fullPath = fullPath.lexically_normal();
+			PrintDebug("%s\n", fullPath.string().c_str());
 			return fullPath.string();
 		}
 
 	private:
-		std::string m_assetFolderPath = "";
+		std::filesystem::path m_assetFolderPath = "";
 	};
 }

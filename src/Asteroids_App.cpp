@@ -1,9 +1,7 @@
 ﻿#include "Asteroids_App.h"
 #include "Core/AssetPathHolder.h"
-#include "GameObjects/LoneParticleEmitter.h"
-#include "GameObjects/SpaceShip.h"
 #include "Scene/GameObject.h"
-#include "GameScenes/TestGameScene.h"
+#include "GameScenes/MainGameScene.h"
 
 void Asteroids_App::BeginApplication()
 {
@@ -19,9 +17,10 @@ void Asteroids_App::InitializeAppSystems()
 
 void Asteroids_App::InitializeScene()
 {
-    m_MainScene = new Asteroids::GameScenes::TestGameScene(100);
+    m_MainScene = new Asteroids::GameScenes::MainGameScene(100);
     m_MainScene->CreateGameObjects();
-    m_MainScene->InitializeGameObjects();
+    m_MainScene->AddComponentsBeforeStartup();
+    m_MainScene->InitializeGameObjectReferences();
 #ifdef _DEBUG
     m_MainScene->SetGameObjectDebugNames();
 #endif

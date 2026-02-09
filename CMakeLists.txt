@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.24)
 set(CMAKE_CXX_STANDARD 23)
 set(EXE_NAME Asteroids_App)
 project(${EXE_NAME})
@@ -10,12 +10,9 @@ add_executable(
             ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/Asteroids_App.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SpaceShip.cpp
-        include/GameObjects/LoneParticleEmitter.h
-        src/GameObjects/LoneParticleEmitter.cpp
-        include/GameScenes/TestGameScene.h
-        src/GameScenes/TestGameScene.cpp
-        include/GameObjects/SimpleChild.h
-        src/GameObjects/SimpleChild.cpp)
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/LoneParticleEmitter.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameScenes/MainGameScene.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SimpleChild.cpp)
 
 EnableASANCompileOptions(${EXE_NAME})
 

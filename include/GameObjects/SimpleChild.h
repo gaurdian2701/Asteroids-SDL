@@ -8,6 +8,8 @@ namespace Asteroids::GameObjects
     public:
         SimpleChild() = default;
         ~SimpleChild() override = default;
+
+        void AddComponentsBeforeStartup() override;
         void Start() override;
     };
 }

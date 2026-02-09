@@ -9,10 +9,15 @@
 constexpr inline glm::vec2 SPACESHIP_STARTING_POINT = glm::vec2(0, 0);
 const inline std::string SPACESHIP_IMAGE_FILEPATH = "images/img_spaceship.png";
 
-void Asteroids::GameObjects::SpaceShip::Start()
+void Asteroids::GameObjects::SpaceShip::AddComponentsBeforeStartup()
 {
 	AddComponent<Assets::Components::Transform>();
 	AddComponent<Assets::Components::Renderer2D>();
+}
+
+void Asteroids::GameObjects::SpaceShip::Start()
+{
+	GameObject::Start();
 
 	auto& renderer = GetComponent<Assets::Components::Renderer2D>();
 

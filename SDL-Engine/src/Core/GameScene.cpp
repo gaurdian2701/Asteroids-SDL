@@ -15,13 +15,6 @@ Core::GameScene::GameScene(const std::uint32_t maxEntitiesInScene) : m_ECSManage
 	m_ECSManager.InitializeManager();
 }
 
-void Core::GameScene::CreateGameObjects()
-{
-#ifdef _DEBUG
-	SetGameObjectDebugNames();
-#endif
-}
-
 void Core::GameScene::RegisterComponents()
 {
 	m_ECSManager.RegisterComponent<Assets::Components::Transform>();
@@ -33,6 +26,14 @@ void Core::GameScene::RegisterGameObject(Scene::GameObject *someGameObject)
 {
 	someGameObject->m_sceneReference = this;
 	someGameObject->m_entityID = GetECSManager().GenerateEntityID();
+}
+
+void Core::GameScene::AddComponentsBeforeStartup()
+{
+	for (auto& gameObject : m_gameObjectsInScene)
+	{
+		gameObject->AddComponentsBeforeStartup();
+	}
 }
 
 void Core::GameScene::RemoveComponentFromEntityUsingTypeIndex(const std::uint32_t someEntityID,

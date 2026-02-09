@@ -5,10 +5,16 @@
 
 const inline std::string TEXTURE_FILEPATH = "images/img_spaceship.png";
 
-void Asteroids::GameObjects::SimpleChild::Start()
+
+void Asteroids::GameObjects::SimpleChild::AddComponentsBeforeStartup()
 {
     AddComponent<Assets::Components::Transform>();
     AddComponent<Assets::Components::Renderer2D>();
+}
+
+void Asteroids::GameObjects::SimpleChild::Start()
+{
+    GameObject::Start();
 
     auto& transform = GetComponent<Assets::Components::Transform>();
     transform.LocalPosition = glm::vec2(0.0f, -1.0f);

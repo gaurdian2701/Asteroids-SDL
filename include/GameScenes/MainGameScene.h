@@ -11,15 +11,15 @@ namespace Asteroids::GameObjects
 
 namespace Asteroids::GameScenes
 {
-    class TestGameScene : public Core::GameScene
+    class MainGameScene : public Core::GameScene
     {
     public:
-        explicit TestGameScene(int maxGameObjects) : GameScene(maxGameObjects) {}
-        ~TestGameScene() override  = default;
+        explicit MainGameScene(int maxGameObjects) : GameScene(maxGameObjects) {}
+        ~MainGameScene() override  = default;
+        void CreateGameObjects() override;
+        void InitializeGameObjectReferences() override;
         void Start() override;
         void Update(const float deltaTime) override;
-        void CreateGameObjects() override;
-        void InitializeGameObjects() override;
 
         protected:
 #ifdef _DEBUG

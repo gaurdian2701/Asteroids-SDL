@@ -6,10 +6,11 @@ project(${PROJECT_NAME})
 
 set(ENGINE_BINARY_NAME SDLEngineLib)
 set(VENDOR_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor/include)
-set(BUILD_SHARED_LIBS ON)
+set(BUILD_SHARED_LIBS OFF)
+set(ENABLE_ASAN OFF CACHE BOOL "Use Windows Address Sanitizer?")
 
 function(EnableASANCompileOptions targetProject)
-    if(${CMAKE_GENERATOR} MATCHES "Visual Studio")
+    if(${CMAKE_GENERATOR} MATCHES "Visual Studio" AND ENABLE_ASAN)
         target_compile_options(
                 ${targetProject}
                     PRIVATE

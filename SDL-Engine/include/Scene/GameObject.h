@@ -12,6 +12,8 @@ namespace Scene
         GameObject() = default;
         virtual ~GameObject() = default;
 
+        virtual void AddComponentsBeforeStartup(){}
+
         virtual void Start(){}
 
         virtual void Update(const float deltaTime){}

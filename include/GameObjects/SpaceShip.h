@@ -9,6 +9,7 @@ namespace Asteroids::GameObjects
 		SpaceShip() = default;
 		~SpaceShip() override = default;
 
+		void AddComponentsBeforeStartup() override;
 		void Start() override;
 		void Update(float deltaTime) override;
 

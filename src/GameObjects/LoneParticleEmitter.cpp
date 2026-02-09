@@ -5,10 +5,15 @@
 
 const inline std::string PARTICLE_TEXTURE_FILEPATH = "images/img_fireCircle.png";
 
-void Asteroids::GameObjects::LoneParticleEmitter::Start()
+void Asteroids::GameObjects::LoneParticleEmitter::AddComponentsBeforeStartup()
 {
 	AddComponent<Assets::Components::Transform>();
 	AddComponent<Assets::Components::ParticleEmitter>();
+}
+
+void Asteroids::GameObjects::LoneParticleEmitter::Start()
+{
+	GameObject::Start();
 
 	auto& transform = GetComponent<Assets::Components::Transform>();
 	transform.Owner = this;
@@ -29,7 +34,7 @@ void Asteroids::GameObjects::LoneParticleEmitter::Start()
 		0.1f,
 		5.0f);
 
-	particleEmitter.Color = SDL_FColor(255, 0, 0, 255);
+	particleEmitter.Color = SDL_FColor(251, 115, 13, 255);
 	particleEmitter.RenderTexture = Core::CoreSystems::TextureResourceManager::GetInstance()
 	.TryLoadAndGetTexture(PARTICLE_TEXTURE_FILEPATH);
 	particleEmitter.Owner = this;

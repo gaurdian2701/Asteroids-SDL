@@ -16,8 +16,9 @@ namespace Core
         explicit GameScene(const std::uint32_t maxEntitiesInScene);
         virtual ~GameScene() = default;
 
-        virtual void CreateGameObjects();
-        virtual void InitializeGameObjects(){}
+        virtual void CreateGameObjects() = 0;
+        virtual void AddComponentsBeforeStartup();
+        virtual void InitializeGameObjectReferences(){}
         virtual void Start();
         virtual void Update(const float deltaTime);
 
@@ -31,7 +32,6 @@ namespace Core
 #ifdef _DEBUG
         virtual void SetGameObjectDebugNames(){}
 #endif
-
 
         static inline const glm::vec2& GetMaxCartesianLimits()
         {
