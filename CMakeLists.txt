@@ -26,6 +26,13 @@ target_link_libraries(
             PRIVATE
                 SDLEngineLib)
 
+add_custom_command(TARGET ${EXE_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} ARGS -E make_directory "$<TARGET_FILE_DIR:${EXE_NAME}>/Assets"
+        COMMAND ${CMAKE_COMMAND} ARGS -E copy_directory
+            "${CMAKE_SOURCE_DIR}/Assets"
+            "$<TARGET_FILE_DIR:${EXE_NAME}>/Assets"
+)
+
 
 
 
