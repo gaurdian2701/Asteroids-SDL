@@ -34,7 +34,7 @@ inline void Core::ECS::Systems::TransformSolverSystem::SolveTransform(Assets::Co
 
 		//Solve Position:
 		//1. Scale local position by parent scale
-		glm::vec2 scaledPositionVector = someTransform.LocalPosition * parentTransform.WorldScale;
+		glm::vec2 scaledPositionVector = someTransform.LocalPosition * parentTransform.WorldScale * 0.01f;
 
 		//2. Rotate position vector by parent rotation:
 		//(xrot, yrot) = (xcost - ysint, xsint + ycost) t is in radians

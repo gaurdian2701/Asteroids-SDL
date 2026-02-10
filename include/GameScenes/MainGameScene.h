@@ -27,6 +27,7 @@ namespace Asteroids::GameScenes
     private:
         GameObjects::SpaceShip* m_spaceShip = nullptr;
         GameObjects::LoneParticleEmitter* m_loneEmitter = nullptr;
+        GameObjects::LoneParticleEmitter* m_secondEmitter = nullptr;
         GameObjects::SimpleChild* m_simpleChild = nullptr;
     };
 }

@@ -106,8 +106,8 @@ inline void Core::ECS::Systems::ParticleSystem::RenderParticle(Assets::Component
                                                                Assets::Components::Particle& someParticle)
 {
 	glm::vec2 screenCoordinates = ConvertToScreenCoordinates(someParticle.CurrentPosition);
-	someParticleEmitter.RenderRectangle.x = screenCoordinates.x - someParticle.ParticleSize / 2;
-	someParticleEmitter.RenderRectangle.y = screenCoordinates.y - someParticle.ParticleSize / 2;
+	someParticleEmitter.RenderRectangle.x = screenCoordinates.x - someParticle.ParticleSize * 0.5f;
+	someParticleEmitter.RenderRectangle.y = screenCoordinates.y - someParticle.ParticleSize * 0.5f;
 	someParticleEmitter.RenderRectangle.w = someParticle.ParticleSize;
 	someParticleEmitter.RenderRectangle.h = someParticle.ParticleSize;
 
