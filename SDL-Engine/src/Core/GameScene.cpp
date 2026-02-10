@@ -15,6 +15,17 @@ Core::GameScene::GameScene(const std::uint32_t maxEntitiesInScene) : m_ECSManage
 	m_ECSManager.InitializeManager();
 }
 
+
+void Core::GameScene::InitializeScene()
+{
+	CreateGameObjects();
+	AddComponentsBeforeStartup();
+	InitializeGameObjectReferences();
+#ifdef _DEBUG
+	SetGameObjectDebugNames();
+#endif
+}
+
 void Core::GameScene::RegisterComponents()
 {
 	m_ECSManager.RegisterComponent<Assets::Components::Transform>();
@@ -80,6 +91,8 @@ void Core::GameScene::Update(const float deltaTime)
 #ifdef _DEBUG
 	UpdateImGuiDebugs();
 #endif
+
+	GarbageCollect();
 }
 
 Core::ECS::ECSManager& Core::GameScene::GetECSManager()
@@ -132,7 +145,7 @@ void Core::GameScene::GarbageCollect()
 	{
 		if (gameObject == nullptr)
 		{
-			m_gameObjectsInScene.erase(first + gameObjectIndexInSceneList, first + gameObjectIndexInSceneList + 1);
+			m_gameObjectsInScene.erase(first + gameObjectIndexInSceneList);
 		}
 		gameObjectIndexInSceneList++;
 	}

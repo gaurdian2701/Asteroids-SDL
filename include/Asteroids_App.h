@@ -1,6 +1,21 @@
 ﻿#pragma once
 #include "Core/GameScene.h"
 
+namespace Asteroids
+{
+    class GameActionStack;
+}
+
+namespace Core
+{
+    class GameScene;
+}
+
+namespace Actions
+{
+    class ActionStack;
+}
+
 class Application;
 
 class Asteroids_App : public Application
@@ -15,11 +30,10 @@ public:
 
 private:
     void InitializeAppSystems();
-    void InitializeScene();
-    void StartScene();
+    void StartGame();
 
 public:
-    Core::GameScene* m_MainScene = nullptr;
+    Asteroids::GameActionStack* m_mainGameActionStack = nullptr;
 };
 
 inline Application* GetApplicationInstance()

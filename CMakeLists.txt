@@ -12,7 +12,20 @@ add_executable(
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SpaceShip.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/LoneParticleEmitter.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameScenes/MainGameScene.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SimpleChild.cpp)
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SimpleChild.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/Actions/ActionStack.cpp
+        include/GameActionStack.h
+        src/GameActionStack.cpp
+        include/GameActions/MainGameSceneAction.h
+        include/Actions/IAction.h
+        src/GameActions/MainGameSceneAction.cpp
+)
+
+set_target_properties(
+        ${EXE_NAME} PROPERTIES
+            VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${EXE_NAME}>")
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${EXE_NAME})
 
 EnableASANCompileOptions(${EXE_NAME})
 

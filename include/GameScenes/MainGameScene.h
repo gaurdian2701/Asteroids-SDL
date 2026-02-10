@@ -20,8 +20,6 @@ namespace Asteroids::GameScenes
         void InitializeGameObjectReferences() override;
         void Start() override;
         void Update(const float deltaTime) override;
-
-        protected:
 #ifdef _DEBUG
         void SetGameObjectDebugNames() override;
 #endif

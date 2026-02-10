@@ -16,9 +16,8 @@ namespace Core
         explicit GameScene(const std::uint32_t maxEntitiesInScene);
         virtual ~GameScene() = default;
 
-        virtual void CreateGameObjects() = 0;
-        virtual void AddComponentsBeforeStartup();
-        virtual void InitializeGameObjectReferences(){}
+        virtual void InitializeScene();
+
         virtual void Start();
         virtual void Update(const float deltaTime);
 
@@ -78,6 +77,9 @@ namespace Core
 
 
     protected:
+        virtual void CreateGameObjects() = 0;
+        virtual void AddComponentsBeforeStartup();
+        virtual void InitializeGameObjectReferences(){}
 #ifdef _DEBUG
         virtual void UpdateImGuiDebugs();
 #endif

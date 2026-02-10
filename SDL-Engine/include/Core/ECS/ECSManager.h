@@ -20,11 +20,11 @@ namespace Core::ECS
     public:
         explicit ECSManager(const std::uint32_t maxEntities);
         ~ECSManager() = default;
+
+        static ECSManager& GetInstance();
         void InitializeManager();
         void UpdateManager(const float deltaTime);
         void BeginSystems();
-
-        static ECSManager& GetInstance();
 
         std::vector<void(*)(ECSManager &, const std::uint32_t)>& GetComponentRemovalHandlesArray();
 
