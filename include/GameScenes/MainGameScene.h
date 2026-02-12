@@ -15,7 +15,13 @@ namespace Asteroids::GameScenes
     {
     public:
         explicit MainGameScene(int maxGameObjects) : GameScene(maxGameObjects) {}
-        ~MainGameScene() override  = default;
+        ~MainGameScene() override
+        {
+            m_spaceShip = nullptr;
+            m_loneEmitter = nullptr;
+            m_simpleChild = nullptr;
+        }
+
         void CreateGameObjects() override;
         void InitializeGameObjectReferences() override;
         void Start() override;
@@ -27,7 +33,6 @@ namespace Asteroids::GameScenes
     private:
         GameObjects::SpaceShip* m_spaceShip = nullptr;
         GameObjects::LoneParticleEmitter* m_loneEmitter = nullptr;
-        GameObjects::LoneParticleEmitter* m_secondEmitter = nullptr;
         GameObjects::SimpleChild* m_simpleChild = nullptr;
     };
 }

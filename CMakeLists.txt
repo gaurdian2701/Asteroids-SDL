@@ -16,9 +16,13 @@ add_executable(
             ${CMAKE_CURRENT_SOURCE_DIR}/src/Actions/ActionStack.cpp
         include/GameActionStack.h
         src/GameActionStack.cpp
-        include/GameActions/MainGameSceneAction.h
         include/Actions/IAction.h
-        src/GameActions/MainGameSceneAction.cpp
+        include/GameActions/GameSceneAction.h
+        src/GameActions/GameSceneAction.cpp
+        include/GameActions/PlayerInputAction.h
+        src/GameActions/PlayerInputAction.cpp
+        include/GameActions/SpaceshipMoveAction.h
+        src/GameActions/SpaceshipMoveAction.cpp
 )
 
 set_target_properties(

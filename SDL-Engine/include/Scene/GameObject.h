@@ -37,8 +37,6 @@ namespace Scene
             return m_sceneReference->GetECSManager().GetComponent<T>(m_entityID);
         }
 
-        glm::vec2 m_translationVector = glm::vec2(0, 0);
-
     public:
 #ifdef _DEBUG
         std::string m_name = "GameObject";

@@ -1,10 +1,12 @@
 ﻿#pragma once
 #include <unordered_set>
 #include <vector>
+#include <concepts>
+#include <typeindex>
+#include "Actions/IAction.h"
 
 namespace Actions
 {
-    class IAction;
 
     class ActionStack
     {
@@ -12,8 +14,26 @@ namespace Actions
         ActionStack() = default;
         virtual ~ActionStack() = default;
 
+        template<std::derived_from<IAction> someAction>
+        IAction* GetAction()
+        {
+            auto actionFound = std::find_if(m_actionStack.begin(), m_actionStack.end(),
+                [](IAction* actionToBeFound)
+                {
+                    return typeid(*actionToBeFound) == typeid(someAction);
+                });
+
+            if (actionFound != m_actionStack.end())
+            {
+                return *actionFound;
+            }
+            return nullptr;
+        }
+
         void UpdateActions(const float deltaTime);
         void PushAction(IAction* someAction);
+        void RemoveAction(IAction* someAction);
+        void End();
 
     protected:
         IAction* m_currentAction = nullptr;

@@ -11,6 +11,5 @@ namespace Asteroids
 
         void Start();
         void Update(const float deltaTime);
-        void End();
     };
 }

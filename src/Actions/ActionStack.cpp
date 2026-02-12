@@ -25,6 +25,20 @@ void Actions::ActionStack::PushAction(IAction* someAction)
     }
 }
 
+void Actions::ActionStack::RemoveAction(IAction* someAction)
+{
+    if (someAction != nullptr)
+    {
+        if (m_currentAction == someAction)
+        {
+            m_currentAction->OnEnd();
+            m_currentAction = nullptr;
+        }
+        m_actionStack.erase(std::find(m_actionStack.begin(), m_actionStack.end(), someAction));
+    }
+}
+
+
 void Actions::ActionStack::UpdateActions(const float deltaTime)
 {
     //is the stack empty?
@@ -79,3 +93,18 @@ void Actions::ActionStack::UpdateActions(const float deltaTime)
         }
     }
 }
+
+void Actions::ActionStack::End()
+{
+    for (auto it = m_actionStack.rbegin(); it != m_actionStack.rend(); ++it)
+    {
+        if (*it != nullptr)
+        {
+            (*it)->OnEnd();
+            delete (*it);
+        }
+    }
+
+    m_actionStack.clear();
+}
+
