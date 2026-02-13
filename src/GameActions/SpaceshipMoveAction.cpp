@@ -1,6 +1,7 @@
 ﻿#include "GameActions/SpaceshipMoveAction.h"
 
 #include <algorithm>
+#include <__msvc_ranges_to.hpp>
 
 #include "GameActions/PlayerInputAction.h"
 #include "Assets/Components/Transform.h"
@@ -10,16 +11,31 @@ void Asteroids::GameActions::SpaceshipMoveAction::OnUpdate(float deltaTime)
 {
     m_playerInputAction->OnUpdate(deltaTime);
 
-    const glm::vec2 translationVector = m_playerInputAction->GetTranslationVector();
+    const float translationInput = m_playerInputAction->GetTranslationInput();
+    glm::vec2 positionPreviousFrame = m_spaceShipTransform->LocalPosition;
 
-    m_spaceShipTransform->LocalPosition.x += translationVector.x * m_moveSpeed * deltaTime;
-    m_spaceShipTransform->LocalPosition.y += translationVector.y * m_moveSpeed * deltaTime;
+    if (translationInput > 0.1f)
+    {
+        m_spaceShipTransform->LocalPosition += m_spaceShipTransform->Up * m_currentMoveSpeed * deltaTime;
+        m_spaceShipVelocity = m_spaceShipTransform->LocalPosition - positionPreviousFrame;
+        m_currentMoveSpeed += m_acceleration * deltaTime;
+    }
+    else
+    {
+        if (m_currentMoveSpeed > 0.0f)
+        {
+            m_residualMoveSpeed = m_currentMoveSpeed;
+        }
 
-    m_spaceShipTransform->LocalRotation = m_playerInputAction->GetRotationAngle();
-}
+        if (glm::length(m_spaceShipTransform->LocalPosition) > 0.0f)
+        {
+            m_spaceShipTransform->LocalPosition += glm::normalize(m_spaceShipVelocity) * m_residualMoveSpeed * deltaTime;
+        }
+        m_currentMoveSpeed = 0.0f;
+    }
 
-void Asteroids::GameActions::SpaceshipMoveAction::SlowdownShip(const float deltaTime)
-{
+    m_currentMoveSpeed = std::clamp(m_currentMoveSpeed, 0.0f, m_maxMoveSpeed);
+    m_spaceShipTransform->LocalRotation = m_playerInputAction->GetRotationAngle() * m_rotationSpeed;
 }
 
 bool Asteroids::GameActions::SpaceshipMoveAction::IsDone()

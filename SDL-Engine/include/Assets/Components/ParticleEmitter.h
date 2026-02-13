@@ -20,7 +20,6 @@ namespace Assets::Components
 		//Copy Constructor
 		Particle(const Particle& other)
 		{
-			InitialVelocity = other.InitialVelocity;
 			CurrentPosition = other.CurrentPosition;
 			CurrentLifeTime = other.CurrentLifeTime;
 			ParticleSize = other.ParticleSize;
@@ -29,7 +28,6 @@ namespace Assets::Components
 		//Move Constructor
 		Particle(Particle&& other) noexcept
 		{
-			InitialVelocity = other.InitialVelocity;
 			CurrentPosition = other.CurrentPosition;
 			CurrentLifeTime = other.CurrentLifeTime;
 			ParticleSize = other.ParticleSize;
@@ -40,7 +38,6 @@ namespace Assets::Components
 		{
 			if (this != &other)
 			{
-				InitialVelocity = other.InitialVelocity;
 				CurrentPosition = other.CurrentPosition;
 				CurrentLifeTime = other.CurrentLifeTime;
 				ParticleSize = other.ParticleSize;
@@ -53,7 +50,6 @@ namespace Assets::Components
 		{
 			if (this != &other)
 			{
-				InitialVelocity = other.InitialVelocity;
 				CurrentPosition = other.CurrentPosition;
 				CurrentLifeTime = other.CurrentLifeTime;
 				ParticleSize = other.ParticleSize;
@@ -62,11 +58,9 @@ namespace Assets::Components
 		}
 
 		glm::vec2 CurrentPosition = glm::vec2(0.0f);
-		glm::vec2 PreviousPosition = glm::vec2(0.0f);
 
 		float CurrentLifeTime = 0.0f;
 		float ParticleSize = 0.0f;
-		float InitialVelocity = 0.0f;
 	};
 
 	struct ParticleEmitter
@@ -88,11 +82,11 @@ namespace Assets::Components
 			Particles.resize(numberOfParticles);
 			StartingOffset = someStartingOffset;
 			MaxDeviation = someMaxDeviation;
+			Velocity = someInitialVelocity;
 			ParticleLifetime = someLifetime;
 
 			for (auto& particle : Particles)
 			{
-				particle.InitialVelocity = someInitialVelocity;
 				particle.CurrentLifeTime = someLifetime;
 				particle.ParticleSize = someParticleSize;
 			}
@@ -106,8 +100,6 @@ namespace Assets::Components
 			ParticleLifetime = other.ParticleLifetime;
 			Owner = other.Owner;
 
-			Friction = other.Friction;
-			Bounciness = other.Bounciness;
 			Color = other.Color;
 			RenderRectangle = other.RenderRectangle;
 			RenderTexture = other.RenderTexture;
@@ -122,8 +114,6 @@ namespace Assets::Components
 			ParticleLifetime = other.ParticleLifetime;
 			Owner = other.Owner;
 
-			Friction = other.Friction;
-			Bounciness = other.Bounciness;
 			Color = other.Color;
 			RenderRectangle = other.RenderRectangle;
 			RenderTexture = other.RenderTexture;
@@ -143,8 +133,6 @@ namespace Assets::Components
 				ParticleLifetime = other.ParticleLifetime;
 				Owner = other.Owner;
 
-				Friction = other.Friction;
-				Bounciness = other.Bounciness;
 				Color = other.Color;
 				RenderRectangle = other.RenderRectangle;
 				RenderTexture = other.RenderTexture;
@@ -163,8 +151,6 @@ namespace Assets::Components
 				ParticleLifetime = other.ParticleLifetime;
 				Owner = other.Owner;
 
-				Friction = other.Friction;
-				Bounciness = other.Bounciness;
 				Color = other.Color;
 				RenderRectangle = other.RenderRectangle;
 				RenderTexture = other.RenderTexture;
@@ -179,9 +165,8 @@ namespace Assets::Components
 		glm::vec2 StartingOffset = glm::vec2(0.0f);
 		uint16_t MaxDeviation = 1;
 
-		float Friction = 0.0f;
-		float Bounciness = 0.0f;
 		float ParticleLifetime = 0.1f;
+		float Velocity = 0.0f;
 
 		SDL_FColor Color = SDL_FColor(255, 255, 255, 255);
 		SDL_FRect RenderRectangle = SDL_FRect(0, 0, 5, 5);

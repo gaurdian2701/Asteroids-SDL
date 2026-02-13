@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "vec2.hpp"
 #include "Actions/IAction.h"
 
 namespace Asteroids::GameActions
@@ -18,11 +19,9 @@ namespace Asteroids::GameActions
     public:
         explicit SpaceshipMoveAction(
             PlayerInputAction* somePlayerInputAction,
-            Assets::Components::Transform* someTransform,
-            float someMoveSpeed) :
+            Assets::Components::Transform* someTransform) :
         m_playerInputAction(somePlayerInputAction),
-        m_spaceShipTransform(someTransform),
-        m_moveSpeed(someMoveSpeed)
+        m_spaceShipTransform(someTransform)
         {}
 
         ~SpaceshipMoveAction() override = default;
@@ -33,9 +32,13 @@ namespace Asteroids::GameActions
         bool IsDone() override;
 
     private:
-        float m_moveSpeed = 0.0f;
-        float m_currentAcceleration = 0.0f;
-        float m_maxAcceleration = 50.0f;
+        float m_currentMoveSpeed = 0.0f;
+        float m_maxMoveSpeed = 200.0f;
+        float m_acceleration = 100.0f;
+        float m_deceleration = 200.0f;
+        float m_rotationSpeed = 5.0f;
+        float m_residualMoveSpeed = 0.0f;
+        glm::vec2 m_spaceShipVelocity = glm::vec2(0.0f);
         Assets::Components::Transform* m_spaceShipTransform = nullptr;
         PlayerInputAction* m_playerInputAction = nullptr;
     };

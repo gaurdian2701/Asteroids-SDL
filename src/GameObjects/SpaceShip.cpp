@@ -32,10 +32,10 @@ void Asteroids::GameObjects::SpaceShip::Start()
 	transform.Owner = this;
 
 	m_spaceshipActionStack = new Actions::ActionStack();
-	m_spaceshipActionStack->PushAction(new GameActions::PlayerInputAction(1.0f));
+	m_spaceshipActionStack->PushAction(new GameActions::PlayerInputAction());
 	m_spaceshipActionStack->PushAction(new GameActions::SpaceshipMoveAction(
 		dynamic_cast<GameActions::PlayerInputAction*>(m_spaceshipActionStack->GetAction<GameActions::PlayerInputAction>()),
-		&transform, 100.0f));
+		&transform));
 }
 
 void Asteroids::GameObjects::SpaceShip::Update(const float deltaTime)

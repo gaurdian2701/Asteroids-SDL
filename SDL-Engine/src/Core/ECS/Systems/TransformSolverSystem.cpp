@@ -2,6 +2,7 @@
 #include "Assets/Components/Transform.h"
 #include "Core/ECS/ECSManager.h"
 
+const inline float LOCAL_SCALING = 0.1f;
 
 void Core::ECS::Systems::TransformSolverSystem::BeginSystem()
 {
@@ -34,7 +35,7 @@ inline void Core::ECS::Systems::TransformSolverSystem::SolveTransform(Assets::Co
 
 		//Solve Position:
 		//1. Scale local position by parent scale
-		glm::vec2 scaledPositionVector = someTransform.LocalPosition * parentTransform.WorldScale * 0.01f;
+		glm::vec2 scaledPositionVector = someTransform.LocalPosition * parentTransform.WorldScale * LOCAL_SCALING;
 
 		//2. Rotate position vector by parent rotation:
 		//(xrot, yrot) = (xcost - ysint, xsint + ycost) t is in radians

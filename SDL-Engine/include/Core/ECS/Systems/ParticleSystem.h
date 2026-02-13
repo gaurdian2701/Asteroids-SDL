@@ -23,13 +23,8 @@ namespace Core::ECS::Systems
 		inline void RenderParticle(Assets::Components::ParticleEmitter& someParticleEmitter,
 			Assets::Components::Particle& someParticle);
 
-		inline void DoBoundsCheck(Assets::Components::Particle& someParticle,
-			const glm::vec2& someParticleVelocity);
-
 	private:
 		std::default_random_engine m_randomOffsetGenerator;
-
-
 		glm::vec2 m_minCartesianLimits = glm::vec2(0.0f, 0.0f);
 		glm::vec2 m_maxCartesianLimits = glm::vec2(0.0f, 0.0f);
 	};

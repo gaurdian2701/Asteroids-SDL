@@ -4,32 +4,19 @@
 
 void Asteroids::GameActions::PlayerInputAction::OnUpdate(float deltaTime)
 {
-    m_translationVector.x = 0;
-    m_translationVector.y = 0;
+    m_translationInput = 0.0f;
 
-    if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_D))
-    {
-        m_translationVector.x = 1;
-    }
-    if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_A))
-    {
-        m_translationVector.x = -1;
-    }
     if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_W))
     {
-        m_translationVector.y = 1;
-    }
-    if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_S))
-    {
-        m_translationVector.y = -1;
+        m_translationInput = 1.0f;
     }
     if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_LEFT))
     {
-        m_rotationAngle += m_rotationSpeed * deltaTime;
+        m_rotationAngle += deltaTime;
     }
     if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_RIGHT))
     {
-        m_rotationAngle -= m_rotationSpeed * deltaTime;
+        m_rotationAngle -= deltaTime;
     }
 }
 
@@ -37,3 +24,9 @@ bool Asteroids::GameActions::PlayerInputAction::IsDone()
 {
     return false;
 }
+
+bool Asteroids::GameActions::PlayerInputAction::NoInputTaken()
+{
+    return m_translationInput > -0.01f && m_translationInput < 0.01f;
+}
+

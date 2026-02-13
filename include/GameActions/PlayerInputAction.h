@@ -7,12 +7,12 @@ namespace Asteroids::GameActions
     class PlayerInputAction : public Actions::IAction
     {
     public:
-        explicit PlayerInputAction(float someRotationSpeed) : m_rotationSpeed(someRotationSpeed) {}
+        PlayerInputAction() = default;
         ~PlayerInputAction() override = default;
 
-        inline const glm::vec2& GetTranslationVector()
+        inline const float GetTranslationInput()
         {
-            return m_translationVector;
+            return m_translationInput;
         }
 
         inline float GetRotationAngle()
@@ -24,10 +24,10 @@ namespace Asteroids::GameActions
         void OnUpdate(float deltaTime) override;
         void OnEnd() override{}
         bool IsDone() override;
+        bool NoInputTaken();
 
     private:
-        glm::vec2 m_translationVector = glm::vec2(0.0f);
+        float m_translationInput = 0.0f;
         float m_rotationAngle = 0.0f;
-        float m_rotationSpeed = 0.0f;
     };
 }

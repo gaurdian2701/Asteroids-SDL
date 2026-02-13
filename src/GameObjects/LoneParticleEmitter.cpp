@@ -17,7 +17,7 @@ void Asteroids::GameObjects::LoneParticleEmitter::Start()
 
 	auto& transform = GetComponent<Assets::Components::Transform>();
 	transform.Owner = this;
-	transform.LocalPosition = glm::vec2(0.0f, -0.5f);
+	transform.LocalPosition = glm::vec2(0.0f, -5.0f);
 	transform.LocalScale = glm::vec2(1.0f, 1.0f);
 
 	if (m_parent != nullptr)
@@ -30,7 +30,7 @@ void Asteroids::GameObjects::LoneParticleEmitter::Start()
 	particleEmitter.InitializeEmitter(10,
 		std::forward<glm::vec2>(glm::vec2(0.0f)),
 		5,
-		0.05f,
+		50.0f,
 		0.1f,
 		5.0f);
 

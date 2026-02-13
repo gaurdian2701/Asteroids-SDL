@@ -14,7 +14,8 @@ void Core::ECS::Systems::ParticleSystem::BeginSystem()
 	ECSManager::GetInstance().ForEach<Assets::Components::Transform, Assets::Components::ParticleEmitter>(
 		[&](const Assets::Components::Transform &transform, Assets::Components::ParticleEmitter &particleEmitter)
 		{
-			std::uniform_int_distribution<int> randomDistribution(-particleEmitter.MaxDeviation, particleEmitter.MaxDeviation);
+			std::uniform_int_distribution<int> randomDistribution(
+				-particleEmitter.MaxDeviation, particleEmitter.MaxDeviation);
 
 			for (auto &particle: particleEmitter.Particles)
 			{
@@ -25,8 +26,6 @@ void Core::ECS::Systems::ParticleSystem::BeginSystem()
 					glm::vec2(randomDistribution(m_randomOffsetGenerator),
 					randomDistribution(m_randomOffsetGenerator));
 
-				particle.PreviousPosition = particle.CurrentPosition + transform.Up * particle.InitialVelocity;
-
 				//Rendering
 				RenderParticle(particleEmitter, particle);
 			}
@@ -35,24 +34,20 @@ void Core::ECS::Systems::ParticleSystem::BeginSystem()
 
 void Core::ECS::Systems::ParticleSystem::UpdateSystem(const float deltaTime)
 {
-	glm::vec2 particleCurrentPosition = glm::vec2(0.0f);
 	glm::vec2 particleVelocity = glm::vec2(0.0f);
 
 	ECSManager::GetInstance().ForEach<Assets::Components::Transform, Assets::Components::ParticleEmitter>(
 		[&, this](Assets::Components::Transform &transform, Assets::Components::ParticleEmitter &particleEmitter)
 		{
-			std::uniform_int_distribution<int> randomDistribution(-particleEmitter.MaxDeviation, particleEmitter.MaxDeviation);
+			std::uniform_int_distribution<int> randomDistribution(
+				-particleEmitter.MaxDeviation, particleEmitter.MaxDeviation);
+
+			particleVelocity = particleEmitter.Velocity * -transform.Up;
 
 			for (auto &particle: particleEmitter.Particles)
 			{
 				//Simulation
-				particleCurrentPosition = particle.CurrentPosition;
-				particleVelocity = particle.CurrentPosition - particle.PreviousPosition;
-
-				//Verlet integration implicitly stores the right velocity since we are keeping track of previous frame's position as well.
-				//Hence we don't need to divide by deltatime to calculate the velocity.
-				particle.CurrentPosition += particleVelocity;
-				particle.PreviousPosition = particleCurrentPosition;
+				particle.CurrentPosition += particleVelocity * deltaTime;
 
 				if (particle.CurrentLifeTime < 0.0f)
 				{
@@ -61,12 +56,8 @@ void Core::ECS::Systems::ParticleSystem::UpdateSystem(const float deltaTime)
 					glm::vec2(randomDistribution(m_randomOffsetGenerator),
 					randomDistribution(m_randomOffsetGenerator));
 
-					particle.PreviousPosition = particle.CurrentPosition + transform.Up * particle.InitialVelocity;
 					particle.CurrentLifeTime = particleEmitter.ParticleLifetime;
 				}
-
-				//Bounds Check For Bouncing
-				this->DoBoundsCheck(particle, particleVelocity);
 
 				particle.CurrentLifeTime -= deltaTime;
 
@@ -74,32 +65,6 @@ void Core::ECS::Systems::ParticleSystem::UpdateSystem(const float deltaTime)
 				this->RenderParticle(particleEmitter, particle);
 			}
 		});
-}
-
-inline void Core::ECS::Systems::ParticleSystem::DoBoundsCheck(Assets::Components::Particle& someParticle,
-	const glm::vec2& someParticleVelocity)
-{
-	if (someParticle.CurrentPosition.x > m_maxCartesianLimits.x)
-	{
-		someParticle.CurrentPosition.x = this->m_maxCartesianLimits.x;
-		someParticle.PreviousPosition.x = someParticle.CurrentPosition.x + someParticleVelocity.x;
-	}
-	else if (someParticle.CurrentPosition.x < this->m_minCartesianLimits.x)
-	{
-		someParticle.CurrentPosition.x = this->m_minCartesianLimits.x;
-		someParticle.PreviousPosition.x = someParticle.CurrentPosition.x + someParticleVelocity.x;
-	}
-
-	if (someParticle.CurrentPosition.y < this->m_maxCartesianLimits.y)
-	{
-		someParticle.CurrentPosition.y = this->m_maxCartesianLimits.y;
-		someParticle.PreviousPosition.y = someParticle.CurrentPosition.y + someParticleVelocity.y;
-	}
-	else if (someParticle.CurrentPosition.y > this->m_minCartesianLimits.y)
-	{
-		someParticle.CurrentPosition.y = this->m_minCartesianLimits.y;
-		someParticle.PreviousPosition.y = someParticle.CurrentPosition.y + someParticleVelocity.y;
-	}
 }
 
 inline void Core::ECS::Systems::ParticleSystem::RenderParticle(Assets::Components::ParticleEmitter& someParticleEmitter,
