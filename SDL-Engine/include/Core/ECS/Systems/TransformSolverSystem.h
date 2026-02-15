@@ -12,11 +12,15 @@ namespace Core::ECS::Systems
     {
     public:
         TransformSolverSystem() = default;
-        void BeginSystem() override;
+        ~TransformSolverSystem() override = default;
+
+        void RegisterInterestedComponents() override;
+        void ProcessInitializationQueue() override{}
+        void BeginSystem() override{}
         void UpdateSystem(const float deltaTime) override;
-        void EndSystem() override;
+        void EndSystem() override{}
 
     private:
-        inline void SolveTransform(Assets::Components::Transform& someTransform);
+        inline void SolveTransform(Assets::Components::Transform* someTransform);
     };
 }

@@ -12,8 +12,7 @@ add_executable(
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SpaceShip.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/LoneParticleEmitter.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameScenes/MainGameScene.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SimpleChild.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/Actions/ActionStack.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/Actions/ActionStack.cpp
         include/GameActionStack.h
         src/GameActionStack.cpp
         include/Actions/IAction.h
@@ -23,6 +22,10 @@ add_executable(
         src/GameActions/PlayerInputAction.cpp
         include/GameActions/SpaceshipMoveAction.h
         src/GameActions/SpaceshipMoveAction.cpp
+        include/GameObjects/Asteroid.h
+        src/GameObjects/Asteroid.cpp
+        include/GameObjects/UnitManager.h
+        src/GameObjects/UnitManager.cpp
 )
 
 set_target_properties(

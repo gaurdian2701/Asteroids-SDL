@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <vector>
 #include "ISparseSet.h"
-#include "Core/Misc.h"
+#include "ECSData.h"
 
 namespace Core::ECS
 {
@@ -36,6 +36,10 @@ namespace Core::ECS
 
 		void RemoveComponentFromEntity(const std::uint32_t entityID) override
 		{
+			if (m_sparseEntityArray[entityID] == INVALID_ENTITY_ID)
+			{
+				return;
+			}
 			const auto swappableLastEntityIndex = m_denseEntityArray.back();
 
 			std::swap(m_denseEntityArray[m_sparseEntityArray[entityID]], m_denseEntityArray.back());
@@ -66,7 +70,8 @@ namespace Core::ECS
 		std::uint32_t m_maxEntityCount;
 
 		std::vector<std::uint32_t> m_sparseEntityArray;
-		std::vector<std::uint32_t> m_denseEntityArray;
-		std::vector<ComponentTypeUsedBySparseSet> m_denseComponentArray;
+		std::vector<std::uint32_t> m_denseEntityArray = std::vector<uint32_t>(1, 0);
+		std::vector<ComponentTypeUsedBySparseSet> m_denseComponentArray =
+			std::vector<ComponentTypeUsedBySparseSet>(1, ComponentTypeUsedBySparseSet());
 	};
 }

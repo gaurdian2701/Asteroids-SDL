@@ -16,6 +16,7 @@ namespace Core
         explicit GameScene(const std::uint32_t maxEntitiesInScene);
         virtual ~GameScene() = default;
 
+        virtual void CreateGameObjects() = 0;
         virtual void InitializeScene();
 
         virtual void Start();
@@ -50,7 +51,7 @@ namespace Core
         {
             m_ECSManager.AddComponent<T>(someEntityID);
             AddComponentToGameObjectData(someGameObject,
-                m_ECSManager.GetComponentTypeIndex<T>(m_ECSManager));
+                m_ECSManager.GetGeneratedComponentTypeIndex<T>(m_ECSManager));
         }
 
         template<typename T>
@@ -58,7 +59,7 @@ namespace Core
         {
             m_ECSManager.RemoveComponent<T>(someEntityID);
             RemoveComponentFromGameObjectData(someGameObject,
-                m_ECSManager.GetComponentTypeIndex<T>());
+                m_ECSManager.GetGeneratedComponentTypeIndex<T>(m_ECSManager));
         }
 
         void RemoveComponentFromEntityUsingTypeIndex(const std::uint32_t someEntityID,
@@ -71,21 +72,18 @@ namespace Core
         GameObjectType* AddGameObject()
         {
             m_gameObjectsInScene.push_back(new GameObjectType());
-            RegisterGameObject(m_gameObjectsInScene.back());
+            InitializeGameObject(m_gameObjectsInScene.back());
             return static_cast<GameObjectType*>(m_gameObjectsInScene.back());
         }
 
-
     protected:
-        virtual void CreateGameObjects() = 0;
-        virtual void AddComponentsBeforeStartup();
         virtual void InitializeGameObjectReferences(){}
 #ifdef _DEBUG
         virtual void UpdateImGuiDebugs();
 #endif
 
     private:
-        void RegisterGameObject(Scene::GameObject* someGameObject);
+        void InitializeGameObject(Scene::GameObject* someGameObject);
         void RegisterComponents();
 
     protected:
@@ -93,5 +91,6 @@ namespace Core
 
     private:
         ECS::ECSManager m_ECSManager;
+        std::vector<Scene::GameObject*> m_startQueue = std::vector<Scene::GameObject*>();
     };
 }

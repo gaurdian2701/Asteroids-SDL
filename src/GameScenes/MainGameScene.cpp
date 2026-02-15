@@ -3,19 +3,19 @@
 #include "Assets/Components/Transform.h"
 #include "GameObjects/LoneParticleEmitter.h"
 #include "GameObjects/SpaceShip.h"
-#include "GameObjects/SimpleChild.h"
+#include "GameObjects/UnitManager.h"
 
 
 void Asteroids::GameScenes::MainGameScene::CreateGameObjects()
 {
     m_spaceShip = AddGameObject<GameObjects::SpaceShip>();
     m_loneEmitter = AddGameObject<GameObjects::LoneParticleEmitter>();
-    m_simpleChild = AddGameObject<GameObjects::SimpleChild>();
+    m_unitManager = AddGameObject<GameObjects::UnitManager>();
 }
 
 void Asteroids::GameScenes::MainGameScene::InitializeGameObjectReferences()
 {
-    m_loneEmitter->m_parent = m_spaceShip;
+    m_loneEmitter->GetComponent<Assets::Components::Transform>()->SetParent(m_spaceShip);
 }
 
 void Asteroids::GameScenes::MainGameScene::Start()
@@ -33,7 +33,7 @@ void Asteroids::GameScenes::MainGameScene::SetGameObjectDebugNames()
 {
     m_spaceShip->m_name = "Space Ship";
     m_loneEmitter->m_name = "Lone Emitter";
-    m_simpleChild->m_name = "Simple Child";
+    m_unitManager->m_name = "Unit Manager";
 }
 #endif
 

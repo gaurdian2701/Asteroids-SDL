@@ -96,7 +96,7 @@ void Application::Run()
         CheckForQuitEvent();
 
         auto currentFrameTime = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<float> deltaTime = currentFrameTime - lastFrameTime;
+        float deltaTime = std::chrono::duration<float>(currentFrameTime - lastFrameTime).count();
         lastFrameTime = currentFrameTime;
 
 #ifdef _DEBUG
@@ -105,7 +105,7 @@ void Application::Run()
         RefreshBackground();
 
         UpdateCoreSystems();
-        GetApplicationInstance()->UpdateApplication(deltaTime.count());
+        GetApplicationInstance()->UpdateApplication(deltaTime);
 
 #ifdef _DEBUG
         PresentImGuiFrame();

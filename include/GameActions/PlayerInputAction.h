@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "vec2.hpp"
 #include "Actions/IAction.h"
 
 namespace Asteroids::GameActions

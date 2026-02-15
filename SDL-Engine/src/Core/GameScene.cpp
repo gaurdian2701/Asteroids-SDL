@@ -15,11 +15,9 @@ Core::GameScene::GameScene(const std::uint32_t maxEntitiesInScene) : m_ECSManage
 	m_ECSManager.InitializeManager();
 }
 
-
 void Core::GameScene::InitializeScene()
 {
 	CreateGameObjects();
-	AddComponentsBeforeStartup();
 	InitializeGameObjectReferences();
 #ifdef _DEBUG
 	SetGameObjectDebugNames();
@@ -33,18 +31,12 @@ void Core::GameScene::RegisterComponents()
 	m_ECSManager.RegisterComponent<Assets::Components::ParticleEmitter>();
 }
 
-void Core::GameScene::RegisterGameObject(Scene::GameObject *someGameObject)
+void Core::GameScene::InitializeGameObject(Scene::GameObject *someGameObject)
 {
 	someGameObject->m_sceneReference = this;
 	someGameObject->m_entityID = GetECSManager().GenerateEntityID();
-}
-
-void Core::GameScene::AddComponentsBeforeStartup()
-{
-	for (auto& gameObject : m_gameObjectsInScene)
-	{
-		gameObject->AddComponentsBeforeStartup();
-	}
+	someGameObject->AddComponentsBeforeStartup();
+	m_startQueue.push_back(someGameObject);
 }
 
 void Core::GameScene::RemoveComponentFromEntityUsingTypeIndex(const std::uint32_t someEntityID,
@@ -68,9 +60,14 @@ void Core::GameScene::RemoveComponentFromGameObjectData(Scene::GameObject &someG
 void Core::GameScene::Start()
 {
 	//Start GameObjects
-	for (auto& gameObject : m_gameObjectsInScene)
+	for (auto gameObject : m_gameObjectsInScene)
 	{
 		gameObject->Start();
+		auto gameObjectInQueue = std::find(m_startQueue.begin(), m_startQueue.end(), gameObject);
+		if (*gameObjectInQueue != nullptr && gameObjectInQueue != m_startQueue.end())
+		{
+			m_startQueue.erase(gameObjectInQueue);
+		}
 	}
 
 	//Start ECS Systems
@@ -79,8 +76,14 @@ void Core::GameScene::Start()
 
 void Core::GameScene::Update(const float deltaTime)
 {
+	//Start any newly created GameObjects
+	for (auto gameObject : m_startQueue)
+	{
+		gameObject->Start();
+	}
+
 	//Update GameObjects
-	for (auto& gameObject : m_gameObjectsInScene)
+	for (auto gameObject : m_gameObjectsInScene)
 	{
 		gameObject->Update(deltaTime);
 	}
@@ -103,7 +106,7 @@ Core::ECS::ECSManager& Core::GameScene::GetECSManager()
 void Core::GameScene::DeleteGameObject(Scene::GameObject* someGameObject)
 {
 	//Use Component ID to remove components from gameobject, hence untracking them in the ECS
-	for (std::size_t typeIndex = 0; typeIndex < Core::ECS::MAX_COMPONENT_TYPES; typeIndex++)
+	for (std::size_t typeIndex = 0; typeIndex < MAX_COMPONENT_TYPES; typeIndex++)
 	{
 		if (someGameObject->m_componentBitSet[typeIndex])
 		{
@@ -138,6 +141,7 @@ void Core::GameScene::UnTrackGameObject(Scene::GameObject* someGameObject)
 
 void Core::GameScene::GarbageCollect()
 {
+	//Erase any gameobjects that are deleted from the scene list
 	int gameObjectIndexInSceneList = 0;
 	std::vector<Scene::GameObject*>::const_iterator first = m_gameObjectsInScene.begin();
 
@@ -148,6 +152,12 @@ void Core::GameScene::GarbageCollect()
 			m_gameObjectsInScene.erase(first + gameObjectIndexInSceneList);
 		}
 		gameObjectIndexInSceneList++;
+	}
+
+	//Clear the start queue
+	if (!m_startQueue.empty())
+	{
+		m_startQueue.clear();
 	}
 }
 
@@ -174,15 +184,18 @@ void Core::GameScene::UpdateImGuiDebugs()
 
 	for (auto& gameObject: m_gameObjectsInScene)
 	{
-		auto& transform = gameObject->GetComponent<Assets::Components::Transform>();
+		Assets::Components::Transform* transform = gameObject->GetComponent<Assets::Components::Transform>();
 
-		ImGui::PushID(gameObject->m_name.c_str());
-		ImGui::Text(gameObject->m_name.c_str());
-		ImGui::SliderFloat2("Local Position", &transform.LocalPosition.x, -1000.0f, 1000.0f);
-		ImGui::SliderFloat2("Local Scale", &transform.LocalScale.x, -100.0f, 100.0f);
-		ImGui::SliderFloat("Local Rotation", &transform.LocalRotation, -1000.0f, 1000.0f);
-		ImGui::Separator();
-		ImGui::PopID();
+		if (transform != nullptr)
+		{
+			ImGui::PushID(gameObject->m_entityID);
+			ImGui::Text(gameObject->m_name.c_str());
+			ImGui::DragFloat2("Position", &transform->LocalPosition.x, 0.5f, -100.0f, 100.0f);
+			ImGui::DragFloat2("Scale", &transform->LocalScale.x, 0.5f, -100.0f, 100.0f);
+			ImGui::DragFloat("Rotation", &transform->LocalRotation, 0.5f, -100.0f, 100.0f);
+			ImGui::Separator();
+			ImGui::PopID();
+		}
 	}
 	ImGui::End();
 }

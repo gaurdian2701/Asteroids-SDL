@@ -1,14 +1,13 @@
 ﻿#pragma once
 #include <cstdint>
 #include "Core/GameScene.h"
-#include "glm.hpp"
 
 namespace Scene
 {
     class GameObject
     {
     public:
-        //Making a default constructor grants some flexibility to create objects not tracked by the scene as well
+        //Making a default constructor grants some flexibility to create objects not tracked by the scene as well?
         GameObject() = default;
         virtual ~GameObject() = default;
 
@@ -32,21 +31,28 @@ namespace Scene
         }
 
         template<typename T>
-        T& GetComponent()
+        T* GetComponent()
         {
             return m_sceneReference->GetECSManager().GetComponent<T>(m_entityID);
+        }
+
+        Core::GameScene& GetSceneReference() const
+        {
+            return *m_sceneReference;
         }
 
     public:
 #ifdef _DEBUG
         std::string m_name = "GameObject";
 #endif
+        //TODO: Not used for now, but will use this in a GameScene step where I have to
+        //set parents according to this pointer
         GameObject* m_parent = nullptr;
 
     private:
         std::uint32_t m_entityID = Core::INVALID_ENTITY_ID;
         Core::GameScene* m_sceneReference = nullptr;
-        std::bitset<Core::ECS::MAX_COMPONENT_TYPES> m_componentBitSet;
+        std::bitset<Core::MAX_COMPONENT_TYPES> m_componentBitSet;
 
         friend class Core::GameScene;
     };

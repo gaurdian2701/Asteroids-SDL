@@ -23,15 +23,25 @@ Core::ECS::ECSManager::GetComponentRemovalHandlesArray()
 
 void Core::ECS::ECSManager::InitializeManager()
 {
+	CreateSystems();
 	InitializeSystems();
+}
+
+void Core::ECS::ECSManager::CreateSystems()
+{
+	m_SystemsList.push_back(new Systems::TransformSolverSystem());
+	m_SystemsList.push_back(new Systems::RenderingSystem());
+	m_SystemsList.push_back(new Systems::ParticleSystem());
 }
 
 void Core::ECS::ECSManager::InitializeSystems()
 {
-	m_SystemsList.push_back(new Systems::TransformSolverSystem());
-	m_SystemsList.push_back(new Systems::ParticleSystem());
-	m_SystemsList.push_back(new Systems::RenderingSystem());
+	for (auto system : m_SystemsList)
+	{
+		system->RegisterInterestedComponents();
+	}
 }
+
 
 void Core::ECS::ECSManager::BeginSystems()
 {
@@ -56,7 +66,7 @@ void Core::ECS::ECSManager::UpdateManager(const float deltaTime)
 
 std::uint32_t Core::ECS::ECSManager::GenerateEntityID()
 {
-	static std::uint32_t nextEntityID = 0;
+	static std::uint32_t nextEntityID = 1;
 
 	if (!m_entityFreeList.empty())
 	{

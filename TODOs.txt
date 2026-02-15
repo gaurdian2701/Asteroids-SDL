@@ -1,0 +1,34 @@
+1. Asteroid Objects
+ - Spawn Asteroid outside of the screen bounds randomly
+ - Increase spawn frequency over time
+ - If bullet hits asteroid, it should break and spawn smaller asteroids
+ - Spawn the smaller asteroids preferably at random rotations
+ - Asteroid hits player, player takes damage
+
+2. Enemies
+ - Spawn enemies outside of screen bounds randomly
+ - Enemies move only horizontally(could tweak them afterwards if there is time)
+ - Make sure they use the same MoveAction as the player(should change move action to accommodate more modular input action)
+ - Enemies shoot bullets
+ - Enemy bullet hits player, player takes damage
+ - Player bullet hits enemy, enemy takes damage
+ - Player touches enemy, player takes damage
+
+3. Bullets
+ - Shoot Action to spawn bullets(should I really make it an action?)
+ - Collision detection(prolly make it a quadtree if you have time?)
+
+4. UI and Menus
+ - Main Menu scene
+ - Health UI
+ - Score UI
+ - Game over UI that shows score and options to go back to menu or restart the game
+
+ PROBLEMS:
+ - IF, SAY, YOU SPAWN A GAMEOBJECT AT RUNTIME, BUT MAX ENTITIES HAVE BEEN REACHED, YOU THEN HAVE TO REALLOCATE MEMORY.
+ YOU CANNOT DO THIS IN THE SAME FRAME, WHICH WOULD BREAK UPDATE LOOPS FOR THE GAMEOBJECTS AS THE CURRENT MEMORY LOCATION
+ WOULD NO LONGER BE VALID.
+ SOLUTION - IN THE NEXT FRAME: 1. REALLOCATE MEMORY 2. UPDATE THE LOOP
+
+NOTE:
+ DO NOT CACHE COMPONENT REFERENCES. IT DOESN'T MAKE SENSE.

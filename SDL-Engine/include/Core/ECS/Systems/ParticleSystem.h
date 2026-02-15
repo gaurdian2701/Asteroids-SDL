@@ -15,12 +15,16 @@ namespace Core::ECS::Systems
 	{
 	public:
 		ParticleSystem() = default;
+		~ParticleSystem() override = default;
+
+		void RegisterInterestedComponents() override;
 		void BeginSystem() override;
+        void ProcessInitializationQueue() override;
 		void UpdateSystem(const float deltaTime) override;
-		void EndSystem() override;
+		void EndSystem() override{}
 
 	private:
-		inline void RenderParticle(Assets::Components::ParticleEmitter& someParticleEmitter,
+		inline void RenderParticle(Assets::Components::ParticleEmitter* someParticleEmitter,
 			Assets::Components::Particle& someParticle);
 
 	private:

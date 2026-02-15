@@ -10,7 +10,7 @@ namespace Assets::Components
     {
         ~Transform()
         {
-            ParentEntity = -1;
+            ParentEntity = Core::INVALID_ENTITY_ID;
         }
 
         //Default Constructor
@@ -105,7 +105,6 @@ namespace Assets::Components
 
         float LocalRotation = 0.0f;
         float WorldRotation = 0.0f;
-        std::uint32_t ParentEntity = -1;
-
+        std::uint32_t ParentEntity = Core::INVALID_ENTITY_ID;
     };
 }

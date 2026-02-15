@@ -26,15 +26,17 @@ namespace Core::Events
         uint32_t functionID = 0;
     };
 
-    enum class EventType : uint16_t
+    enum class EventType : uint8_t
     {
-        InputEvent,
+        InputEvent = 0,
+        GameEvent = 1
     };
 
     class EventSystem : public CoreSystem
     {
     private:
         EventSystem() = default;
+    public:
         ~EventSystem() override = default;
 
     public:

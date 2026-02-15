@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "SpaceShip.h"
 #include "Scene/GameObject.h"
 
 namespace Asteroids::GameObjects

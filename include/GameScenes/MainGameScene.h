@@ -1,12 +1,11 @@
 ﻿#pragma once
 #include "Core/GameScene.h"
-#include "GameObjects/SpaceShip.h"
 
 namespace Asteroids::GameObjects
 {
     class SpaceShip;
-    class SimpleChild;
     class LoneParticleEmitter;
+    class UnitManager;
 }
 
 namespace Asteroids::GameScenes
@@ -19,7 +18,6 @@ namespace Asteroids::GameScenes
         {
             m_spaceShip = nullptr;
             m_loneEmitter = nullptr;
-            m_simpleChild = nullptr;
         }
 
         void CreateGameObjects() override;
@@ -33,6 +31,6 @@ namespace Asteroids::GameScenes
     private:
         GameObjects::SpaceShip* m_spaceShip = nullptr;
         GameObjects::LoneParticleEmitter* m_loneEmitter = nullptr;
-        GameObjects::SimpleChild* m_simpleChild = nullptr;
+        GameObjects::UnitManager* m_unitManager = nullptr;
     };
 }

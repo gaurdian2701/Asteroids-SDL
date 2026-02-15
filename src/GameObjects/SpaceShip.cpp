@@ -21,21 +21,21 @@ void Asteroids::GameObjects::SpaceShip::Start()
 {
 	GameObject::Start();
 
-	auto& renderer = GetComponent<Assets::Components::Renderer2D>();
+	auto renderer = GetComponent<Assets::Components::Renderer2D>();
 
-	renderer.RenderTexture = Core::CoreSystems::TextureResourceManager::GetInstance()
+	renderer->RenderTexture = Core::CoreSystems::TextureResourceManager::GetInstance()
 	.TryLoadAndGetTexture(SPACESHIP_IMAGE_FILEPATH);
 
-	auto& transform = GetComponent<Assets::Components::Transform>();
-	transform.LocalPosition = SPACESHIP_STARTING_POINT;
-	transform.LocalScale = glm::vec2(50.0f);
-	transform.Owner = this;
+	auto transform = GetComponent<Assets::Components::Transform>();
+	transform->LocalPosition = SPACESHIP_STARTING_POINT;
+	transform->LocalScale = glm::vec2(50.0f);
+	transform->Owner = this;
 
 	m_spaceshipActionStack = new Actions::ActionStack();
 	m_spaceshipActionStack->PushAction(new GameActions::PlayerInputAction());
 	m_spaceshipActionStack->PushAction(new GameActions::SpaceshipMoveAction(
 		dynamic_cast<GameActions::PlayerInputAction*>(m_spaceshipActionStack->GetAction<GameActions::PlayerInputAction>()),
-		&transform));
+		this));
 }
 
 void Asteroids::GameObjects::SpaceShip::Update(const float deltaTime)

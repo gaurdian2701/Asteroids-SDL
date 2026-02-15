@@ -12,6 +12,11 @@ namespace Assets::Components
     struct Transform;
 }
 
+namespace Scene
+{
+    class GameObject;
+}
+
 namespace Asteroids::GameActions
 {
     class SpaceshipMoveAction : public Actions::IAction
@@ -19,9 +24,9 @@ namespace Asteroids::GameActions
     public:
         explicit SpaceshipMoveAction(
             PlayerInputAction* somePlayerInputAction,
-            Assets::Components::Transform* someTransform) :
+            Scene::GameObject* someSpaceShip) :
         m_playerInputAction(somePlayerInputAction),
-        m_spaceShipTransform(someTransform)
+        m_spaceshipGameObject(someSpaceShip)
         {}
 
         ~SpaceshipMoveAction() override = default;
@@ -35,11 +40,11 @@ namespace Asteroids::GameActions
         float m_currentMoveSpeed = 0.0f;
         float m_maxMoveSpeed = 200.0f;
         float m_acceleration = 100.0f;
-        float m_deceleration = 200.0f;
         float m_rotationSpeed = 5.0f;
-        float m_residualMoveSpeed = 0.0f;
+        float m_residualSpeed = 0.0f;
+        glm::vec2 m_residualVelocity = glm::vec2(0.0f);
         glm::vec2 m_spaceShipVelocity = glm::vec2(0.0f);
-        Assets::Components::Transform* m_spaceShipTransform = nullptr;
+        Scene::GameObject* m_spaceshipGameObject = nullptr;
         PlayerInputAction* m_playerInputAction = nullptr;
     };
 }

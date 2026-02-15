@@ -8,7 +8,11 @@ namespace Core::ECS::Systems
     {
     public:
         RenderingSystem() = default;
-        void BeginSystem() override;
+        ~RenderingSystem() override = default;
+
+        void RegisterInterestedComponents() override;
+        void BeginSystem() override{}
+        void ProcessInitializationQueue() override{}
         void UpdateSystem(const float deltaTime) override;
         void EndSystem() override;
     };
