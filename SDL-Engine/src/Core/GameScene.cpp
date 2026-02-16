@@ -10,7 +10,8 @@ const inline float LOCAL_SCALING_FACTOR = 0.01f;
 
 Core::GameScene::GameScene(const std::uint32_t maxEntitiesInScene) : m_ECSManager(maxEntitiesInScene)
 {
-	m_gameObjectsInScene.reserve(maxEntitiesInScene);
+	m_maxEntityCount = maxEntitiesInScene;
+	m_gameObjectsInScene.reserve(m_maxEntityCount);
 	RegisterComponents();
 	m_ECSManager.InitializeManager();
 }

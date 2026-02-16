@@ -4,7 +4,7 @@
 
 namespace Asteroids::GameActions
 {
-    class PlayerInputAction;
+    class PlayerControlAction;
 }
 
 namespace Assets::Components
@@ -23,7 +23,7 @@ namespace Asteroids::GameActions
     {
     public:
         explicit SpaceshipMoveAction(
-            PlayerInputAction* somePlayerInputAction,
+            PlayerControlAction* somePlayerInputAction,
             Scene::GameObject* someSpaceShip) :
         m_playerInputAction(somePlayerInputAction),
         m_spaceshipGameObject(someSpaceShip)
@@ -45,6 +45,6 @@ namespace Asteroids::GameActions
         glm::vec2 m_residualVelocity = glm::vec2(0.0f);
         glm::vec2 m_spaceShipVelocity = glm::vec2(0.0f);
         Scene::GameObject* m_spaceshipGameObject = nullptr;
-        PlayerInputAction* m_playerInputAction = nullptr;
+        PlayerControlAction* m_playerInputAction = nullptr;
     };
 }

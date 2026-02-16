@@ -13,15 +13,32 @@ namespace Core::ECS
 		SparseSet(const std::uint32_t someMaxEntityCount) : m_maxEntityCount(someMaxEntityCount)
 		{
 			m_sparseEntityArray.resize(m_maxEntityCount, INVALID_ENTITY_ID);
+			m_sparseEntityArray.reserve(m_maxEntityCount/2);
+			m_denseEntityArray.reserve(m_maxEntityCount);
+			m_denseComponentArray.reserve(m_maxEntityCount);
 		}
 
-		~SparseSet() = default;
+		~SparseSet() override
+		{
+			m_sparseEntityArray.clear();
+			m_denseEntityArray.clear();
+			m_denseComponentArray.clear();
+
+			m_sparseEntityArray.shrink_to_fit();
+			m_denseEntityArray.shrink_to_fit();
+			m_denseComponentArray.shrink_to_fit();
+		}
 
 		void AddComponentToEntity(const std::uint32_t entityID, ComponentTypeUsedBySparseSet&& component)
 		{
 			if (m_sparseEntityArray.size()-1 < entityID)
 			{
+				//Resize sparse array to accomodate new elements, and
+				//reserve space for future allocations
 				m_sparseEntityArray.resize(entityID);
+				m_sparseEntityArray.reserve(m_maxEntityCount / 2);
+				m_denseEntityArray.reserve(m_maxEntityCount / 2);
+				m_denseComponentArray.reserve(m_maxEntityCount / 2);
 			}
 
 			if (m_sparseEntityArray[entityID] != INVALID_ENTITY_ID)
@@ -42,6 +59,7 @@ namespace Core::ECS
 			}
 			const auto swappableLastEntityIndex = m_denseEntityArray.back();
 
+			//Swap component to be removed with the last element in dense array
 			std::swap(m_denseEntityArray[m_sparseEntityArray[entityID]], m_denseEntityArray.back());
 			std::swap(m_denseComponentArray[m_sparseEntityArray[entityID]], m_denseComponentArray.back());
 			std::swap(m_sparseEntityArray[swappableLastEntityIndex], m_sparseEntityArray[entityID]);

@@ -1,6 +1,6 @@
 ﻿#include "GameActions/SpaceshipMoveAction.h"
 #include <algorithm>
-#include "GameActions/PlayerInputAction.h"
+#include "GameActions/PlayerControlAction.h"
 #include "Assets/Components/Transform.h"
 #include "vec2.hpp"
 

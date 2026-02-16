@@ -18,14 +18,15 @@ add_executable(
         include/Actions/IAction.h
         include/GameActions/GameSceneAction.h
         src/GameActions/GameSceneAction.cpp
-        include/GameActions/PlayerInputAction.h
-        src/GameActions/PlayerInputAction.cpp
+        include/GameActions/PlayerControlAction.h
+        src/GameActions/PlayerControlAction.cpp
         include/GameActions/SpaceshipMoveAction.h
         src/GameActions/SpaceshipMoveAction.cpp
         include/GameObjects/Asteroid.h
         src/GameObjects/Asteroid.cpp
         include/GameObjects/UnitManager.h
         src/GameObjects/UnitManager.cpp
+        include/GameActions/IControlAction.h
 )
 
 set_target_properties(

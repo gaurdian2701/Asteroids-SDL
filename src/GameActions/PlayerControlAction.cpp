@@ -1,8 +1,8 @@
-﻿#include "GameActions/PlayerInputAction.h"
+﻿#include "GameActions/PlayerControlAction.h"
 #include "Core/CoreSystems/InputSystem.h"
 #include "SDL3/SDL_scancode.h"
 
-void Asteroids::GameActions::PlayerInputAction::OnUpdate(float deltaTime)
+void Asteroids::GameActions::PlayerControlAction::OnUpdate(float deltaTime)
 {
     m_translationInput = 0.0f;
 
@@ -20,12 +20,12 @@ void Asteroids::GameActions::PlayerInputAction::OnUpdate(float deltaTime)
     }
 }
 
-bool Asteroids::GameActions::PlayerInputAction::IsDone()
+bool Asteroids::GameActions::PlayerControlAction::IsDone()
 {
     return false;
 }
 
-bool Asteroids::GameActions::PlayerInputAction::NoInputTaken()
+bool Asteroids::GameActions::PlayerControlAction::NoInputTaken()
 {
     return m_translationInput > -0.01f && m_translationInput < 0.01f;
 }

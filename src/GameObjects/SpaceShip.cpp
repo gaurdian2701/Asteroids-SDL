@@ -5,7 +5,7 @@
 #include "Core/CoreSystems/TextureResourceManager.h"
 #include "Core/ECS/Systems/System.h"
 #include "Actions/ActionStack.h"
-#include "GameActions/PlayerInputAction.h"
+#include "GameActions/PlayerControlAction.h"
 #include "GameActions/SpaceshipMoveAction.h"
 
 constexpr inline glm::vec2 SPACESHIP_STARTING_POINT = glm::vec2(0, 0);
@@ -32,9 +32,9 @@ void Asteroids::GameObjects::SpaceShip::Start()
 	transform->Owner = this;
 
 	m_spaceshipActionStack = new Actions::ActionStack();
-	m_spaceshipActionStack->PushAction(new GameActions::PlayerInputAction());
+	m_spaceshipActionStack->PushAction(new GameActions::PlayerControlAction());
 	m_spaceshipActionStack->PushAction(new GameActions::SpaceshipMoveAction(
-		dynamic_cast<GameActions::PlayerInputAction*>(m_spaceshipActionStack->GetAction<GameActions::PlayerInputAction>()),
+		dynamic_cast<GameActions::PlayerControlAction*>(m_spaceshipActionStack->GetAction<GameActions::PlayerControlAction>()),
 		this));
 }
 

@@ -35,8 +35,7 @@ namespace Asteroids::GameObjects
 
 	private:
 		float m_defaultAsteroidSize = 75.0f;
-		float m_spawnCircleRadius = 300.0f;
-		uint8_t m_maxDeviationForUnitHomingDirection = 50;
+		float m_spawnCircleRadius = 650.0f;
 		std::vector<GameObject*> m_managedUnits = std::vector<GameObject*>();
 		std::default_random_engine m_randomGenerator;
 		const glm::vec2 m_spawnCenter = glm::vec2(0.0f);

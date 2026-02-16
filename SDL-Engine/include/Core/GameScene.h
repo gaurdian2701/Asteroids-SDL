@@ -2,6 +2,7 @@
 #include "vec2.hpp"
 #include "Application/Application.h"
 #include "Core/ECS/ECSManager.h"
+#include "PrintDebug.h"
 
 namespace Scene
 {
@@ -71,6 +72,12 @@ namespace Core
         template<std::derived_from<Scene::GameObject> GameObjectType>
         GameObjectType* AddGameObject()
         {
+            if (m_gameObjectsInScene.size() == m_maxEntityCount)
+            {
+                PrintDebug("%s", "SCENE MAX ENTITY CAPACITY REACHED");
+                return nullptr;
+            }
+
             m_gameObjectsInScene.push_back(new GameObjectType());
             InitializeGameObject(m_gameObjectsInScene.back());
             return static_cast<GameObjectType*>(m_gameObjectsInScene.back());
@@ -92,5 +99,6 @@ namespace Core
     private:
         ECS::ECSManager m_ECSManager;
         std::vector<Scene::GameObject*> m_startQueue = std::vector<Scene::GameObject*>();
+        uint32_t m_maxEntityCount = 0;
     };
 }

@@ -3,7 +3,7 @@
 
 namespace Asteroids::GameActions
 {
-	class PlayerInputAction;
+	class PlayerControlAction;
 }
 
 namespace Actions

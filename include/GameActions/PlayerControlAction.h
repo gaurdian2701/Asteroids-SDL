@@ -1,20 +1,20 @@
 ﻿#pragma once
-#include "Actions/IAction.h"
+#include "IControlAction.h"
 
 namespace Asteroids::GameActions
 {
-    class PlayerInputAction : public Actions::IAction
+    class PlayerControlAction : public IControlAction
     {
     public:
-        PlayerInputAction() = default;
-        ~PlayerInputAction() override = default;
+        PlayerControlAction() = default;
+        ~PlayerControlAction() override = default;
 
-        inline const float GetTranslationInput()
+        inline const float GetTranslationValue() override
         {
             return m_translationInput;
         }
 
-        inline float GetRotationAngle()
+        inline const float GetRotationValue() override
         {
             return m_rotationAngle;
         }

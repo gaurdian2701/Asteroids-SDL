@@ -21,5 +21,10 @@ namespace Asteroids::GameObjects
 		bool m_hasRenderer = true;
 		float m_timeToToggleComponent = 1.0f;
 		float m_timer = 0.0f;
+		float m_moveSpeed = 75.0f;
+		float m_rotationSpeed = 3.0f;
+		float m_velocityDirectionDeviation = 0.0f;
+		std::default_random_engine m_randomGenerator;
+		glm::vec2 m_initialVelocity = glm::vec2(0.0f);
 	};
 }
