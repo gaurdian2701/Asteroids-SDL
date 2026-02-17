@@ -31,10 +31,6 @@ void Asteroids::GameObjects::UnitManager::SpawnUnit(UnitType someUnitType, float
 			Asteroid* asteroid = GetSceneReference().AddGameObject<Asteroid>();
 			asteroid->m_size = someUnitSize;
 			asteroid->m_startingPosition = spawnPosition;
-#ifdef _DEBUG
-			static uint16_t asteroidNumber = 0;
-			asteroid->m_name = "Asteroid" + std::to_string(++asteroidNumber);
-#endif
 			m_managedUnits.push_back(asteroid);
 			break;
 		}

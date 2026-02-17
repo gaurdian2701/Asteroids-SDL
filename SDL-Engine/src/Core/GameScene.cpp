@@ -5,6 +5,7 @@
 #include "Assets/Components/Transform.h"
 #include "Assets/Components/Renderer2D.h"
 #include "imgui.h"
+#include "Core/HelperFunctions.h"
 
 const inline float LOCAL_SCALING_FACTOR = 0.01f;
 
@@ -14,6 +15,9 @@ Core::GameScene::GameScene(const std::uint32_t maxEntitiesInScene) : m_ECSManage
 	m_gameObjectsInScene.reserve(m_maxEntityCount);
 	RegisterComponents();
 	m_ECSManager.InitializeManager();
+
+	m_minCartesianLimits = GetMinCartesianLimits();
+	m_maxCartesianLimits = GetMaxCartesianLimits();
 }
 
 void Core::GameScene::InitializeScene()
@@ -77,10 +81,16 @@ void Core::GameScene::Start()
 
 void Core::GameScene::Update(const float deltaTime)
 {
-	//Start any newly created GameObjects
+	//Start any newly created GameObjects in the start queue
 	for (auto gameObject : m_startQueue)
 	{
 		gameObject->Start();
+	}
+
+	//Clear the start queue
+	if (!m_startQueue.empty())
+	{
+		m_startQueue.clear();
 	}
 
 	//Update GameObjects
@@ -102,6 +112,18 @@ void Core::GameScene::Update(const float deltaTime)
 Core::ECS::ECSManager& Core::GameScene::GetECSManager()
 {
 	return m_ECSManager;
+}
+
+bool Core::GameScene::IsGameObjectOutOfBounds(Scene::GameObject* someGameObject)
+{
+	glm::vec2 position = someGameObject->GetComponent<Assets::Components::Transform>()->LocalPosition;
+
+	if (position.x > m_maxCartesianLimits.x || position.x < m_minCartesianLimits.x || position.y > m_maxCartesianLimits.y || position.y < m_maxCartesianLimits.y)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void Core::GameScene::DeleteGameObject(Scene::GameObject* someGameObject)
@@ -153,12 +175,6 @@ void Core::GameScene::GarbageCollect()
 			m_gameObjectsInScene.erase(first + gameObjectIndexInSceneList);
 		}
 		gameObjectIndexInSceneList++;
-	}
-
-	//Clear the start queue
-	if (!m_startQueue.empty())
-	{
-		m_startQueue.clear();
 	}
 }
 

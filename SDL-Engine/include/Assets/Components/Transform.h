@@ -8,15 +8,15 @@ namespace Assets::Components
 {
     struct Transform
     {
-        ~Transform()
-        {
-            ParentEntity = Core::INVALID_ENTITY_ID;
-        }
-
         //Default Constructor
         Transform()
         {
             PrintDebug("Transform default constructor called \n");
+        }
+
+        ~Transform()
+        {
+            ParentEntity = Core::INVALID_ENTITY_ID;
         }
 
         //Copy Constructor
@@ -41,31 +41,39 @@ namespace Assets::Components
         {
             PrintDebug("Transform move constructor called \n");
 
-            WorldPosition = other.WorldPosition;
-            WorldScale = other.WorldScale;
-            WorldRotation = other.WorldRotation;
+            if (this != &other)
+            {
+                WorldPosition = other.WorldPosition;
+                WorldScale = other.WorldScale;
+                WorldRotation = other.WorldRotation;
 
-            LocalPosition = other.LocalPosition;
-            LocalScale = other.LocalScale;
-            LocalRotation = other.LocalRotation;
+                LocalPosition = other.LocalPosition;
+                LocalScale = other.LocalScale;
+                LocalRotation = other.LocalRotation;
 
-            ParentEntity = other.ParentEntity;
-            Owner = other.Owner;
+                ParentEntity = other.ParentEntity;
+                Owner = other.Owner;
+            }
         }
 
         //Copy Assignment operator
         Transform& operator=(const Transform& other)
         {
-            WorldPosition = other.WorldPosition;
-            WorldScale = other.WorldScale;
-            WorldRotation = other.WorldRotation;
+            if (this != &other)
+            {
+                WorldPosition = other.WorldPosition;
+                WorldScale = other.WorldScale;
+                WorldRotation = other.WorldRotation;
 
-            LocalPosition = other.LocalPosition;
-            LocalScale = other.LocalScale;
-            LocalRotation = other.LocalRotation;
+                LocalPosition = other.LocalPosition;
+                LocalScale = other.LocalScale;
+                LocalRotation = other.LocalRotation;
 
-            ParentEntity = other.ParentEntity;
-            Owner = other.Owner;
+                ParentEntity = other.ParentEntity;
+                Owner = other.Owner;
+            }
+
+            return *this;
         }
 
         //Move Assignment operator

@@ -1,9 +1,7 @@
 ﻿#include "Core/ECS/Systems/ParticleSystem.h"
-#include "vec2.hpp"
-#include "Application/Application.h"
+#include "Core/HelperFunctions.h"
 #include "Assets/Components/ParticleEmitter.h"
 #include "Assets/Components/Transform.h"
-#include "Core/GameScene.h"
 #include "Core/ECS/ECSManager.h"
 
 void Core::ECS::Systems::ParticleSystem::RegisterInterestedComponents()
@@ -14,8 +12,8 @@ void Core::ECS::Systems::ParticleSystem::RegisterInterestedComponents()
 
 void Core::ECS::Systems::ParticleSystem::BeginSystem()
 {
-	m_maxCartesianLimits = GameScene::GetMaxCartesianLimits();
-	m_minCartesianLimits = GameScene::GetMinCartesianLimits();
+	m_maxCartesianLimits = GetMaxCartesianLimits();
+	m_minCartesianLimits = GetMinCartesianLimits();
 }
 
 void Core::ECS::Systems::ParticleSystem::ProcessInitializationQueue()

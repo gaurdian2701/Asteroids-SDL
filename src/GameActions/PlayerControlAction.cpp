@@ -6,7 +6,7 @@ void Asteroids::GameActions::PlayerControlAction::OnUpdate(float deltaTime)
 {
     m_translationInput = 0.0f;
 
-    if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_W))
+    if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_UP))
     {
         m_translationInput = 1.0f;
     }
@@ -17,6 +17,14 @@ void Asteroids::GameActions::PlayerControlAction::OnUpdate(float deltaTime)
     if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_RIGHT))
     {
         m_rotationAngle -= deltaTime;
+    }
+    if (Core::Input::InputSystem::GetInstance().CheckForKeyPress(SDL_SCANCODE_SPACE))
+    {
+        m_shootButtonPressed = true;
+    }
+    else
+    {
+        m_shootButtonPressed = false;
     }
 }
 

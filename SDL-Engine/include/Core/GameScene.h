@@ -34,18 +34,7 @@ namespace Core
         virtual void SetGameObjectDebugNames(){}
 #endif
 
-        static inline const glm::vec2& GetMaxCartesianLimits()
-        {
-            static glm::vec2 limits = glm::vec2(Application::SCREEN_WIDTH - Application::SCREEN_WIDTH/2,
-                -Application::SCREEN_HEIGHT + Application::SCREEN_HEIGHT/2);
-            return limits;
-        }
-
-        static inline const glm::vec2& GetMinCartesianLimits()
-        {
-            static glm::vec2 limits = glm::vec2(-Application::SCREEN_WIDTH/2,Application::SCREEN_HEIGHT/2);
-            return limits;
-        }
+        bool inline IsGameObjectOutOfBounds(Scene::GameObject* someGameObject);
 
         template<typename T>
         void AddComponentToEntity(Scene::GameObject& someGameObject, const std::uint32_t someEntityID)
@@ -100,5 +89,7 @@ namespace Core
         ECS::ECSManager m_ECSManager;
         std::vector<Scene::GameObject*> m_startQueue = std::vector<Scene::GameObject*>();
         uint32_t m_maxEntityCount = 0;
+        glm::vec2 m_minCartesianLimits = glm::vec2(0.0f);
+        glm::vec2 m_maxCartesianLimits = glm::vec2(0.0f);
     };
 }

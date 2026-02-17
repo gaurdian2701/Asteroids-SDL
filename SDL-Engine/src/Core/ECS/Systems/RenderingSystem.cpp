@@ -4,6 +4,7 @@
 #include "SDL3/SDL_render.h"
 #include "Assets/Components/Renderer2D.h"
 #include "Assets/Components/Transform.h"
+#include "Core/HelperFunctions.h"
 
 void Core::ECS::Systems::RenderingSystem::RegisterInterestedComponents()
 {

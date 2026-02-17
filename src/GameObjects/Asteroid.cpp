@@ -13,6 +13,10 @@ void Asteroids::GameObjects::Asteroid::AddComponentsBeforeStartup()
 
 void Asteroids::GameObjects::Asteroid::Start()
 {
+#ifdef _DEBUG
+	m_name = "Asteroid";
+#endif
+
 	auto transform = GetComponent<Assets::Components::Transform>();
 	transform->LocalPosition = m_startingPosition;
 	transform->LocalScale = glm::vec2(m_size);

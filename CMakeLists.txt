@@ -27,6 +27,11 @@ add_executable(
         include/GameObjects/UnitManager.h
         src/GameObjects/UnitManager.cpp
         include/GameActions/IControlAction.h
+        include/GameObjects/PlayerProjectile.h
+        src/GameObjects/PlayerProjectile.cpp
+        include/GameObjects/ProjectilePool.h
+        include/GameObjects/IProjectile.h
+        src/GameObjects/ProjectilePool.cpp
 )
 
 set_target_properties(

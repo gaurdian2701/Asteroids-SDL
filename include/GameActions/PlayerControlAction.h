@@ -19,6 +19,11 @@ namespace Asteroids::GameActions
             return m_rotationAngle;
         }
 
+        inline const bool GetIsShooting()
+        {
+            return m_shootButtonPressed;
+        }
+
         void OnBegin(bool isFirstTime) override{}
         void OnUpdate(float deltaTime) override;
         void OnEnd() override{}
@@ -28,5 +33,6 @@ namespace Asteroids::GameActions
     private:
         float m_translationInput = 0.0f;
         float m_rotationAngle = 0.0f;
+        bool m_shootButtonPressed = false;
     };
 }

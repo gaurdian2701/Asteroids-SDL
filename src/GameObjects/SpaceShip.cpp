@@ -3,10 +3,10 @@
 #include "Assets/Components/ParticleEmitter.h"
 #include "Assets/Components/Renderer2D.h"
 #include "Core/CoreSystems/TextureResourceManager.h"
-#include "Core/ECS/Systems/System.h"
 #include "Actions/ActionStack.h"
 #include "GameActions/PlayerControlAction.h"
 #include "GameActions/SpaceshipMoveAction.h"
+#include "GameObjects/PlayerProjectile.h"
 
 constexpr inline glm::vec2 SPACESHIP_STARTING_POINT = glm::vec2(0, 0);
 const inline std::string SPACESHIP_IMAGE_FILEPATH = "images/img_spaceship.png";
@@ -36,11 +36,31 @@ void Asteroids::GameObjects::SpaceShip::Start()
 	m_spaceshipActionStack->PushAction(new GameActions::SpaceshipMoveAction(
 		dynamic_cast<GameActions::PlayerControlAction*>(m_spaceshipActionStack->GetAction<GameActions::PlayerControlAction>()),
 		this));
+
+	m_playerControlAction = dynamic_cast<GameActions::PlayerControlAction*>(m_spaceshipActionStack->GetAction<GameActions::PlayerControlAction>());
 }
 
 void Asteroids::GameObjects::SpaceShip::Update(const float deltaTime)
 {
 	m_spaceshipActionStack->UpdateActions(deltaTime);
+
+	if (m_playerControlAction->GetIsShooting() && m_shootTimer >= m_timePerShot)
+	{
+		m_shootTimer = 0.0f;
+		ShootBullet();
+	}
+
+	m_shootTimer += deltaTime;
 }
+
+void Asteroids::GameObjects::SpaceShip::ShootBullet()
+{
+	PlayerProjectile* bullet = GetSceneReference().AddGameObject<Asteroids::GameObjects::PlayerProjectile>();
+	auto transform = GetComponent<Assets::Components::Transform>();
+	bullet->m_startingPosition = transform->LocalPosition + transform->Up * m_bulletLaunchOffset;
+	bullet->m_startingRotation = transform->LocalRotation;
+	bullet->m_movementDirection = transform->Up;
+}
+
 
 
