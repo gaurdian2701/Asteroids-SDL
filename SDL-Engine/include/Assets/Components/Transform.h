@@ -9,10 +9,7 @@ namespace Assets::Components
     struct Transform
     {
         //Default Constructor
-        Transform()
-        {
-            PrintDebug("Transform default constructor called \n");
-        }
+        Transform() = default;
 
         ~Transform()
         {
@@ -22,8 +19,6 @@ namespace Assets::Components
         //Copy Constructor
         Transform(const Transform& other)
         {
-            PrintDebug("Transform copy constructor called \n");
-
             WorldPosition = other.WorldPosition;
             WorldScale = other.WorldScale;
             WorldRotation = other.WorldRotation;
@@ -39,8 +34,6 @@ namespace Assets::Components
         //Move Constructor
         Transform(Transform&& other) noexcept
         {
-            PrintDebug("Transform move constructor called \n");
-
             if (this != &other)
             {
                 WorldPosition = other.WorldPosition;
@@ -79,8 +72,6 @@ namespace Assets::Components
         //Move Assignment operator
         Transform& operator=(Transform&& other) noexcept
         {
-            PrintDebug("Transform move assignment constructor called \n");
-
             if (this != &other)
             {
                 WorldPosition = other.WorldPosition;
@@ -100,6 +91,16 @@ namespace Assets::Components
         void SetParent(Scene::GameObject* parent)
         {
             ParentEntity = parent->GetEntityID();
+        }
+
+        const glm::vec2& GetRecalculatedWorldPosition()
+        {
+            if (ParentEntity == Core::INVALID_ENTITY_ID)
+            {
+                WorldPosition = LocalPosition;
+            }
+
+            return WorldPosition;
         }
 
         Scene::GameObject* Owner = nullptr;

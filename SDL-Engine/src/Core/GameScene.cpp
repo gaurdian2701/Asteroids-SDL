@@ -116,10 +116,15 @@ Core::ECS::ECSManager& Core::GameScene::GetECSManager()
 
 bool Core::GameScene::IsGameObjectOutOfBounds(Scene::GameObject* someGameObject)
 {
-	glm::vec2 position = someGameObject->GetComponent<Assets::Components::Transform>()->LocalPosition;
+	auto transform = someGameObject->GetComponent<Assets::Components::Transform>();
 
-	if (position.x > m_maxCartesianLimits.x || position.x < m_minCartesianLimits.x || position.y > m_maxCartesianLimits.y || position.y < m_maxCartesianLimits.y)
+	glm::vec2 position = transform->GetRecalculatedWorldPosition();
+	glm::vec2 scale = transform->LocalScale;
+
+	if (position.x - scale.x > m_maxCartesianLimits.x || position.x + scale.x < m_minCartesianLimits.x
+		|| position.y + scale.y < m_maxCartesianLimits.y || position.y - scale.y > m_minCartesianLimits.y)
 	{
+		PrintDebug("%s\n", "OUT OF BOUNDS");
 		return true;
 	}
 

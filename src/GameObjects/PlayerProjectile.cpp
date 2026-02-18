@@ -2,6 +2,9 @@
 #include "Assets/Components/Renderer2D.h"
 #include "Assets/Components/Transform.h"
 #include "Core/CoreSystems/TextureResourceManager.h"
+#include "Core/CoreSystems/EventSystem/EventSystem.h"
+#include "GameObjects/ProjectilePool.h"
+#include "Core/GameScene.h"
 
 const inline std::string BULLET_IMAGE_FILEPATH = "images/img_bullet.png";
 
@@ -14,9 +17,7 @@ void Asteroids::GameObjects::PlayerProjectile::AddComponentsBeforeStartup()
 void Asteroids::GameObjects::PlayerProjectile::Start()
 {
     auto transform = GetComponent<Assets::Components::Transform>();
-    transform->LocalScale = glm::vec2(m_scale);
-    transform->LocalPosition = m_startingPosition;
-    transform->LocalRotation = m_startingRotation;
+    transform->Owner = this;
 
     auto renderer = GetComponent<Assets::Components::Renderer2D>();
     renderer->RenderTexture = Core::CoreSystems::TextureResourceManager::GetInstance().TryLoadAndGetTexture(BULLET_IMAGE_FILEPATH);
@@ -29,8 +30,17 @@ void Asteroids::GameObjects::PlayerProjectile::Start()
 
 void Asteroids::GameObjects::PlayerProjectile::Update(const float deltaTime)
 {
-    auto transform = GetComponent<Assets::Components::Transform>();
-    transform->LocalPosition += m_speed * deltaTime * m_movementDirection;
+    if (m_isActive)
+    {
+        auto transform = GetComponent<Assets::Components::Transform>();
+        transform->LocalPosition += m_speed * deltaTime * m_movementDirection;
+
+        if (GetSceneReference().IsGameObjectOutOfBounds(this))
+        {
+            Core::Events::EventSystem::GetInstance().PublishEvent<ProjectilePool::ReturnProjectileToPoolEvent>(Core::Events::EventType::GameEvent, m_poolReturnEvent);
+            m_isActive = false;
+        }
+    }
 }
 
 

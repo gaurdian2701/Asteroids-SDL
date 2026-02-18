@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "IProjectile.h"
 #include "Scene/GameObject.h"
 
 namespace Asteroids::GameObjects
@@ -64,32 +65,41 @@ namespace Asteroids::GameObjects
             IProjectile* m_projectile = nullptr;
         };
 
+        struct ReturnProjectileToPoolEvent
+        {
+            IProjectile* m_projectile = nullptr;
+        };
+
         ProjectilePool() = default;
         ~ProjectilePool() override = default;
 
         void Start() override;
+        void Update(float deltaTime) override;
 
         template<std::derived_from<IProjectile> ProjectileType>
-        ProjectileType* GetProjectileFromPool()
+        IProjectile* GetProjectileFromPool()
         {
             std::vector<PoolObject>::iterator poolIterator = std::find_if(m_poolList.begin(), m_poolList.end(),
                 [](PoolObject& projectilePoolObject)
                 {
                     if (!projectilePoolObject.m_isUsed)
                     {
-                        projectilePoolObject.m_isUsed = true;
-                        return projectilePoolObject;
+                        return true;
                     }
+                    return false;
                 });
 
-            if (poolIterator != m_poolList.end())
+            if (poolIterator != m_poolList.end() && poolIterator->m_projectile != nullptr)
             {
+                poolIterator->m_isUsed = true;
                 return poolIterator->m_projectile;
             }
 
             m_poolList.emplace_back(true, GetSceneReference().AddGameObject<ProjectileType>());
             return m_poolList.back().m_projectile;
         }
+
+        void ReturnProjectileToPool(IProjectile* projectile);
 
     private:
         uint32_t m_maxPoolSize = 20;

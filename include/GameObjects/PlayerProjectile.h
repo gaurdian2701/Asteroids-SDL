@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "IProjectile.h"
+#include "ProjectilePool.h"
 
 namespace Asteroids::GameObjects
 {
@@ -12,5 +13,8 @@ namespace Asteroids::GameObjects
         void AddComponentsBeforeStartup() override;
         void Start() override;
         void Update(const float deltaTime) override;
+
+    private:
+        ProjectilePool::ReturnProjectileToPoolEvent m_poolReturnEvent = ProjectilePool::ReturnProjectileToPoolEvent(this);
     };
 }

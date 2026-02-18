@@ -34,7 +34,7 @@ namespace Core
         virtual void SetGameObjectDebugNames(){}
 #endif
 
-        bool inline IsGameObjectOutOfBounds(Scene::GameObject* someGameObject);
+        bool IsGameObjectOutOfBounds(Scene::GameObject* someGameObject);
 
         template<typename T>
         void AddComponentToEntity(Scene::GameObject& someGameObject, const std::uint32_t someEntityID)

@@ -1,6 +1,11 @@
 ﻿#pragma once
 #include "Scene/GameObject.h"
 
+namespace Asteroids::GameObjects
+{
+	class ProjectilePool;
+}
+
 namespace Asteroids::GameActions
 {
 	class PlayerControlAction;
@@ -33,5 +38,8 @@ namespace Asteroids::GameObjects
 		float m_bulletLaunchOffset = 20.0f;
 		Actions::ActionStack* m_spaceshipActionStack = nullptr;
 		GameActions::PlayerControlAction* m_playerControlAction = nullptr;
+
+	public:
+		ProjectilePool* m_projectilePool = nullptr;
 	};
 }
