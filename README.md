@@ -16,6 +16,6 @@ The folders contain code for:
 I currently have three systems implemented:
 - A Rendering System that uses SDL for rendering textures on an SDL_Rect. It makes use of the Transform and Renderer2D Components.
 - A Particle System that renders and simulates particles. I'd thought I could implement this since I had to program spaceships in my game anyway.
-- A Transform Solver System. A simple system that solves transformations since I have parent-child transformations in the game. It is not very robust as I did not implement a hierarchy tree as I did not have the time, so all it now does is blindly solve transforms for each object.
+- A Transform Solver System. A simple system that solves transformations since I have parent-child transformations in the game. It is not very robust as I did not implement a hierarchy tree as I did not have the time, so all it does is blindly solve transforms for each object.
 
 The game makes use of all three systems. Currently I am implementing game logic.
