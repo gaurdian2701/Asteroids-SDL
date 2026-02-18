@@ -58,8 +58,8 @@ namespace Core
         void AddComponentToGameObjectData(Scene::GameObject& someGameObject, std::size_t someComponentTypeIndex);
         void RemoveComponentFromGameObjectData(Scene::GameObject& someGameObject, std::size_t someComponentTypeIndex);
 
-        template<std::derived_from<Scene::GameObject> GameObjectType>
-        GameObjectType* AddGameObject()
+        template<std::derived_from<Scene::GameObject> GameObjectType, typename ...Args>
+        GameObjectType* AddGameObject(Args&&... gameObjectArguments)
         {
             if (m_gameObjectsInScene.size() == m_maxEntityCount)
             {
@@ -67,7 +67,7 @@ namespace Core
                 return nullptr;
             }
 
-            m_gameObjectsInScene.push_back(new GameObjectType());
+            m_gameObjectsInScene.push_back(new GameObjectType(std::forward<Args>(gameObjectArguments)...));
             InitializeGameObject(m_gameObjectsInScene.back());
             return static_cast<GameObjectType*>(m_gameObjectsInScene.back());
         }

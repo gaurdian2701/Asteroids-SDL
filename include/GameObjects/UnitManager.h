@@ -2,6 +2,11 @@
 #include <random>
 #include "Scene/GameObject.h"
 
+namespace Asteroids::GameObjects
+{
+	class GenericObjectPool;
+}
+
 namespace Actions
 {
 	class ActionStack;
@@ -11,19 +16,19 @@ namespace Asteroids::GameObjects
 {
 	class UnitManager : public Scene::GameObject
 	{
+	public:
 		enum class UnitType : uint8_t
 		{
 			Asteroid = 0,
 			EnemyShip = 1
 		};
 
-		class SpawnUnitEvent
+		struct SpawnUnitEvent
 		{
+			explicit SpawnUnitEvent(UnitType someUnitType) : m_unitType(someUnitType) {}
 			UnitType m_unitType = UnitType::Asteroid;
-			float m_unitSize = 50.0f;
 		};
 
-	public:
 		UnitManager() = default;
 		~UnitManager() override = default;
 
@@ -31,12 +36,14 @@ namespace Asteroids::GameObjects
 		void Update(const float deltaTime) override;
 
 	private:
-		void SpawnUnit(UnitType someUnitType, float someUnitSize);
+		void SpawnUnit(UnitType someUnitType);
+
+	public:
+		GenericObjectPool* m_asteroidPool = nullptr;
 
 	private:
 		float m_defaultAsteroidSize = 75.0f;
 		float m_spawnCircleRadius = 650.0f;
-		std::vector<GameObject*> m_managedUnits = std::vector<GameObject*>();
 		std::default_random_engine m_randomGenerator;
 		const glm::vec2 m_spawnCenter = glm::vec2(0.0f);
 	};

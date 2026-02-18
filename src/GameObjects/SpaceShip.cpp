@@ -7,7 +7,7 @@
 #include "GameActions/PlayerControlAction.h"
 #include "GameActions/SpaceshipMoveAction.h"
 #include "GameObjects/PlayerProjectile.h"
-#include "GameObjects/ProjectilePool.h"
+#include "../../include/GameObjects/ObjectPooling/GenericObjectPool.h"
 
 constexpr inline glm::vec2 SPACESHIP_STARTING_POINT = glm::vec2(0, 0);
 const inline std::string SPACESHIP_IMAGE_FILEPATH = "images/img_spaceship.png";
@@ -56,7 +56,7 @@ void Asteroids::GameObjects::SpaceShip::Update(const float deltaTime)
 
 void Asteroids::GameObjects::SpaceShip::ShootBullet()
 {
-	auto playerProjectile = m_projectilePool->GetProjectileFromPool<PlayerProjectile>();
+	auto playerProjectile = static_cast<PlayerProjectile*>(m_projectilePool->GetObjectFromPool<PlayerProjectile>());
 	auto transform = GetComponent<Assets::Components::Transform>();
 	playerProjectile->Initialize(transform->LocalPosition + transform->Up * m_bulletLaunchOffset,
 		std::forward<glm::vec2>(transform->Up),

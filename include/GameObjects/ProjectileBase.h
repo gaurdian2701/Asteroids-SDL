@@ -5,11 +5,11 @@
 
 namespace Asteroids::GameObjects
 {
-    class IProjectile : public Scene::GameObject
+    class ProjectileBase : public Scene::GameObject
     {
     public:
-        IProjectile() = default;
-        ~IProjectile() override = default;
+        ProjectileBase() = default;
+        ~ProjectileBase() override = default;
 
         void Initialize(glm::vec2&& somePosition, glm::vec2&& someMovementDirection, float someRotation)
         {

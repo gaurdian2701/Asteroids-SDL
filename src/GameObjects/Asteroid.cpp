@@ -2,6 +2,7 @@
 #include "Assets/Components/Renderer2D.h"
 #include "Assets/Components/Transform.h"
 #include "Core/CoreSystems/TextureResourceManager.h"
+#include "Core/CoreSystems/EventSystem/EventSystem.h"
 
 const inline std::string ASTEROID_TEXTURE_FILEPATH = "images/img_asteroid.png";
 
@@ -26,15 +27,27 @@ void Asteroids::GameObjects::Asteroid::Start()
 	renderer->RenderTexture = Core::CoreSystems::TextureResourceManager::
 			GetInstance().TryLoadAndGetTexture(ASTEROID_TEXTURE_FILEPATH);
 
+	ResetVelocity();
+}
+
+void Asteroids::GameObjects::Asteroid::ResetVelocity()
+{
+	auto transform = GetComponent<Assets::Components::Transform>();
+
+	transform->LocalPosition = m_startingPosition;
+
 	std::uniform_real_distribution<float> random_distribution(-m_velocityDirectionDeviation,
-	                                                          m_velocityDirectionDeviation);
+														  m_velocityDirectionDeviation);
 
 	//Set starting velocity to move towards the center with a random deviation
-	if (glm::length(transform->LocalPosition) > 0.0f) {
+	if (glm::length(transform->LocalPosition) > 0.0f)
+	{
 		m_initialVelocity = -glm::normalize(transform->LocalPosition) +
-		                    glm::vec2(random_distribution(m_randomGenerator),
-		                              random_distribution(m_randomGenerator));
-	} else {
+							glm::vec2(random_distribution(m_randomGenerator),
+									  random_distribution(m_randomGenerator));
+	}
+	else
+	{
 		//Don't move at all
 		m_initialVelocity = glm::vec2(0.0f);
 	}
@@ -46,7 +59,22 @@ void Asteroids::GameObjects::Asteroid::Start()
 
 void Asteroids::GameObjects::Asteroid::Update(const float deltaTime)
 {
-	auto transform = GetComponent<Assets::Components::Transform>();
-	transform->LocalPosition +=  m_moveSpeed * deltaTime * m_initialVelocity;
-	transform->LocalRotation += m_rotationSpeed * deltaTime;
+	if (m_isActive)
+	{
+		auto transform = GetComponent<Assets::Components::Transform>();
+		transform->LocalPosition +=  m_moveSpeed * deltaTime * m_initialVelocity;
+		transform->LocalRotation += m_rotationSpeed * deltaTime;
+
+		//Is the asteroid outside of the circle?
+		if (transform->LocalPosition.x * transform->LocalPosition.x + transform->LocalPosition.y * transform->LocalPosition.y > m_activeRadius
+			* m_activeRadius)
+		{
+			m_isActive = false;
+
+			Core::Events::EventSystem::GetInstance().PublishEvent<UnitObjectPool::ReturnUnitToPoolEvent>(Core::Events::EventType::GameEvent,
+				m_returnToPoolEvent);
+			Core::Events::EventSystem::GetInstance().PublishEvent<UnitManager::SpawnUnitEvent>(Core::Events::EventType::GameEvent,
+				m_spawnEvent);
+		}
+	}
 }

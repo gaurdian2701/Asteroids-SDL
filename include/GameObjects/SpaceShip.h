@@ -3,7 +3,7 @@
 
 namespace Asteroids::GameObjects
 {
-	class ProjectilePool;
+	class GenericObjectPool;
 }
 
 namespace Asteroids::GameActions
@@ -40,6 +40,6 @@ namespace Asteroids::GameObjects
 		GameActions::PlayerControlAction* m_playerControlAction = nullptr;
 
 	public:
-		ProjectilePool* m_projectilePool = nullptr;
+		GenericObjectPool* m_projectilePool = nullptr;
 	};
 }

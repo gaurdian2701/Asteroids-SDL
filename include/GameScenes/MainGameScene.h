@@ -6,7 +6,8 @@ namespace Asteroids::GameObjects
     class SpaceShip;
     class LoneParticleEmitter;
     class UnitManager;
-    class ProjectilePool;
+    class ProjectileObjectPool;
+    class UnitObjectPool;
 }
 
 namespace Asteroids::GameScenes
@@ -33,6 +34,7 @@ namespace Asteroids::GameScenes
         GameObjects::SpaceShip* m_spaceShip = nullptr;
         GameObjects::LoneParticleEmitter* m_loneEmitter = nullptr;
         GameObjects::UnitManager* m_unitManager = nullptr;
-        GameObjects::ProjectilePool* m_projectilePool = nullptr;
+        GameObjects::ProjectileObjectPool* m_projectilePool = nullptr;
+        GameObjects::UnitObjectPool* m_asteroidPool = nullptr;
     };
 }

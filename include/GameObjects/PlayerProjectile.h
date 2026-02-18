@@ -1,10 +1,10 @@
 ﻿#pragma once
-#include "IProjectile.h"
-#include "ProjectilePool.h"
+#include "ProjectileBase.h"
+#include "GameObjects/ObjectPooling/ProjectileObjectPool.h"
 
 namespace Asteroids::GameObjects
 {
-    class PlayerProjectile : public IProjectile
+    class PlayerProjectile : public ProjectileBase
     {
     public:
         PlayerProjectile() = default;
@@ -15,6 +15,6 @@ namespace Asteroids::GameObjects
         void Update(const float deltaTime) override;
 
     private:
-        ProjectilePool::ReturnProjectileToPoolEvent m_poolReturnEvent = ProjectilePool::ReturnProjectileToPoolEvent(this);
+        ProjectileObjectPool::ReturnProjectileToPoolEvent m_returnToPoolEvent = ProjectileObjectPool::ReturnProjectileToPoolEvent(this);
     };
 }
