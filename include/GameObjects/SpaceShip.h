@@ -3,7 +3,7 @@
 
 namespace Asteroids::GameObjects
 {
-	class GenericObjectPool;
+	class PoolManager;
 }
 
 namespace Asteroids::GameActions
@@ -38,8 +38,5 @@ namespace Asteroids::GameObjects
 		float m_bulletLaunchOffset = 20.0f;
 		Actions::ActionStack* m_spaceshipActionStack = nullptr;
 		GameActions::PlayerControlAction* m_playerControlAction = nullptr;
-
-	public:
-		GenericObjectPool* m_projectilePool = nullptr;
 	};
 }

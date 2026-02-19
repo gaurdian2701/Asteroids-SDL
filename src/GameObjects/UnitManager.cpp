@@ -3,7 +3,7 @@
 #include "GameObjects/Asteroid.h"
 #define USE_MATH_DEFINES
 #include <corecrt_math_defines.h>
-#include "../../include/GameObjects/ObjectPooling/GenericObjectPool.h"
+#include "../../include/GameObjects/PoolManager.h"
 
 void Asteroids::GameObjects::UnitManager::Start()
 {
@@ -27,17 +27,18 @@ void Asteroids::GameObjects::UnitManager::SpawnUnit(UnitType someUnitType)
     float randomPointOnUnitCircle = spawnPointDistribution(m_randomGenerator) * 2 * M_PI;
     glm::vec2 spawnPosition = m_spawnCenter +
         glm::vec2(std::cos(randomPointOnUnitCircle),
-                  std::sin(randomPointOnUnitCircle)) * m_spawnCircleRadius;
+                  std::sin(randomPointOnUnitCircle)) * (m_spawnCircleRadius);
 
     switch (someUnitType)
     {
     default:
     case UnitType::Asteroid:
         {
-            Asteroid* asteroid = static_cast<Asteroid*>(m_asteroidPool->GetObjectFromPool<Asteroid>());
+            Asteroid* asteroid = static_cast<Asteroid*>(PoolManager::GetInstance
+                (GetSceneReference()).GetObjectFromPool<Asteroid>());
             asteroid->m_size = 75.0f;
             asteroid->m_startingPosition = spawnPosition;
-            asteroid->m_activeRadius = m_spawnCircleRadius;
+            asteroid->m_activeRadius = m_spawnCircleRadius + 10.0f;
             asteroid->ResetVelocity();
             asteroid->m_isActive = true;
             break;

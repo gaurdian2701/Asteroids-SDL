@@ -70,9 +70,7 @@ void Asteroids::GameObjects::Asteroid::Update(const float deltaTime)
 			* m_activeRadius)
 		{
 			m_isActive = false;
-
-			Core::Events::EventSystem::GetInstance().PublishEvent<UnitObjectPool::ReturnUnitToPoolEvent>(Core::Events::EventType::GameEvent,
-				m_returnToPoolEvent);
+			PoolManager::GetInstance(GetSceneReference()).ReturnObjectToPool<Asteroid>(this);
 			Core::Events::EventSystem::GetInstance().PublishEvent<UnitManager::SpawnUnitEvent>(Core::Events::EventType::GameEvent,
 				m_spawnEvent);
 		}

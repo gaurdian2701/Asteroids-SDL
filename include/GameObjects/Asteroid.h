@@ -1,7 +1,6 @@
 ﻿#pragma once
+#include "PoolManager.h"
 #include "UnitManager.h"
-#include "ObjectPooling/UnitObjectPool.h"
-#include "ObjectPooling/UnitObjectPool.h"
 #include "Scene/GameObject.h"
 
 namespace Asteroids::GameObjects
@@ -29,7 +28,6 @@ namespace Asteroids::GameObjects
 		float m_velocityDirectionDeviation = 0.0f;
 		std::default_random_engine m_randomGenerator;
 		glm::vec2 m_initialVelocity = glm::vec2(0.0f);
-        UnitObjectPool::ReturnUnitToPoolEvent m_returnToPoolEvent = UnitObjectPool::ReturnUnitToPoolEvent(this);
 		UnitManager::SpawnUnitEvent m_spawnEvent = UnitManager::SpawnUnitEvent(UnitManager::UnitType::Asteroid);
 	};
 }

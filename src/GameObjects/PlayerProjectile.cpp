@@ -4,7 +4,6 @@
 #include "Core/CoreSystems/TextureResourceManager.h"
 #include "Core/CoreSystems/EventSystem/EventSystem.h"
 #include "Core/GameScene.h"
-#include "GameObjects/ObjectPooling/ProjectileObjectPool.h"
 
 const inline std::string BULLET_IMAGE_FILEPATH = "images/img_bullet.png";
 
@@ -37,8 +36,7 @@ void Asteroids::GameObjects::PlayerProjectile::Update(const float deltaTime)
 
         if (GetSceneReference().IsGameObjectOutOfBounds(this))
         {
-            Core::Events::EventSystem::GetInstance().PublishEvent<ProjectileObjectPool::ReturnProjectileToPoolEvent>(
-                Core::Events::EventType::GameEvent, m_returnToPoolEvent);
+            PoolManager::GetInstance(GetSceneReference()).ReturnObjectToPool<PlayerProjectile>(this);
             m_isActive = false;
         }
     }

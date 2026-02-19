@@ -4,7 +4,7 @@
 
 namespace Asteroids::GameObjects
 {
-	class GenericObjectPool;
+	class PoolManager;
 }
 
 namespace Actions
@@ -37,9 +37,6 @@ namespace Asteroids::GameObjects
 
 	private:
 		void SpawnUnit(UnitType someUnitType);
-
-	public:
-		GenericObjectPool* m_asteroidPool = nullptr;
 
 	private:
 		float m_defaultAsteroidSize = 75.0f;

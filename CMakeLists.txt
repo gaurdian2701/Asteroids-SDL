@@ -30,11 +30,7 @@ add_executable(
         include/GameObjects/PlayerProjectile.h
         src/GameObjects/PlayerProjectile.cpp
         include/GameObjects/ProjectileBase.h
-        include/GameObjects/ObjectPooling/GenericObjectPool.h
-        include/GameObjects/ObjectPooling/ProjectileObjectPool.h
-        src/GameObjects/ObjectPooling/ProjectileObjectPool.cpp
-        include/GameObjects/ObjectPooling/UnitObjectPool.h
-        src/GameObjects/ObjectPooling/UnitObjectPool.cpp
+        include/GameObjects/PoolManager.h
 )
 
 set_target_properties(
