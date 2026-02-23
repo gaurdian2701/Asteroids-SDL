@@ -1,19 +1,8 @@
 ﻿#include "Core/ECS/ECSManager.h"
-
 #include "Core/ECS/Systems/ParticleSystem.h"
+#include "Core/ECS/Systems/PhysicsSystem.h"
 #include "Core/ECS/Systems/RenderingSystem.h"
 #include "Core/ECS/Systems/TransformSolverSystem.h"
-
-static Core::ECS::ECSManager* ECSManagerInstance = nullptr;
-
-Core::ECS::ECSManager::ECSManager(const std::uint32_t maxEntities) : m_maxEntities(maxEntities)
-{
-	if (ECSManagerInstance == nullptr)
-	{
-		ECSManagerInstance = this;
-	}
-	m_componentRemovalHandles.resize(MAX_COMPONENT_TYPES);
-}
 
 std::vector<void(*)(Core::ECS::ECSManager &, const std::uint32_t)>&
 Core::ECS::ECSManager::GetComponentRemovalHandlesArray()
@@ -21,17 +10,25 @@ Core::ECS::ECSManager::GetComponentRemovalHandlesArray()
 	return m_componentRemovalHandles;
 }
 
-void Core::ECS::ECSManager::InitializeManager()
+void Core::ECS::ECSManager::InitializeManager(uint32_t someMaxEntities)
 {
+	static bool hasInitialized = false;
+	if (hasInitialized)
+	{
+		return;
+	}
+	m_maxEntities = someMaxEntities;
 	CreateSystems();
 	InitializeSystems();
+	hasInitialized = true;
 }
 
 void Core::ECS::ECSManager::CreateSystems()
 {
 	m_SystemsList.push_back(new Systems::TransformSolverSystem());
-	m_SystemsList.push_back(new Systems::RenderingSystem());
 	m_SystemsList.push_back(new Systems::ParticleSystem());
+	m_SystemsList.push_back(new Systems::PhysicsSystem());
+	m_SystemsList.push_back(new Systems::RenderingSystem());
 }
 
 void Core::ECS::ECSManager::InitializeSystems()
@@ -42,18 +39,12 @@ void Core::ECS::ECSManager::InitializeSystems()
 	}
 }
 
-
 void Core::ECS::ECSManager::BeginSystems()
 {
 	for (auto& system : m_SystemsList)
 	{
 		system->BeginSystem();
 	}
-}
-
-Core::ECS::ECSManager& Core::ECS::ECSManager::GetInstance()
-{
-	return *ECSManagerInstance;
 }
 
 void Core::ECS::ECSManager::UpdateManager(const float deltaTime)

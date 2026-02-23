@@ -52,9 +52,17 @@ void Core::ECS::Systems::ParticleSystem::UpdateSystem(const float deltaTime)
 			std::uniform_int_distribution<int> randomDistribution(
 				-particleEmitter->MaxDeviation, particleEmitter->MaxDeviation);
 
-			particleVelocity = particleEmitter->Velocity * -transform->Up;
+			if (particleEmitter->UseOwnerDirection)
+			{
+				particleVelocity = particleEmitter->ParticleSpeed * transform->Up;
+			}
+			else
+			{
+				particleVelocity = particleEmitter->ParticleSpeed * particleEmitter->Direction;
+			}
 
-			for (auto &particle: particleEmitter->Particles) {
+			for (auto &particle: particleEmitter->Particles)
+			{
 				//Simulation
 				particle.CurrentPosition += particleVelocity * deltaTime;
 

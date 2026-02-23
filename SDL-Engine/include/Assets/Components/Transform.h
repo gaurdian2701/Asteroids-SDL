@@ -93,16 +93,6 @@ namespace Assets::Components
             ParentEntity = parent->GetEntityID();
         }
 
-        const glm::vec2& GetRecalculatedWorldPosition()
-        {
-            if (ParentEntity == Core::INVALID_ENTITY_ID)
-            {
-                WorldPosition = LocalPosition;
-            }
-
-            return WorldPosition;
-        }
-
         Scene::GameObject* Owner = nullptr;
 
         glm::vec2 WorldPosition = glm::vec2(0.0f);

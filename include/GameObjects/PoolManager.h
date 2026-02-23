@@ -62,12 +62,9 @@ namespace Asteroids::GameObjects
 
     public:
         PoolManager() = default;
-        ~PoolManager() override = default;
-
-        static PoolManager& GetInstance(Core::GameScene& someSceneReference)
+        ~PoolManager() override
         {
-            static PoolManager* instance = someSceneReference.AddGameObject<PoolManager>();
-            return *instance;
+            m_poolMap.clear();
         }
 
         template<typename GameObjectType>
@@ -82,7 +79,7 @@ namespace Asteroids::GameObjects
         }
 
         template<std::derived_from<GameObject> GameObjectType>
-        GameObject* GetObjectFromPool()
+        GameObjectType* GetObjectFromPool()
         {
             auto& poolList = m_poolMap[std::type_index(typeid(GameObjectType))];
 
@@ -99,11 +96,16 @@ namespace Asteroids::GameObjects
             if (poolIterator != poolList.end() && poolIterator->m_gameObject != nullptr)
             {
                 poolIterator->m_isUsed = true;
-                return poolIterator->m_gameObject;
+                return static_cast<GameObjectType*>(poolIterator->m_gameObject);
             }
 
-            poolList.emplace_back(true, GetSceneReference().AddGameObject<GameObjectType>());
-            return poolList.back().m_gameObject;
+            if (poolList.size() < m_maxPoolSize)
+            {
+                poolList.emplace_back(true, GetSceneReference().AddGameObject<GameObjectType>());
+                return static_cast<GameObjectType*>(poolList.back().m_gameObject);
+            }
+
+            return nullptr;
         }
 
         template<std::derived_from<GameObject> GameObjectType>

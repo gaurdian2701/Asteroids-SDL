@@ -1,6 +1,15 @@
 ﻿#pragma once
-#include "PoolManager.h"
 #include "ProjectileBase.h"
+
+namespace Asteroids::GameObjects
+{
+    class PoolManager;
+}
+
+namespace Asteroids::GameObjects
+{
+    class SpaceShip;
+}
 
 namespace Asteroids::GameObjects
 {
@@ -10,8 +19,12 @@ namespace Asteroids::GameObjects
         PlayerProjectile() = default;
         ~PlayerProjectile() override = default;
 
-        void AddComponentsBeforeStartup() override;
         void Start() override;
-        void Update(const float deltaTime) override;
+        void DisableProjectile() override;
+        void CheckForCollisions() override;
+
+    private:
+        SpaceShip* m_player = nullptr;
+        PoolManager* m_poolManager = nullptr;
     };
 }

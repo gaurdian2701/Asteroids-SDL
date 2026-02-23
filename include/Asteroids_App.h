@@ -28,6 +28,8 @@ public:
     void UpdateApplication(float deltaTime) override;
     void EndApplication() override;
 
+    void NotifySceneForDelete(Core::GameScene* someScene);
+
 private:
     void InitializeAppSystems();
     void StartGame();

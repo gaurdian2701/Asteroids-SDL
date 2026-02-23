@@ -34,5 +34,12 @@ SDL_Texture* Core::CoreSystems::TextureResourceManager::GetTexture(const std::st
 	return m_textureMap[someImageFilePath];
 }
 
+void Core::CoreSystems::TextureResourceManager::ClearData()
+{
+	m_textureMap.clear();
+	m_surfacesMap.clear();
+}
+
+
 
 

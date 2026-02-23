@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include <random>
 #include "Scene/GameObject.h"
 
 namespace Asteroids::GameObjects
@@ -23,10 +22,22 @@ namespace Asteroids::GameObjects
 			EnemyShip = 1
 		};
 
-		struct SpawnUnitEvent
+		struct UnitLeftActiveRadiusEvent
 		{
-			explicit SpawnUnitEvent(UnitType someUnitType) : m_unitType(someUnitType) {}
-			UnitType m_unitType = UnitType::Asteroid;
+			explicit UnitLeftActiveRadiusEvent(GameObject* someUnit, UnitType someUnitType) :
+			Unit(someUnit), UnitType(someUnitType) {}
+
+			GameObject* Unit = nullptr;
+			UnitType UnitType = UnitType::Asteroid;
+		};
+
+		struct UnitDestroyedEvent
+		{
+			explicit UnitDestroyedEvent(GameObject* someUnit, UnitType someUnitType) :
+			Unit(someUnit), UnitType(someUnitType) {}
+
+			GameObject* Unit = nullptr;
+			UnitType UnitType = UnitType::Asteroid;
 		};
 
 		UnitManager() = default;
@@ -34,14 +45,24 @@ namespace Asteroids::GameObjects
 
 		void Start() override;
 		void Update(const float deltaTime) override;
+		void End() override;
 
 	private:
 		void SpawnUnit(UnitType someUnitType);
+		void OnUnitLeftActiveRadius(GameObject* someUnit, UnitType someUnitType);
+		void OnUnitDestroyed(GameObject* someUnit, UnitType someUnitType);
 
 	private:
+		float m_timeBetweenAsteroidSpawns = 3.0f;
+		float m_timeBetweenEnemySpawns = 10.0f;
+		float m_asteroidSpawnTimer = 0.0f;
+		float m_enemySpawnTimer = 0.0f;
+		float m_timeTillFirstEnemySpawn = 20.0f;
 		float m_defaultAsteroidSize = 75.0f;
 		float m_spawnCircleRadius = 650.0f;
-		std::default_random_engine m_randomGenerator;
+		uint32_t m_leftActiveRadiusFunctionID = 0;
+		uint32_t m_unitDestroyedFunctionID = 0;
 		const glm::vec2 m_spawnCenter = glm::vec2(0.0f);
+		PoolManager* m_poolManager = nullptr;
 	};
 }

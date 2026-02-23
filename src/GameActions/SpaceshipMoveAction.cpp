@@ -6,10 +6,10 @@
 
 void Asteroids::GameActions::SpaceshipMoveAction::OnUpdate(float deltaTime)
 {
-    m_playerInputAction->OnUpdate(deltaTime);
+    m_controlAction->OnUpdate(deltaTime);
 
-    auto transform = m_spaceshipGameObject->GetComponent<Assets::Components::Transform>();
-    const float translationInput = m_playerInputAction->GetTranslationValue();
+    const float translationInput = m_controlAction->GetTranslationValue();
+    auto transform = m_spaceShip->GetComponent<Assets::Components::Transform>();
     glm::vec2 positionPreviousFrame = transform->LocalPosition;
 
     if (translationInput > 0.1f)
@@ -42,7 +42,7 @@ void Asteroids::GameActions::SpaceshipMoveAction::OnUpdate(float deltaTime)
 
     m_currentMoveSpeed = std::clamp(m_currentMoveSpeed, 0.0f, m_maxMoveSpeed);
     m_residualSpeed = std::clamp(m_residualSpeed, 0.0f, m_maxMoveSpeed);
-    transform->LocalRotation = m_playerInputAction->GetRotationValue() * m_rotationSpeed;
+    transform->LocalRotation = m_controlAction->GetRotationValue() * m_rotationSpeed;
 }
 
 bool Asteroids::GameActions::SpaceshipMoveAction::IsDone()

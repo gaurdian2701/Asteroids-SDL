@@ -15,11 +15,20 @@ namespace Core::ECS
     class ECSManager
     {
     public:
-        explicit ECSManager(const std::uint32_t maxEntities);
+        ECSManager()
+        {
+            m_componentRemovalHandles.resize(MAX_COMPONENT_TYPES);
+        }
+
         ~ECSManager() = default;
 
-        static ECSManager& GetInstance();
-        void InitializeManager();
+        static ECSManager& GetInstance()
+        {
+            static ECSManager* instance = new ECSManager();
+            return *instance;
+        }
+
+        void InitializeManager(uint32_t someMaxEntities);
         void UpdateManager(const float deltaTime);
         void BeginSystems();
 
@@ -141,6 +150,37 @@ namespace Core::ECS
             {
                 uint32_t entityID = entities[index];
                 someFunctor(GetComponent<FirstComponentType>(entityID), GetComponent<OtherComponentTypes>(entityID) ...);
+            }
+        }
+
+        template<typename FirstComponentType, typename ... OtherComponentTypes, typename Functor>
+        void BreakableForEachUsingComponentsWithEntityID(const Functor& someFunctor)
+        {
+            const auto& entities = GetSmallestDenseEntityArray<FirstComponentType, OtherComponentTypes ...>();
+            bool breakInitiated = false;
+
+            //Query dense component arrays and pass them into the functor
+            for (uint32_t index = 1; index < entities.size(); ++index)
+            {
+                uint32_t entityID = entities[index];
+                someFunctor(breakInitiated, entityID, GetComponent<FirstComponentType>(entityID), GetComponent<OtherComponentTypes>(entityID) ...);
+                if (breakInitiated)
+                {
+                    break;
+                }
+            }
+        }
+
+        template<typename FirstComponentType, typename ... OtherComponentTypes, typename Functor>
+        void ForEachUsingComponentsWithEntityID(const Functor& someFunctor)
+        {
+            const auto& entities = GetSmallestDenseEntityArray<FirstComponentType, OtherComponentTypes ...>();
+
+            //Query dense component arrays and pass them into the functor
+            for (uint32_t index = 1; index < entities.size(); ++index)
+            {
+                uint32_t entityID = entities[index];
+                someFunctor(entityID, GetComponent<FirstComponentType>(entityID), GetComponent<OtherComponentTypes>(entityID) ...);
             }
         }
 

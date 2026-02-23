@@ -3,8 +3,9 @@
 
 namespace Asteroids::GameObjects
 {
+    class EnemySpaceship;
     class SpaceShip;
-    class LoneParticleEmitter;
+    class SpaceShipParticleEmitter;
     class UnitManager;
     class PoolManager;
 }
@@ -25,13 +26,11 @@ namespace Asteroids::GameScenes
         void InitializeGameObjectReferences() override;
         void Start() override;
         void Update(const float deltaTime) override;
-#ifdef _DEBUG
-        void SetGameObjectDebugNames() override;
-#endif
 
     private:
+        GameObjects::PoolManager* m_poolManager = nullptr;
         GameObjects::SpaceShip* m_spaceShip = nullptr;
-        GameObjects::LoneParticleEmitter* m_loneEmitter = nullptr;
+        GameObjects::SpaceShipParticleEmitter* m_loneEmitter = nullptr;
         GameObjects::UnitManager* m_unitManager = nullptr;
     };
 }

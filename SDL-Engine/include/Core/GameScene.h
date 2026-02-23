@@ -28,28 +28,26 @@ namespace Core
         void DeleteGameObject(Scene::GameObject* someGameObject);
         inline void UnTrackGameObject(Scene::GameObject* someGameObject);
         void GarbageCollect();
-        void CleanupScene();
+        void SetupForEnd();
+        bool HasEnded() const {return m_sceneEndTriggered;}
 
 #ifdef _DEBUG
-        virtual void SetGameObjectDebugNames(){}
 #endif
-
-        bool IsGameObjectOutOfBounds(Scene::GameObject* someGameObject);
 
         template<typename T>
         void AddComponentToEntity(Scene::GameObject& someGameObject, const std::uint32_t someEntityID)
         {
-            m_ECSManager.AddComponent<T>(someEntityID);
+            Core::ECS::ECSManager::GetInstance().AddComponent<T>(someEntityID);
             AddComponentToGameObjectData(someGameObject,
-                m_ECSManager.GetGeneratedComponentTypeIndex<T>(m_ECSManager));
+                Core::ECS::ECSManager::GetInstance().GetGeneratedComponentTypeIndex<T>(Core::ECS::ECSManager::GetInstance()));
         }
 
         template<typename T>
         void RemoveComponentFromEntity(Scene::GameObject& someGameObject, const std::uint32_t someEntityID)
         {
-            m_ECSManager.RemoveComponent<T>(someEntityID);
+            Core::ECS::ECSManager::GetInstance().RemoveComponent<T>(someEntityID);
             RemoveComponentFromGameObjectData(someGameObject,
-                m_ECSManager.GetGeneratedComponentTypeIndex<T>(m_ECSManager));
+                Core::ECS::ECSManager::GetInstance().GetGeneratedComponentTypeIndex<T>(Core::ECS::ECSManager::GetInstance()));
         }
 
         void RemoveComponentFromEntityUsingTypeIndex(const std::uint32_t someEntityID,
@@ -68,9 +66,19 @@ namespace Core
             }
 
             m_gameObjectsInScene.push_back(new GameObjectType(std::forward<Args>(gameObjectArguments)...));
+            m_entityToGameObjectMap[std::type_index(typeid(GameObjectType))].push_back(m_gameObjectsInScene.back());
             InitializeGameObject(m_gameObjectsInScene.back());
             return static_cast<GameObjectType*>(m_gameObjectsInScene.back());
         }
+
+        template<std::derived_from<Scene::GameObject> GameObjectType>
+        GameObjectType* GetGameObjectUsingType()
+        {
+            auto& gameObjectList = m_entityToGameObjectMap[std::type_index(typeid(GameObjectType))];
+            return static_cast<GameObjectType*>(SearchGameObjectByType(typeid(GameObjectType), gameObjectList));
+        }
+
+        Scene::GameObject* GetGameObjectFromEntityID(std::uint32_t someEntityID);
 
     protected:
         virtual void InitializeGameObjectReferences(){}
@@ -79,15 +87,19 @@ namespace Core
 #endif
 
     private:
+        Scene::GameObject* SearchGameObjectByType(const type_info &typeInfo, std::vector<Scene::GameObject*>& someList);
         void InitializeGameObject(Scene::GameObject* someGameObject);
         void RegisterComponents();
+        void CleanupScene();
 
     protected:
+        float m_sceneBoundsRadius;
         std::vector<Scene::GameObject*> m_gameObjectsInScene;
 
     private:
-        ECS::ECSManager m_ECSManager;
+        bool m_sceneEndTriggered = false;
         std::vector<Scene::GameObject*> m_startQueue = std::vector<Scene::GameObject*>();
+        std::unordered_map<std::type_index, std::vector<Scene::GameObject*>> m_entityToGameObjectMap;
         uint32_t m_maxEntityCount = 0;
         glm::vec2 m_minCartesianLimits = glm::vec2(0.0f);
         glm::vec2 m_maxCartesianLimits = glm::vec2(0.0f);

@@ -1,15 +1,15 @@
 ﻿#include "GameScenes/MainGameScene.h"
 #include "Assets/Components/Transform.h"
-#include "GameObjects/ProjectileBase.h"
-#include "GameObjects/LoneParticleEmitter.h"
+#include "GameObjects/SpaceShipParticleEmitter.h"
 #include "GameObjects/SpaceShip.h"
 #include "GameObjects/UnitManager.h"
-#include "../../include/GameObjects/PoolManager.h"
+#include "GameObjects/PoolManager.h"
+
 void Asteroids::GameScenes::MainGameScene::CreateGameObjects()
 {
-    GameObjects::PoolManager::GetInstance(*this);
+    m_poolManager = AddGameObject<GameObjects::PoolManager>();
     m_spaceShip = AddGameObject<GameObjects::SpaceShip>();
-    m_loneEmitter = AddGameObject<GameObjects::LoneParticleEmitter>();
+    m_loneEmitter = AddGameObject<GameObjects::SpaceShipParticleEmitter>();
     m_unitManager = AddGameObject<GameObjects::UnitManager>();
 }
 
@@ -27,14 +27,4 @@ void Asteroids::GameScenes::MainGameScene::Update(const float deltaTime)
 {
     GameScene::Update(deltaTime);
 }
-
-#ifdef _DEBUG
-void Asteroids::GameScenes::MainGameScene::SetGameObjectDebugNames()
-{
-    m_spaceShip->m_name = "Space Ship";
-    m_loneEmitter->m_name = "Lone Emitter";
-    m_unitManager->m_name = "Unit Manager";
-}
-#endif
-
 

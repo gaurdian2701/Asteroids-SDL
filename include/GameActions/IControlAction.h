@@ -9,9 +9,6 @@ namespace Asteroids::GameActions
 		IControlAction() = default;
 		~IControlAction() override = default;
 
-		void OnBegin(bool isFirstTime) override{}
-		void OnUpdate(float deltaTime) override{}
-		void OnEnd() override{}
 		bool IsDone() override{ return false;}
 
 		virtual inline const float GetTranslationValue() = 0;

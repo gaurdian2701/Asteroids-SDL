@@ -32,6 +32,9 @@ add_library(
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/Systems/ParticleSystem.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/Systems/TransformSolverSystem.cpp
         include/Core/HelperFunctions.h
+        include/Assets/Components/Collider2D.h
+        include/Core/ECS/Systems/PhysicsSystem.h
+        src/Core/ECS/Systems/PhysicsSystem.cpp
 )
 
 EnableASANCompileOptions(${ENGINE_BINARY_NAME})

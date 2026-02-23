@@ -10,14 +10,13 @@ add_executable(
             ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/Asteroids_App.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SpaceShip.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/LoneParticleEmitter.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SpaceShipParticleEmitter.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameScenes/MainGameScene.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/Actions/ActionStack.cpp
         include/GameActionStack.h
         src/GameActionStack.cpp
         include/Actions/IAction.h
         include/GameActions/GameSceneAction.h
-        src/GameActions/GameSceneAction.cpp
         include/GameActions/PlayerControlAction.h
         src/GameActions/PlayerControlAction.cpp
         include/GameActions/SpaceshipMoveAction.h
@@ -31,6 +30,15 @@ add_executable(
         src/GameObjects/PlayerProjectile.cpp
         include/GameObjects/ProjectileBase.h
         include/GameObjects/PoolManager.h
+        include/MiscFunctions.h
+        include/GameActions/EnemyControlAction.h
+        src/GameActions/EnemyControlAction.cpp
+        include/GameObjects/EnemySpaceship.h
+        src/GameObjects/EnemySpaceship.cpp
+        src/GameObjects/ProjectileBase.cpp
+        include/GameObjects/EnemyProjectile.h
+        src/GameObjects/EnemyProjectile.cpp
+        include/GameObjects/IHostile.h
 )
 
 set_target_properties(

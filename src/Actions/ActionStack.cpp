@@ -38,7 +38,6 @@ void Actions::ActionStack::RemoveAction(IAction* someAction)
     }
 }
 
-
 void Actions::ActionStack::UpdateActions(const float deltaTime)
 {
     //is the stack empty?

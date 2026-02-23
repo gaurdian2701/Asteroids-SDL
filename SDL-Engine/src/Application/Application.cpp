@@ -126,7 +126,6 @@ void Application::UpdateCoreSystems()
     }
 }
 
-
 void Application::CheckForQuitEvent()
 {
     while (SDL_PollEvent(&m_mainEventCatcher))

@@ -24,11 +24,8 @@ namespace Asteroids::GameActions
             return m_shootButtonPressed;
         }
 
-        void OnBegin(bool isFirstTime) override{}
         void OnUpdate(float deltaTime) override;
-        void OnEnd() override{}
         bool IsDone() override;
-        bool NoInputTaken();
 
     private:
         float m_translationInput = 0.0f;

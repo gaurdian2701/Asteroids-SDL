@@ -13,10 +13,24 @@ namespace Scene
 
         virtual void AddComponentsBeforeStartup(){}
 
+#ifdef _DEBUG
+        virtual void SetDebugName(){}
+#endif
+
         virtual void Start(){}
+
+        void UpdateObject(const float deltaTime)
+        {
+            if (m_isActive)
+            {
+                Update(deltaTime);
+            }
+        }
 
         virtual void Update(const float deltaTime){}
         [[nodiscard]] std::uint32_t GetEntityID() const { return m_entityID;}
+
+        virtual void End(){}
 
         template<typename T>
         void AddComponent()
@@ -48,6 +62,7 @@ namespace Scene
         //TODO: Not used for now, but will use this in a GameScene step where I have to
         //set parents according to this pointer
         GameObject* m_parent = nullptr;
+        bool m_isActive = true;
 
     private:
         std::uint32_t m_entityID = Core::INVALID_ENTITY_ID;

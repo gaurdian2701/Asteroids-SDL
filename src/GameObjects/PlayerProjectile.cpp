@@ -1,45 +1,53 @@
 ﻿#include "GameObjects/PlayerProjectile.h"
+
+#include "MiscFunctions.h"
+#include "Assets/Components/Collider2D.h"
 #include "Assets/Components/Renderer2D.h"
 #include "Assets/Components/Transform.h"
 #include "Core/CoreSystems/TextureResourceManager.h"
-#include "Core/CoreSystems/EventSystem/EventSystem.h"
-#include "Core/GameScene.h"
-
-const inline std::string BULLET_IMAGE_FILEPATH = "images/img_bullet.png";
-
-void Asteroids::GameObjects::PlayerProjectile::AddComponentsBeforeStartup()
-{
-    AddComponent<Assets::Components::Transform>();
-    AddComponent<Assets::Components::Renderer2D>();
-}
+#include "GameObjects/Asteroid.h"
+#include "GameObjects/EnemySpaceship.h"
+#include "GameObjects/PoolManager.h"
+#include "GameObjects/SpaceShip.h"
 
 void Asteroids::GameObjects::PlayerProjectile::Start()
 {
-    auto transform = GetComponent<Assets::Components::Transform>();
-    transform->Owner = this;
+	ProjectileBase::Start();
 
-    auto renderer = GetComponent<Assets::Components::Renderer2D>();
-    renderer->RenderTexture = Core::CoreSystems::TextureResourceManager::GetInstance().TryLoadAndGetTexture(BULLET_IMAGE_FILEPATH);
-    renderer->Color = SDL_FColor(255, 0, 0, 255);
+	auto renderer = GetComponent<Assets::Components::Renderer2D>();
+	renderer->Color = SDL_FColor(255, 0, 0, 255);
+
+	m_player = GetSceneReference().GetGameObjectUsingType<SpaceShip>();
+	m_poolManager = GetSceneReference().GetGameObjectUsingType<PoolManager>();
 
 #ifdef _DEBUG
-    m_name = "Player Projectile";
+	m_name = "Player Projectile";
 #endif
 }
 
-void Asteroids::GameObjects::PlayerProjectile::Update(const float deltaTime)
+void Asteroids::GameObjects::PlayerProjectile::DisableProjectile()
 {
-    if (m_isActive)
-    {
-        auto transform = GetComponent<Assets::Components::Transform>();
-        transform->LocalPosition += m_speed * deltaTime * m_movementDirection;
-
-        if (GetSceneReference().IsGameObjectOutOfBounds(this))
-        {
-            PoolManager::GetInstance(GetSceneReference()).ReturnObjectToPool<PlayerProjectile>(this);
-            m_isActive = false;
-        }
-    }
+	m_isActive = false;
+	m_poolManager->ReturnObjectToPool<PlayerProjectile>(this);
 }
+
+void Asteroids::GameObjects::PlayerProjectile::CheckForCollisions()
+{
+	if (m_collider->EntityCollidedWith != Core::INVALID_ENTITY_ID &&
+		m_collider->EntityCollidedWith != m_player->GetEntityID())
+	{
+		GameObject* collidedObject = GetSceneReference().GetGameObjectFromEntityID(m_collider->EntityCollidedWith);
+
+		if (IHostile* hostile = dynamic_cast<IHostile*>(collidedObject))
+		{
+			hostile->OnHit();
+		}
+
+		DisableProjectile();
+		m_transform->LocalPosition = MiscFunctions::GetRandomPointOnCircle(glm::vec2(0.0f),
+		m_activeRadius);
+	}
+}
+
 
 

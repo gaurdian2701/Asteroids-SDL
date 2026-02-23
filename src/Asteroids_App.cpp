@@ -28,3 +28,12 @@ void Asteroids_App::EndApplication()
 {
     m_mainGameActionStack->End();
 }
+
+void Asteroids_App::NotifySceneForDelete(Core::GameScene *someScene)
+{
+    if (someScene != nullptr)
+    {
+        delete someScene;
+    }
+}
+

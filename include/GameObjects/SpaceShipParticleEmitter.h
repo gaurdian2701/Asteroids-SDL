@@ -3,11 +3,11 @@
 
 namespace Asteroids::GameObjects
 {
-	class LoneParticleEmitter : public Scene::GameObject
+	class SpaceShipParticleEmitter : public Scene::GameObject
 	{
 	public:
-		LoneParticleEmitter() = default;
-		~LoneParticleEmitter() override = default;
+		SpaceShipParticleEmitter() = default;
+		~SpaceShipParticleEmitter() override = default;
 
 		void AddComponentsBeforeStartup() override;
 		void Start() override;

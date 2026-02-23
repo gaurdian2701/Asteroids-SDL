@@ -74,15 +74,17 @@ namespace Assets::Components
 
 		void InitializeEmitter(uint8_t numberOfParticles,
 			glm::vec2&& someStartingOffset,
+			glm::vec2&& someInitialDirection,
 			uint16_t someMaxDeviation,
-			float someInitialVelocity,
+			float someSpeed,
 			float someLifetime,
 			float someParticleSize)
 		{
 			Particles.resize(numberOfParticles);
 			StartingOffset = someStartingOffset;
+			Direction = someInitialDirection;
+			ParticleSpeed = someSpeed;
 			MaxDeviation = someMaxDeviation;
-			Velocity = someInitialVelocity;
 			ParticleLifetime = someLifetime;
 
 			for (auto& particle : Particles)
@@ -163,17 +165,19 @@ namespace Assets::Components
 		}
 
 		glm::vec2 StartingOffset = glm::vec2(0.0f);
+		glm::vec2 Direction = glm::vec2(0.0f);
+
 		uint16_t MaxDeviation = 1;
 
 		float ParticleLifetime = 0.1f;
-		float Velocity = 0.0f;
+		float ParticleSpeed = 0.0f;
+		bool UseOwnerDirection = false;
 
 		SDL_FColor Color = SDL_FColor(255, 255, 255, 255);
 		SDL_FRect RenderRectangle = SDL_FRect(0, 0, 5, 5);
 		SDL_Texture* RenderTexture = nullptr;
 
 		Scene::GameObject* Owner = nullptr;
-
 		std::vector<Particle> Particles = std::vector<Particle>(5);
 	};
 }

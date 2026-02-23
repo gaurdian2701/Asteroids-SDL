@@ -5,35 +5,34 @@
 #include "Assets/Components/Transform.h"
 #include "Assets/Components/Renderer2D.h"
 #include "imgui.h"
+#include "../../../include/Asteroids_App.h"
+#include "Assets/Components/Collider2D.h"
 #include "Core/HelperFunctions.h"
+#include "Core/CoreSystems/TextureResourceManager.h"
 
-const inline float LOCAL_SCALING_FACTOR = 0.01f;
-
-Core::GameScene::GameScene(const std::uint32_t maxEntitiesInScene) : m_ECSManager(maxEntitiesInScene)
+Core::GameScene::GameScene(const std::uint32_t maxEntitiesInScene)
 {
-	m_maxEntityCount = maxEntitiesInScene;
-	m_gameObjectsInScene.reserve(m_maxEntityCount);
+	ECS::ECSManager::GetInstance().InitializeManager(300);
 	RegisterComponents();
-	m_ECSManager.InitializeManager();
 
+	m_gameObjectsInScene.reserve(maxEntitiesInScene);
 	m_minCartesianLimits = GetMinCartesianLimits();
 	m_maxCartesianLimits = GetMaxCartesianLimits();
+	m_maxEntityCount = maxEntitiesInScene;
 }
 
 void Core::GameScene::InitializeScene()
 {
 	CreateGameObjects();
 	InitializeGameObjectReferences();
-#ifdef _DEBUG
-	SetGameObjectDebugNames();
-#endif
 }
 
 void Core::GameScene::RegisterComponents()
 {
-	m_ECSManager.RegisterComponent<Assets::Components::Transform>();
-	m_ECSManager.RegisterComponent<Assets::Components::Renderer2D>();
-	m_ECSManager.RegisterComponent<Assets::Components::ParticleEmitter>();
+	ECS::ECSManager::GetInstance().RegisterComponent<Assets::Components::Transform>();
+	ECS::ECSManager::GetInstance().RegisterComponent<Assets::Components::Renderer2D>();
+	ECS::ECSManager::GetInstance().RegisterComponent<Assets::Components::ParticleEmitter>();
+	ECS::ECSManager::GetInstance().RegisterComponent<Assets::Components::Collider2D>();
 }
 
 void Core::GameScene::InitializeGameObject(Scene::GameObject *someGameObject)
@@ -45,19 +44,19 @@ void Core::GameScene::InitializeGameObject(Scene::GameObject *someGameObject)
 }
 
 void Core::GameScene::RemoveComponentFromEntityUsingTypeIndex(const std::uint32_t someEntityID,
-	const std::size_t someComponentTypeIndex)
+                                                              const std::size_t someComponentTypeIndex)
 {
-	m_ECSManager.GetComponentRemovalHandlesArray()[someComponentTypeIndex](m_ECSManager, someEntityID);
+	ECS::ECSManager::GetInstance().GetComponentRemovalHandlesArray()[someComponentTypeIndex](ECS::ECSManager::GetInstance(), someEntityID);
 }
 
 void Core::GameScene::AddComponentToGameObjectData(Scene::GameObject &someGameObject,
-	const std::size_t someComponentTypeIndex)
+                                                   const std::size_t someComponentTypeIndex)
 {
 	someGameObject.m_componentBitSet[someComponentTypeIndex] = true;
 }
 
 void Core::GameScene::RemoveComponentFromGameObjectData(Scene::GameObject &someGameObject,
-	const std::size_t someComponentTypeIndex)
+                                                        const std::size_t someComponentTypeIndex)
 {
 	someGameObject.m_componentBitSet[someComponentTypeIndex] = false;
 }
@@ -65,24 +64,29 @@ void Core::GameScene::RemoveComponentFromGameObjectData(Scene::GameObject &someG
 void Core::GameScene::Start()
 {
 	//Start GameObjects
-	for (auto gameObject : m_gameObjectsInScene)
-	{
+	for (auto gameObject: m_gameObjectsInScene) {
 		gameObject->Start();
 		auto gameObjectInQueue = std::find(m_startQueue.begin(), m_startQueue.end(), gameObject);
-		if (*gameObjectInQueue != nullptr && gameObjectInQueue != m_startQueue.end())
-		{
+		if (*gameObjectInQueue != nullptr && gameObjectInQueue != m_startQueue.end()) {
 			m_startQueue.erase(gameObjectInQueue);
 		}
 	}
 
 	//Start ECS Systems
-	m_ECSManager.BeginSystems();
+	ECS::ECSManager::GetInstance().BeginSystems();
 }
 
 void Core::GameScene::Update(const float deltaTime)
 {
+	if (m_sceneEndTriggered)
+	{
+		CleanupScene();
+		static_cast<Asteroids_App*>(GetApplicationInstance())->NotifySceneForDelete(this);
+		return;
+	}
+
 	//Start any newly created GameObjects in the start queue
-	for (auto gameObject : m_startQueue)
+	for (auto gameObject: m_startQueue)
 	{
 		gameObject->Start();
 	}
@@ -94,13 +98,13 @@ void Core::GameScene::Update(const float deltaTime)
 	}
 
 	//Update GameObjects
-	for (auto gameObject : m_gameObjectsInScene)
+	for (auto gameObject: m_gameObjectsInScene)
 	{
-		gameObject->Update(deltaTime);
+		gameObject->UpdateObject(deltaTime);
 	}
 
 	//Update ECS Manager
-	m_ECSManager.UpdateManager(deltaTime);
+	ECS::ECSManager::GetInstance().UpdateManager(deltaTime);
 
 #ifdef _DEBUG
 	UpdateImGuiDebugs();
@@ -109,74 +113,95 @@ void Core::GameScene::Update(const float deltaTime)
 	GarbageCollect();
 }
 
-Core::ECS::ECSManager& Core::GameScene::GetECSManager()
+Core::ECS::ECSManager &Core::GameScene::GetECSManager()
 {
-	return m_ECSManager;
+	return ECS::ECSManager::GetInstance();
 }
 
-bool Core::GameScene::IsGameObjectOutOfBounds(Scene::GameObject* someGameObject)
+Scene::GameObject *Core::GameScene::GetGameObjectFromEntityID(std::uint32_t someEntityID)
 {
-	auto transform = someGameObject->GetComponent<Assets::Components::Transform>();
-
-	glm::vec2 position = transform->GetRecalculatedWorldPosition();
-	glm::vec2 scale = transform->LocalScale;
-
-	if (position.x - scale.x > m_maxCartesianLimits.x || position.x + scale.x < m_minCartesianLimits.x
-		|| position.y + scale.y < m_maxCartesianLimits.y || position.y - scale.y > m_minCartesianLimits.y)
-	{
-		PrintDebug("%s\n", "OUT OF BOUNDS");
-		return true;
-	}
-
-	return false;
-}
-
-void Core::GameScene::DeleteGameObject(Scene::GameObject* someGameObject)
-{
-	//Use Component ID to remove components from gameobject, hence untracking them in the ECS
-	for (std::size_t typeIndex = 0; typeIndex < MAX_COMPONENT_TYPES; typeIndex++)
-	{
-		if (someGameObject->m_componentBitSet[typeIndex])
+	auto gameObjectFound = std::find_if(m_gameObjectsInScene.begin(),
+		m_gameObjectsInScene.end(),
+		[&](Scene::GameObject* gameObjectInList)
 		{
-			RemoveComponentFromEntityUsingTypeIndex(someGameObject->m_entityID, typeIndex);
-			someGameObject->m_componentBitSet[typeIndex] = false;
-		}
-	}
+			if (gameObjectInList->GetEntityID() == someEntityID) {
+				return true;
+			}
+			return false;
+		});
 
-	UnTrackGameObject(someGameObject); //Untrack entityID
-	someGameObject->m_sceneReference = nullptr;
-
-	//Remove from scene list
-	int gameObjectIndexInSceneList = 0;
-	for (const auto gameObject : m_gameObjectsInScene)
+	if (gameObjectFound != m_gameObjectsInScene.end() && *gameObjectFound != nullptr)
 	{
-		if (gameObject != nullptr && gameObject->GetEntityID() == someGameObject->GetEntityID())
-		{
-			break;
-		}
-		gameObjectIndexInSceneList++;
+		return *gameObjectFound;
 	}
-
-	//Set gameobject reference to nullptr and cleanup after
-	m_gameObjectsInScene[gameObjectIndexInSceneList] = nullptr;
-	delete someGameObject;
+	return nullptr;
 }
 
-void Core::GameScene::UnTrackGameObject(Scene::GameObject* someGameObject)
+Scene::GameObject *Core::GameScene::SearchGameObjectByType(const type_info &typeInfo, std::vector<Scene::GameObject *> &someList)
 {
-	m_ECSManager.FreeEntityID(someGameObject->GetEntityID());
+	auto gameObjectFound = std::find_if(someList.begin(), someList.end(),
+	[&](Scene::GameObject* gameObjectInList)
+	{
+		if (typeid(*gameObjectInList) == typeInfo)
+		{
+			return true;
+		}
+		return false;
+	});
+	if (gameObjectFound != someList.end())
+	{
+		return *gameObjectFound;
+	}
+	return nullptr;
+}
+
+void Core::GameScene::DeleteGameObject(Scene::GameObject *someGameObject)
+{
+	if (someGameObject != nullptr)
+	{
+		someGameObject->m_isActive = false;
+
+		//Use Component ID to remove components from gameobject, hence untracking them in the ECS
+		for (std::size_t typeIndex = 0; typeIndex < MAX_COMPONENT_TYPES; typeIndex++) {
+			if (someGameObject->m_componentBitSet[typeIndex]) {
+				RemoveComponentFromEntityUsingTypeIndex(someGameObject->m_entityID, typeIndex);
+				someGameObject->m_componentBitSet[typeIndex] = false;
+			}
+		}
+
+		UnTrackGameObject(someGameObject); //Untrack entityID
+		someGameObject->m_sceneReference = nullptr;
+
+		auto gameObjectIterator = std::find_if(m_gameObjectsInScene.begin(), m_gameObjectsInScene.end(),
+		                                       [&](Scene::GameObject *gameObjectInList)
+		                                       {
+			                                       if (gameObjectInList == someGameObject) {
+				                                       return true;
+			                                       }
+			                                       return false;
+		                                       });
+
+		if (gameObjectIterator != m_gameObjectsInScene.end()) {
+			*gameObjectIterator = nullptr;
+		}
+
+		delete someGameObject;
+	}
+}
+
+void Core::GameScene::UnTrackGameObject(Scene::GameObject *someGameObject)
+{
+	ECS::ECSManager::GetInstance().FreeEntityID(someGameObject->GetEntityID());
 }
 
 void Core::GameScene::GarbageCollect()
 {
 	//Erase any gameobjects that are deleted from the scene list
 	int gameObjectIndexInSceneList = 0;
-	std::vector<Scene::GameObject*>::const_iterator first = m_gameObjectsInScene.begin();
+	std::vector<Scene::GameObject *>::const_iterator first = m_gameObjectsInScene.begin();
 
-	for (auto& gameObject : m_gameObjectsInScene)
-	{
-		if (gameObject == nullptr)
-		{
+	for (auto &gameObject: m_gameObjectsInScene) {
+		if (gameObject == nullptr) {
 			m_gameObjectsInScene.erase(first + gameObjectIndexInSceneList);
 		}
 		gameObjectIndexInSceneList++;
@@ -185,12 +210,16 @@ void Core::GameScene::GarbageCollect()
 
 void Core::GameScene::CleanupScene()
 {
-	for (auto& gameObject : m_gameObjectsInScene)
-	{
+	for (auto &gameObject: m_gameObjectsInScene) {
+		gameObject->End();
+	}
+
+	for (auto &gameObject: m_gameObjectsInScene) {
 		DeleteGameObject(gameObject);
 	}
 
 	m_gameObjectsInScene.erase(m_gameObjectsInScene.begin(), m_gameObjectsInScene.end());
+	CoreSystems::TextureResourceManager::GetInstance().ClearData();
 }
 
 #ifdef _DEBUG
@@ -199,17 +228,17 @@ void Core::GameScene::UpdateImGuiDebugs()
 	ImGui::Begin("Debug");
 	ImGui::Text("FRAME RATE:");
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)\n",
-	1000.0f / ImGui::GetIO().Framerate,
-	ImGui::GetIO().Framerate);
-
+	            1000.0f / ImGui::GetIO().Framerate,
+	            ImGui::GetIO().Framerate);
+	ImGui::Separator();
+	ImGui::Text("Number of Entities: %i\n", m_gameObjectsInScene.size());
+	ImGui::Separator();
 	ImGui::Text("CHANGEABLE DEBUGS: ");
 
-	for (auto& gameObject: m_gameObjectsInScene)
-	{
-		Assets::Components::Transform* transform = gameObject->GetComponent<Assets::Components::Transform>();
+	for (auto &gameObject: m_gameObjectsInScene) {
+		Assets::Components::Transform *transform = gameObject->GetComponent<Assets::Components::Transform>();
 
-		if (transform != nullptr)
-		{
+		if (transform != nullptr) {
 			ImGui::PushID(gameObject->m_entityID);
 			ImGui::Text(gameObject->m_name.c_str());
 			ImGui::DragFloat2("Position", &transform->LocalPosition.x, 0.5f, -100.0f, 100.0f);
@@ -223,4 +252,8 @@ void Core::GameScene::UpdateImGuiDebugs()
 }
 #endif
 
+void Core::GameScene::SetupForEnd()
+{
+	m_sceneEndTriggered = true;
+}
 
