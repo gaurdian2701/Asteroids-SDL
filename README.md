@@ -20,4 +20,4 @@ I currently have the following systems implemented:
 - A Transform Solver System. A simple system that solves transformations since I have parent-child transformations in the game. It is not very robust as I did not implement a hierarchy tree as I did not have the time, so all it does is blindly solve transforms for each object.
 - Physics System. For now this only detects overlaps between colliders.
 
-The game makes use of all three systems. Currently I am implementing game logic.
+The game makes use of all systems. Currently I am implementing game logic.
