@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "IHostile.h"
+#include "UnitManager.h"
 #include "Scene/GameObject.h"
 
 namespace Asteroids::GameObjects
@@ -37,7 +38,7 @@ namespace Asteroids::GameObjects
 		void OnHit() override;
 
 	private:
-		float m_timePerShot = 1.0f;
+		float m_timePerShot = 2.0f;
 		float m_shootTimer = 0.0f;
 		float m_bulletLaunchOffset = 20.0f;
 		float m_minShootingDistance = 100.0f;
@@ -49,5 +50,7 @@ namespace Asteroids::GameObjects
 		Assets::Components::Transform* m_transform = nullptr;
 		SDL_Texture* m_projectileTexture = nullptr;
 		PoolManager* m_poolManager = nullptr;
+		UnitManager::UnitDestroyedEvent m_destroyedEvent =
+			UnitManager::UnitDestroyedEvent(this, UnitManager::UnitType::EnemyShip);
 	};
 }

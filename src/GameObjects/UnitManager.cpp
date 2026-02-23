@@ -83,7 +83,7 @@ void Asteroids::GameObjects::UnitManager::Update(const float deltaTime)
 	if (m_asteroidSpawnTimer > m_timeBetweenAsteroidSpawns)
 	{
 		m_asteroidSpawnTimer = 0.0f;
-		for (uint8_t i = 0; i < 5; i++)
+		for (uint8_t i = 0; i < 3; i++)
 		{
 			SpawnUnit(UnitType::Asteroid);
 		}
@@ -122,15 +122,15 @@ void Asteroids::GameObjects::UnitManager::OnUnitLeftActiveRadius(GameObject *som
 		{
 			case UnitType::Asteroid:
 			{
-				Asteroid *asteroid = static_cast<Asteroid *>(someUnit);
+				Asteroid *asteroid = static_cast<Asteroid*>(someUnit);
 				if (asteroid != nullptr) {
 					m_poolManager->ReturnObjectToPool<Asteroid>(asteroid);
 				}
 				break;
 			}
-			case UnitType::EnemyShip:
-				break;
+
 			default:
+			case UnitType::EnemyShip:
 				break;
 		}
 	}
@@ -187,6 +187,14 @@ void Asteroids::GameObjects::UnitManager::OnUnitDestroyed(GameObject *someUnit, 
 				}
 				break;
 			}
+
+			case UnitType::EnemyShip:
+				EnemySpaceship *enemy = static_cast<EnemySpaceship*>(someUnit);
+				if (enemy != nullptr)
+				{
+					enemy->GetComponent<Assets::Components::Transform>()->LocalPosition = respawnPoint;
+				}
+				break;
 		}
 	}
 }

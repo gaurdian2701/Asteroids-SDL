@@ -112,8 +112,6 @@ void Asteroids::GameObjects::Asteroid::Update(const float deltaTime)
 
 void Asteroids::GameObjects::Asteroid::OnHit()
 {
-	PrintDebug("%s\n", "ASTEROID HAS BEEN HIT");
-
 	Core::Events::EventSystem::GetInstance().PublishEvent<UnitManager::UnitDestroyedEvent>(
 		Core::Events::EventType::GameEvent,
 		m_onDestroyedEvent);

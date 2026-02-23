@@ -10,6 +10,8 @@
 #include "GameObjects/EnemyProjectile.h"
 #include "GameObjects/PoolManager.h"
 #include "Assets/Components/ParticleEmitter.h"
+#include "Core/CoreSystems/EventSystem/EventSystem.h"
+#include "GameObjects/UnitManager.h"
 
 const inline std::string ENEMY_SPACESHIP_IMAGE_FILEPATH = "images/img_enemySpaceship.png";
 const inline std::string PROJECTILE_IMAGE_FILEPATH = "images/img_projectile.png";
@@ -85,7 +87,9 @@ void Asteroids::GameObjects::EnemySpaceship::DoShooting()
 
 void Asteroids::GameObjects::EnemySpaceship::OnHit()
 {
-
+	Core::Events::EventSystem::GetInstance().PublishEvent<UnitManager::UnitDestroyedEvent>(
+	Core::Events::EventType::GameEvent,
+	m_destroyedEvent);
 }
 
 
