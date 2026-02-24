@@ -36,6 +36,7 @@ add_library(
         include/Assets/Components/Collider2D.h
         include/Core/ECS/Systems/PhysicsSystem.h
         src/Core/ECS/Systems/PhysicsSystem.cpp
+        include/Assets/Components/UITexture.h
 )
 
 EnableASANCompileOptions(${ENGINE_BINARY_NAME})

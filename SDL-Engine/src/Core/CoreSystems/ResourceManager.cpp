@@ -1,14 +1,10 @@
 ﻿#include "Core/CoreSystems/ResourceManager.h"
 #include "Application/Application.h"
 #include "Core/AssetPathHolder.h"
+#include "SDL3/SDL_oldnames.h"
 
 Core::CoreSystems::ResourceManager::~ResourceManager()
 {
-	for (const auto& surface : m_surfacesMap)
-	{
-		SDL_DestroySurface(surface.second);
-	}
-
 	for (const auto& texture : m_textureMap)
 	{
 		SDL_DestroyTexture(texture.second);
@@ -17,13 +13,14 @@ Core::CoreSystems::ResourceManager::~ResourceManager()
 
 SDL_Texture* Core::CoreSystems::ResourceManager::TryLoadAndGetTexture(const std::string someImageFilePath)
 {
-	if (!m_surfacesMap.contains(someImageFilePath))
+	if (!m_textureMap.contains(someImageFilePath))
 	{
-		m_surfacesMap[someImageFilePath] = SDL_LoadPNG(
+		SDL_Surface* surface = SDL_LoadPNG(
 			AssetPathHolder::GetInstance().GetAssetPath(someImageFilePath).c_str());
 		m_textureMap[someImageFilePath] = SDL_CreateTextureFromSurface(
 			Application::GetCoreInstance().GetMainRenderer(),
-			m_surfacesMap[someImageFilePath]);
+			surface);
+		SDL_DestroySurface(surface);
 	}
 
 	return m_textureMap[someImageFilePath];
@@ -37,7 +34,6 @@ SDL_Texture* Core::CoreSystems::ResourceManager::GetTexture(const std::string so
 void Core::CoreSystems::ResourceManager::ClearData()
 {
 	m_textureMap.clear();
-	m_surfacesMap.clear();
 }
 
 

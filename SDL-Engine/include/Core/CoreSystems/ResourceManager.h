@@ -17,7 +17,6 @@ namespace Core::CoreSystems
 		void ClearData();
 
 	private:
-		std::unordered_map<std::string, SDL_Surface*> m_surfacesMap = std::unordered_map<std::string, SDL_Surface*>();
 		std::unordered_map<std::string, SDL_Texture*> m_textureMap = std::unordered_map<std::string, SDL_Texture*>();
 	};
 }
