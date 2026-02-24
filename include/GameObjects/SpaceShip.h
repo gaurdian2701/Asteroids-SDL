@@ -47,6 +47,7 @@ namespace Asteroids::GameObjects
 		float m_bulletLaunchOffset = 20.0f;
 		glm::vec2 m_maxCartesianLimits = glm::vec2(0.0f);
 		glm::vec2 m_minCartesianLimits = glm::vec2(0.0f);
+		SDL_Texture* m_spaceShipTexture = nullptr;
 		SDL_Texture* m_projectileTexture = nullptr;
 		Assets::Components::Transform* m_transform = nullptr;
 		Actions::ActionStack* m_actionStack = nullptr;

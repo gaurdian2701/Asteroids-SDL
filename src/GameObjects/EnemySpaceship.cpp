@@ -2,7 +2,7 @@
 #include "Assets/Components/Collider2D.h"
 #include "Assets/Components/Renderer2D.h"
 #include "Assets/Components/Transform.h"
-#include "Core/CoreSystems/TextureResourceManager.h"
+#include "Core/CoreSystems/ResourceManager.h"
 #include "Actions/ActionStack.h"
 #include "GameActions/EnemyControlAction.h"
 #include "GameObjects/SpaceShip.h"
@@ -33,10 +33,10 @@ void Asteroids::GameObjects::EnemySpaceship::Start()
 	m_transform->LocalScale = glm::vec2(m_scale);
 
 	auto renderer = GetComponent<Assets::Components::Renderer2D>();
-	renderer->RenderTexture = Core::CoreSystems::TextureResourceManager::GetInstance()
+	renderer->RenderTexture = GetSceneReference().GetResourceManager()
 			.TryLoadAndGetTexture(ENEMY_SPACESHIP_IMAGE_FILEPATH);
 
-	m_projectileTexture = Core::CoreSystems::TextureResourceManager::GetInstance().TryLoadAndGetTexture(
+	m_projectileTexture = GetSceneReference().GetResourceManager().TryLoadAndGetTexture(
 		PROJECTILE_IMAGE_FILEPATH);
 
 	auto collider = GetComponent<Assets::Components::Collider2D>();
@@ -78,7 +78,7 @@ void Asteroids::GameObjects::EnemySpaceship::DoShooting()
 
 	if (projectile != nullptr)
 	{
-		projectile->Initialize(m_transform->LocalPosition + m_transform->Up * m_bulletLaunchOffset,
+		projectile->Initialize(this, m_transform->LocalPosition + m_transform->Up * m_bulletLaunchOffset,
 							 std::forward<glm::vec2>(m_transform->Up),
 							 m_projectileTexture,
 							 m_transform->LocalRotation);

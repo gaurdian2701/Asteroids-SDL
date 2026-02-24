@@ -5,6 +5,16 @@
 
 namespace Asteroids::GameObjects
 {
+	class SpaceShip;
+}
+
+namespace Assets::Components
+{
+	struct Collider2D;
+}
+
+namespace Asteroids::GameObjects
+{
 	class Asteroid : public Scene::GameObject, public IHostile
 	{
 	public:
@@ -23,6 +33,9 @@ namespace Asteroids::GameObjects
 		void ResetVelocity();
 		void OnHit() override;
 
+	private:
+		void CheckForCollisions();
+
 	public:
 		float m_startingScale = 75.0f;
 		float m_activeRadius = 0.0f;
@@ -35,7 +48,9 @@ namespace Asteroids::GameObjects
 		float m_moveSpeed = 100.0f;
 		float m_rotationSpeed = 3.0f;
 		float m_particleSpeed = 100.0f;
+		SpaceShip* m_player = nullptr;
 		std::default_random_engine m_randomGenerator;
+		Assets::Components::Collider2D* m_collider = nullptr;
 		UnitManager::UnitLeftActiveRadiusEvent m_onLeftActiveRadiusEvent =
 				UnitManager::UnitLeftActiveRadiusEvent(this, UnitManager::UnitType::Asteroid);
 		UnitManager::UnitDestroyedEvent m_onDestroyedEvent =

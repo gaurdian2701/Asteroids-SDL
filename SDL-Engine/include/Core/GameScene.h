@@ -3,6 +3,7 @@
 #include "Application/Application.h"
 #include "Core/ECS/ECSManager.h"
 #include "PrintDebug.h"
+#include "CoreSystems/ResourceManager.h"
 
 namespace Scene
 {
@@ -15,7 +16,10 @@ namespace Core
     {
     public:
         explicit GameScene(const std::uint32_t maxEntitiesInScene);
-        virtual ~GameScene() = default;
+        virtual ~GameScene()
+        {
+            delete m_resourceManager;
+        }
 
         virtual void CreateGameObjects() = 0;
         virtual void InitializeScene();
@@ -24,12 +28,19 @@ namespace Core
         virtual void Update(const float deltaTime);
 
         ECS::ECSManager& GetECSManager();
+        CoreSystems::ResourceManager& GetResourceManager()
+        {
+            return *m_resourceManager;
+        }
 
         void DeleteGameObject(Scene::GameObject* someGameObject);
         inline void UnTrackGameObject(Scene::GameObject* someGameObject);
         void GarbageCollect();
         void SetupForEnd();
-        bool HasEnded() const {return m_sceneEndTriggered;}
+        bool HasEnded() const
+        {
+            return m_sceneEndTriggered;
+        }
 
 #ifdef _DEBUG
 #endif
@@ -100,6 +111,7 @@ namespace Core
         bool m_sceneEndTriggered = false;
         std::vector<Scene::GameObject*> m_startQueue = std::vector<Scene::GameObject*>();
         std::unordered_map<std::type_index, std::vector<Scene::GameObject*>> m_entityToGameObjectMap;
+        CoreSystems::ResourceManager* m_resourceManager = nullptr;
         uint32_t m_maxEntityCount = 0;
         glm::vec2 m_minCartesianLimits = glm::vec2(0.0f);
         glm::vec2 m_maxCartesianLimits = glm::vec2(0.0f);

@@ -4,6 +4,8 @@ set(PROJECT_NAME SDLEngine)
 
 project(${PROJECT_NAME})
 
+add_subdirectory(vendor)
+
 set(ENGINE_BINARY_NAME SDLEngineLib)
 set(VENDOR_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/vendor/include)
 set(BUILD_SHARED_LIBS OFF)
@@ -18,7 +20,6 @@ function(EnableASANCompileOptions targetProject)
     endif()
 endfunction()
 
-add_subdirectory(vendor)
 
 add_library(
         ${ENGINE_BINARY_NAME}
@@ -27,7 +28,7 @@ add_library(
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/GameScene.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/ECSManager.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/Systems/RenderingSystem.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/CoreSystems/TextureResourceManager.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/CoreSystems/ResourceManager.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/CoreSystems/InputSystem.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/Systems/ParticleSystem.cpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ECS/Systems/TransformSolverSystem.cpp

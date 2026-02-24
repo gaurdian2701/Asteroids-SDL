@@ -1,7 +1,7 @@
 ﻿#include "GameObjects/SpaceShipParticleEmitter.h"
 #include "Assets/Components/ParticleEmitter.h"
 #include "Assets/Components/Transform.h"
-#include "Core/CoreSystems/TextureResourceManager.h"
+#include "Core/CoreSystems/ResourceManager.h"
 
 const inline std::string PARTICLE_TEXTURE_FILEPATH = "images/img_fireCircle.png";
 
@@ -32,7 +32,7 @@ void Asteroids::GameObjects::SpaceShipParticleEmitter::Start()
 		5.0f);
 
 	particleEmitter->Color = SDL_FColor(251, 115, 13, 255);
-	particleEmitter->RenderTexture = Core::CoreSystems::TextureResourceManager::GetInstance()
+	particleEmitter->RenderTexture = GetSceneReference().GetResourceManager()
 	.TryLoadAndGetTexture(PARTICLE_TEXTURE_FILEPATH);
 	particleEmitter->UseOwnerDirection = true;
 	particleEmitter->Owner = this;

@@ -2,6 +2,7 @@
 #include "vec2.hpp"
 #include "Actions/IAction.h"
 #include "PlayerControlAction.h"
+#include "PrintDebug.h"
 
 namespace Asteroids::GameActions
 {
@@ -33,10 +34,7 @@ namespace Asteroids::GameActions
         {}
 
         ~SpaceshipMoveAction() override = default;
-
-        void OnBegin(bool isFirstTime) override{}
         void OnUpdate(float deltaTime) override;
-        void OnEnd() override{}
         bool IsDone() override;
 
     private:

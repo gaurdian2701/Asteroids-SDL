@@ -21,8 +21,9 @@ namespace Asteroids::GameObjects
         void Start() override;
         void Update(const float deltaTime) override;
 
-        void Initialize(glm::vec2&& somePosition, glm::vec2&& someMovementDirection, SDL_Texture* someTexture, float someRotation)
+        void Initialize(GameObject* instigator, glm::vec2&& somePosition, glm::vec2&& someMovementDirection, SDL_Texture* someTexture, float someRotation)
         {
+            m_instigator = instigator;
             m_transform = GetComponent<Assets::Components::Transform>();
             m_transform->LocalScale = glm::vec2(m_scale);
             m_transform->LocalPosition = somePosition;
@@ -42,6 +43,7 @@ namespace Asteroids::GameObjects
         float m_scale = 50.0f;
         float m_startingRotation = 0.0f;
         float m_activeRadius = 600.0f;
+        GameObject* m_instigator = nullptr;
         Assets::Components::Transform* m_transform = nullptr;
         Assets::Components::Collider2D* m_collider = nullptr;
         glm::vec2 m_movementDirection = glm::vec2(0.0f);

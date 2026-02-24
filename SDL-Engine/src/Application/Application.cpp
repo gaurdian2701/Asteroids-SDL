@@ -5,14 +5,13 @@
 #include <SDL3/SDL_init.h>
 #include "PrintDebug.h"
 #include "Core/CoreSystems/CoreSystemsHolder.h"
+#include "SDL3_ttf/SDL_ttf.h"
 
 #ifdef _DEBUG
     #include "imgui.h"
     #include "imgui_impl_sdl3.h"
     #include "imgui_impl_sdlrenderer3.h"
 #endif
-
-
 
 static Application* CoreApplicationInstance = nullptr;
 const char* WINDOW_NAME = "Asteroids";
@@ -31,6 +30,11 @@ Application::Application()
     {
         PrintDebug("SDL_Init Error: %s", SDL_GetError());
         return;
+    }
+
+    if (!TTF_Init())
+    {
+        PrintDebug("TTF Initialization Error\n");
     }
 
     m_mainWindow = SDL_CreateWindow(
@@ -80,6 +84,7 @@ void Application::InitiateShutdown()
 
     SDL_DestroyRenderer(m_mainRenderer);
     SDL_DestroyWindow(m_mainWindow);
+    TTF_Quit();
     SDL_Quit();
 }
 

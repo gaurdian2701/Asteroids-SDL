@@ -6,43 +6,46 @@
 
 void Asteroids::GameActions::SpaceshipMoveAction::OnUpdate(float deltaTime)
 {
-    m_controlAction->OnUpdate(deltaTime);
-
-    const float translationInput = m_controlAction->GetTranslationValue();
-    auto transform = m_spaceShip->GetComponent<Assets::Components::Transform>();
-    glm::vec2 positionPreviousFrame = transform->LocalPosition;
-
-    if (translationInput > 0.1f)
+    if (m_controlAction != nullptr)
     {
-        transform->LocalPosition += transform->Up * m_currentMoveSpeed * deltaTime;
+        m_controlAction->OnUpdate(deltaTime);
 
-        if (glm::length(m_residualVelocity) > 0.0f)
-        {
-            transform->LocalPosition += glm::normalize(m_residualVelocity) * m_residualSpeed * deltaTime;
-        }
-        m_spaceShipVelocity = transform->LocalPosition - positionPreviousFrame;
-        m_currentMoveSpeed += m_acceleration * deltaTime;
-        m_residualSpeed -= m_acceleration * deltaTime;
-    }
-    else
-    {
-        if (m_currentMoveSpeed > 0.0f)
-        {
-            m_residualSpeed = m_currentMoveSpeed;
-            m_residualVelocity = m_spaceShipVelocity;
-        }
+        const float translationInput = m_controlAction->GetTranslationValue();
+        auto transform = m_spaceShip->GetComponent<Assets::Components::Transform>();
+        glm::vec2 positionPreviousFrame = transform->LocalPosition;
 
-        if (glm::length(m_residualVelocity) > 0.0f)
+        if (translationInput > 0.1f)
         {
-            transform->LocalPosition += glm::normalize(m_residualVelocity) * m_residualSpeed * deltaTime;
+            transform->LocalPosition += transform->Up * m_currentMoveSpeed * deltaTime;
+
+            if (glm::length(m_residualVelocity) > 0.0f)
+            {
+                transform->LocalPosition += glm::normalize(m_residualVelocity) * m_residualSpeed * deltaTime;
+            }
+            m_spaceShipVelocity = transform->LocalPosition - positionPreviousFrame;
+            m_currentMoveSpeed += m_acceleration * deltaTime;
             m_residualSpeed -= m_acceleration * deltaTime;
         }
-        m_currentMoveSpeed = 0.0f;
-    }
+        else
+        {
+            if (m_currentMoveSpeed > 0.0f)
+            {
+                m_residualSpeed = m_currentMoveSpeed;
+                m_residualVelocity = m_spaceShipVelocity;
+            }
 
-    m_currentMoveSpeed = std::clamp(m_currentMoveSpeed, 0.0f, m_maxMoveSpeed);
-    m_residualSpeed = std::clamp(m_residualSpeed, 0.0f, m_maxMoveSpeed);
-    transform->LocalRotation = m_controlAction->GetRotationValue() * m_rotationSpeed;
+            if (glm::length(m_residualVelocity) > 0.0f)
+            {
+                transform->LocalPosition += glm::normalize(m_residualVelocity) * m_residualSpeed * deltaTime;
+                m_residualSpeed -= m_acceleration * deltaTime;
+            }
+            m_currentMoveSpeed = 0.0f;
+        }
+
+        m_currentMoveSpeed = std::clamp(m_currentMoveSpeed, 0.0f, m_maxMoveSpeed);
+        m_residualSpeed = std::clamp(m_residualSpeed, 0.0f, m_maxMoveSpeed);
+        transform->LocalRotation = m_controlAction->GetRotationValue() * m_rotationSpeed;
+    }
 }
 
 bool Asteroids::GameActions::SpaceshipMoveAction::IsDone()

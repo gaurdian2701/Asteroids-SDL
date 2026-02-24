@@ -8,11 +8,12 @@
 #include "../../../include/Asteroids_App.h"
 #include "Assets/Components/Collider2D.h"
 #include "Core/HelperFunctions.h"
-#include "Core/CoreSystems/TextureResourceManager.h"
+#include "Core/CoreSystems/ResourceManager.h"
 
 Core::GameScene::GameScene(const std::uint32_t maxEntitiesInScene)
 {
 	ECS::ECSManager::GetInstance().InitializeManager(300);
+	m_resourceManager = new CoreSystems::ResourceManager();
 	RegisterComponents();
 
 	m_gameObjectsInScene.reserve(maxEntitiesInScene);
@@ -219,7 +220,7 @@ void Core::GameScene::CleanupScene()
 	}
 
 	m_gameObjectsInScene.erase(m_gameObjectsInScene.begin(), m_gameObjectsInScene.end());
-	CoreSystems::TextureResourceManager::GetInstance().ClearData();
+	m_resourceManager->ClearData();
 }
 
 #ifdef _DEBUG

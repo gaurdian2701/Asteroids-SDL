@@ -2,7 +2,7 @@
 #include "Assets/Components/Transform.h"
 #include "Assets/Components/ParticleEmitter.h"
 #include "Assets/Components/Renderer2D.h"
-#include "Core/CoreSystems/TextureResourceManager.h"
+#include "Core/CoreSystems/ResourceManager.h"
 #include "Actions/ActionStack.h"
 #include "GameActions/PlayerControlAction.h"
 #include "GameActions/SpaceshipMoveAction.h"
@@ -10,6 +10,7 @@
 #include "../../include/GameObjects/PoolManager.h"
 #include "Assets/Components/Collider2D.h"
 #include "Core/HelperFunctions.h"
+#include "GameActions/PlayerRespawnAction.h"
 
 constexpr inline glm::vec2 SPACESHIP_STARTING_POINT = glm::vec2(0, 0);
 const inline std::string SPACESHIP_IMAGE_FILEPATH = "images/img_spaceship.png";
@@ -30,9 +31,10 @@ void Asteroids::GameObjects::SpaceShip::Start()
 	m_minCartesianLimits = Core::GetMinCartesianLimits();
 
 	auto renderer = GetComponent<Assets::Components::Renderer2D>();
+	m_spaceShipTexture = GetSceneReference().GetResourceManager()
+	.TryLoadAndGetTexture(SPACESHIP_IMAGE_FILEPATH);
 
-	renderer->RenderTexture = Core::CoreSystems::TextureResourceManager::GetInstance()
-			.TryLoadAndGetTexture(SPACESHIP_IMAGE_FILEPATH);
+	renderer->RenderTexture = m_spaceShipTexture;
 
 	m_transform = GetComponent<Assets::Components::Transform>();
 	m_transform->LocalPosition = SPACESHIP_STARTING_POINT;
@@ -51,7 +53,7 @@ void Asteroids::GameObjects::SpaceShip::Start()
 
 	m_controlAction = m_actionStack->GetAction<GameActions::PlayerControlAction>();
 
-	m_projectileTexture = Core::CoreSystems::TextureResourceManager::GetInstance().TryLoadAndGetTexture(
+	m_projectileTexture = GetSceneReference().GetResourceManager().TryLoadAndGetTexture(
 		PROJECTILE_IMAGE_FILEPATH);
 
 	m_poolManager = GetSceneReference().GetGameObjectUsingType<PoolManager>();
@@ -106,10 +108,9 @@ void Asteroids::GameObjects::SpaceShip::WrapPosition()
 
 void Asteroids::GameObjects::SpaceShip::DoShooting()
 {
-	auto projectile = static_cast<PlayerProjectile*>
-			(m_poolManager->GetObjectFromPool<PlayerProjectile>());
+	auto projectile = m_poolManager->GetObjectFromPool<PlayerProjectile>();
 
-	projectile->Initialize(m_transform->LocalPosition + m_transform->Up * m_bulletLaunchOffset,
+	projectile->Initialize(this, m_transform->LocalPosition + m_transform->Up * m_bulletLaunchOffset,
 	                             std::forward<glm::vec2>(m_transform->Up),
 	                             m_projectileTexture,
 	                             m_transform->LocalRotation);
@@ -117,7 +118,7 @@ void Asteroids::GameObjects::SpaceShip::DoShooting()
 
 void Asteroids::GameObjects::SpaceShip::OnHit()
 {
-	PrintDebug("%s\n", "PLAYER HAS BEEN HIT");
+	m_actionStack->PushAction(new GameActions::PlayerRespawnAction(this, m_spaceShipTexture));
 }
 
 

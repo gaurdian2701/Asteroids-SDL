@@ -10,35 +10,20 @@ add_executable(
             ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/Asteroids_App.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SpaceShip.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SpaceShipParticleEmitter.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SpaceShipParticleEmitter.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameScenes/MainGameScene.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/Actions/ActionStack.cpp
-        include/GameActionStack.h
-        src/GameActionStack.cpp
-        include/Actions/IAction.h
-        include/GameActions/GameSceneAction.h
-        include/GameActions/PlayerControlAction.h
-        src/GameActions/PlayerControlAction.cpp
-        include/GameActions/SpaceshipMoveAction.h
-        src/GameActions/SpaceshipMoveAction.cpp
-        include/GameObjects/Asteroid.h
-        src/GameObjects/Asteroid.cpp
-        include/GameObjects/UnitManager.h
-        src/GameObjects/UnitManager.cpp
-        include/GameActions/IControlAction.h
-        include/GameObjects/PlayerProjectile.h
-        src/GameObjects/PlayerProjectile.cpp
-        include/GameObjects/ProjectileBase.h
-        include/GameObjects/PoolManager.h
-        include/MiscFunctions.h
-        include/GameActions/EnemyControlAction.h
-        src/GameActions/EnemyControlAction.cpp
-        include/GameObjects/EnemySpaceship.h
-        src/GameObjects/EnemySpaceship.cpp
-        src/GameObjects/ProjectileBase.cpp
-        include/GameObjects/EnemyProjectile.h
-        src/GameObjects/EnemyProjectile.cpp
-        include/GameObjects/IHostile.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/Actions/ActionStack.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameActionStack.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameActions/PlayerControlAction.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameActions/SpaceshipMoveAction.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/Asteroid.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/UnitManager.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/PlayerProjectile.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameActions/EnemyControlAction.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/EnemySpaceship.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/ProjectileBase.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/EnemyProjectile.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameActions/PlayerRespawnAction.cpp
 )
 
 set_target_properties(

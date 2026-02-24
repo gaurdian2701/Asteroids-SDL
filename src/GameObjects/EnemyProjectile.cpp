@@ -3,6 +3,7 @@
 #include "MiscFunctions.h"
 #include "GameObjects/SpaceShip.h"
 #include "Assets/Components/Collider2D.h"
+#include "GameObjects/IHostile.h"
 #include "GameObjects/PoolManager.h"
 
 void Asteroids::GameObjects::EnemyProjectile::Start()
@@ -25,15 +26,17 @@ void Asteroids::GameObjects::EnemyProjectile::DisableProjectile()
 
 void Asteroids::GameObjects::EnemyProjectile::CheckForCollisions()
 {
-	if (m_collider->EntityCollidedWith != Core::INVALID_ENTITY_ID)
+	if (m_collider->EntityCollidedWith != Core::INVALID_ENTITY_ID
+		&& m_collider->EntityCollidedWith != m_instigator->GetEntityID())
 	{
 		if (m_collider->EntityCollidedWith == m_player->GetEntityID())
 		{
 			m_player->OnHit();
-			DisableProjectile();
-			m_transform->LocalPosition = MiscFunctions::GetRandomPointOnCircle(glm::vec2(0.0f),
-			m_activeRadius);
 		}
+
+		DisableProjectile();
+		m_transform->LocalPosition = MiscFunctions::GetRandomPointOnCircle(glm::vec2(0.0f),
+		m_activeRadius);
 	}
 }
 

@@ -4,7 +4,7 @@
 #include "Assets/Components/Collider2D.h"
 #include "Assets/Components/Renderer2D.h"
 #include "Assets/Components/Transform.h"
-#include "Core/CoreSystems/TextureResourceManager.h"
+#include "Core/CoreSystems/ResourceManager.h"
 #include "GameObjects/Asteroid.h"
 #include "GameObjects/EnemySpaceship.h"
 #include "GameObjects/PoolManager.h"
@@ -34,7 +34,7 @@ void Asteroids::GameObjects::PlayerProjectile::DisableProjectile()
 void Asteroids::GameObjects::PlayerProjectile::CheckForCollisions()
 {
 	if (m_collider->EntityCollidedWith != Core::INVALID_ENTITY_ID &&
-		m_collider->EntityCollidedWith != m_player->GetEntityID())
+		m_collider->EntityCollidedWith != m_instigator->GetEntityID())
 	{
 		GameObject* collidedObject = GetSceneReference().GetGameObjectFromEntityID(m_collider->EntityCollidedWith);
 

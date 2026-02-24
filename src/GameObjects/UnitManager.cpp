@@ -83,10 +83,7 @@ void Asteroids::GameObjects::UnitManager::Update(const float deltaTime)
 	if (m_asteroidSpawnTimer > m_timeBetweenAsteroidSpawns)
 	{
 		m_asteroidSpawnTimer = 0.0f;
-		for (uint8_t i = 0; i < 3; i++)
-		{
-			SpawnUnit(UnitType::Asteroid);
-		}
+		SpawnUnit(UnitType::Asteroid);
 	}
 	m_asteroidSpawnTimer += deltaTime;
 
