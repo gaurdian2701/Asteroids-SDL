@@ -1,7 +1,7 @@
 ﻿#include "GameObjects/EnemyProjectile.h"
 
 #include "MiscFunctions.h"
-#include "GameObjects/SpaceShip.h"
+#include "GameObjects/Player.h"
 #include "Assets/Components/Collider2D.h"
 #include "GameObjects/IHostile.h"
 #include "GameObjects/PoolManager.h"
@@ -13,7 +13,7 @@ void Asteroids::GameObjects::EnemyProjectile::Start()
 	auto renderer = GetComponent<Assets::Components::Renderer2D>();
 	renderer->Color = SDL_FColor{ 0, 255, 0, 255 };
 
-	m_player = GetSceneReference().GetGameObjectUsingType<SpaceShip>();
+	m_player = GetSceneReference().GetGameObjectUsingType<Player>();
 	m_speed = 200.0f;
 	m_poolManager = GetSceneReference().GetGameObjectUsingType<PoolManager>();
 }

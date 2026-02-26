@@ -16,7 +16,7 @@ namespace Asteroids
         template<typename GameSceneType>
         void UnloadScene()
         {
-            auto sceneAction = GetAction<GameActions::GameSceneAction<GameSceneType, 100>>();
+            auto sceneAction = GetAction<GameActions::GameSceneAction<GameSceneType>>();
             m_staleGameSceneToBeUpdated = sceneAction->m_gameSceneHeld;
             if (sceneAction != nullptr)
             {
@@ -27,7 +27,7 @@ namespace Asteroids
         template<typename GameSceneType>
         void LoadScene()
         {
-            PushAction(new GameActions::GameSceneAction<GameSceneType, 100>());
+            PushAction(new GameActions::GameSceneAction<GameSceneType>());
         }
 
     private:

@@ -3,7 +3,7 @@
 
 namespace Asteroids::GameObjects
 {
-	class EnemySpaceship;
+	class Enemyship;
 }
 
 namespace Asteroids::GameObjects
@@ -13,7 +13,7 @@ namespace Asteroids::GameObjects
 
 namespace Asteroids::GameObjects
 {
-	class SpaceShip;
+	class Player;
 }
 
 namespace Asteroids::GameObjects
@@ -29,8 +29,8 @@ namespace Asteroids::GameObjects
 		void CheckForCollisions() override;
 
 	private:
-		EnemySpaceship* m_shooter = nullptr;
-		SpaceShip* m_player = nullptr;
+		Enemyship* m_shooter = nullptr;
+		Player* m_player = nullptr;
 		PoolManager* m_poolManager = nullptr;
 	};
 }

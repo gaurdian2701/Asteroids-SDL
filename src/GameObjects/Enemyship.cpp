@@ -1,11 +1,11 @@
-﻿#include "GameObjects/EnemySpaceship.h"
+﻿#include "GameObjects/Enemyship.h"
 #include "Assets/Components/Collider2D.h"
 #include "Assets/Components/Renderer2D.h"
 #include "Assets/Components/Transform.h"
 #include "Core/CoreSystems/ResourceManager.h"
 #include "Actions/ActionStack.h"
 #include "GameActions/EnemyControlAction.h"
-#include "GameObjects/SpaceShip.h"
+#include "GameObjects/Player.h"
 #include "GameActions/SpaceshipMoveAction.h"
 #include "GameObjects/EnemyProjectile.h"
 #include "GameObjects/PoolManager.h"
@@ -16,18 +16,18 @@
 const inline std::string ENEMY_SPACESHIP_IMAGE_FILEPATH = "images/img_enemySpaceship.png";
 const inline std::string PROJECTILE_IMAGE_FILEPATH = "images/img_projectile.png";
 
-void Asteroids::GameObjects::EnemySpaceship::AddComponentsBeforeStartup()
+void Asteroids::GameObjects::Enemyship::AddComponentsBeforeStartup()
 {
 	AddComponent<Assets::Components::Transform>();
 	AddComponent<Assets::Components::Renderer2D>();
 	AddComponent<Assets::Components::Collider2D>();
 }
 
-void Asteroids::GameObjects::EnemySpaceship::Start()
+void Asteroids::GameObjects::Enemyship::Start()
 {
 	GameObject::Start();
 
-	m_player = GetSceneReference().GetGameObjectUsingType<SpaceShip>();
+	m_player = GetSceneReference().GetGameObjectUsingType<Player>();
 
 	m_transform = GetComponent<Assets::Components::Transform>();
 	m_transform->LocalScale = glm::vec2(m_scale);
@@ -55,7 +55,7 @@ void Asteroids::GameObjects::EnemySpaceship::Start()
 #endif
 }
 
-void Asteroids::GameObjects::EnemySpaceship::Update(float deltaTime)
+void Asteroids::GameObjects::Enemyship::Update(float deltaTime)
 {
 	m_transform = GetComponent<Assets::Components::Transform>();
 	m_actionStack->UpdateActions(deltaTime);
@@ -72,7 +72,7 @@ void Asteroids::GameObjects::EnemySpaceship::Update(float deltaTime)
 	m_shootTimer += deltaTime;
 }
 
-void Asteroids::GameObjects::EnemySpaceship::DoShooting()
+void Asteroids::GameObjects::Enemyship::DoShooting()
 {
 	auto projectile = m_poolManager->GetObjectFromPool<EnemyProjectile>();
 
@@ -85,7 +85,7 @@ void Asteroids::GameObjects::EnemySpaceship::DoShooting()
 	}
 }
 
-void Asteroids::GameObjects::EnemySpaceship::OnHit()
+void Asteroids::GameObjects::Enemyship::OnHit()
 {
 	Core::Events::EventSystem::GetInstance().PublishEvent<UnitManager::UnitDestroyedEvent>(
 	Core::Events::EventType::GameEvent,

@@ -5,7 +5,7 @@
 #include "Assets/Components/ParticleEmitter.h"
 #include "Core/CoreSystems/ResourceManager.h"
 #include "Core/CoreSystems/EventSystem/EventSystem.h"
-#include "GameObjects/SpaceShip.h"
+#include "GameObjects/Player.h"
 #include "gtx/rotate_vector.hpp"
 
 const inline std::string ASTEROID_TEXTURE_FILEPATH = "images/img_asteroid.png";
@@ -45,7 +45,7 @@ void Asteroids::GameObjects::Asteroid::Start()
         .GetTexture(PARTICLE_TEXTURE_FILEPATH);
     particleEmitter->Color = SDL_FColor{255, 200, 120, 255};
 
-    m_player = GetSceneReference().GetGameObjectUsingType<SpaceShip>();
+    m_player = GetSceneReference().GetGameObjectUsingType<Player>();
     ResetVelocity();
 
 #ifdef _DEBUG

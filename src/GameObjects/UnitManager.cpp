@@ -6,7 +6,7 @@
 #include "Assets/Components/Transform.h"
 #include <gtx/rotate_vector.hpp>
 #include "MiscFunctions.h"
-#include "GameObjects/EnemySpaceship.h"
+#include "GameObjects/Enemyship.h"
 
 void Asteroids::GameObjects::UnitManager::Start()
 {
@@ -33,7 +33,7 @@ void Asteroids::GameObjects::UnitManager::Start()
 	m_poolManager = GetSceneReference().GetGameObjectUsingType<PoolManager>();
 	
 	m_poolManager->RegisterPoolMap<Asteroid>();
-	m_poolManager->RegisterPoolMap<EnemySpaceship>();
+	m_poolManager->RegisterPoolMap<Enemyship>();
 
 	for (uint8_t i = 0; i < 5; i++) {
 		SpawnUnit(UnitType::Asteroid);
@@ -65,7 +65,7 @@ void Asteroids::GameObjects::UnitManager::SpawnUnit(UnitType someUnitType)
 
 		case UnitType::EnemyShip:
 		{
-			EnemySpaceship* enemyShip = m_poolManager->GetObjectFromPool<EnemySpaceship>();
+			Enemyship* enemyShip = m_poolManager->GetObjectFromPool<Enemyship>();
 
 			if (enemyShip != nullptr)
 			{
@@ -186,7 +186,7 @@ void Asteroids::GameObjects::UnitManager::OnUnitDestroyed(GameObject *someUnit, 
 			}
 
 			case UnitType::EnemyShip:
-				EnemySpaceship *enemy = static_cast<EnemySpaceship*>(someUnit);
+				Enemyship *enemy = static_cast<Enemyship*>(someUnit);
 				if (enemy != nullptr)
 				{
 					enemy->GetComponent<Assets::Components::Transform>()->LocalPosition = respawnPoint;

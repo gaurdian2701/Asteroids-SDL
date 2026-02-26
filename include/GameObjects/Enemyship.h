@@ -15,7 +15,7 @@ namespace Assets::Components
 
 namespace Asteroids::GameObjects
 {
-	class SpaceShip;
+	class Player;
 }
 
 namespace Actions
@@ -25,11 +25,11 @@ namespace Actions
 
 namespace Asteroids::GameObjects
 {
-	class EnemySpaceship : public Scene::GameObject, public IHostile
+	class Enemyship : public Scene::GameObject, public IHostile
 	{
 	public:
-		EnemySpaceship() = default;
-		~EnemySpaceship() override = default;
+		Enemyship() = default;
+		~Enemyship() override = default;
 
 		void AddComponentsBeforeStartup() override;
 		void Start() override;
@@ -46,7 +46,7 @@ namespace Asteroids::GameObjects
 
 		glm::vec2 m_startingPosition = glm::vec2(0, 0);
 		Actions::ActionStack* m_actionStack = nullptr;
-		SpaceShip* m_player = nullptr;
+		Player* m_player = nullptr;
 		Assets::Components::Transform* m_transform = nullptr;
 		SDL_Texture* m_projectileTexture = nullptr;
 		PoolManager* m_poolManager = nullptr;

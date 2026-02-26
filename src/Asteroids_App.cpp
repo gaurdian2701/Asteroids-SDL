@@ -27,6 +27,7 @@ void Asteroids_App::UpdateApplication(const float deltaTime)
 void Asteroids_App::EndApplication()
 {
     m_mainGameActionStack->End();
+    m_isRunning = false;
 }
 
 void Asteroids_App::NotifySceneForDelete(Core::GameScene *someScene)

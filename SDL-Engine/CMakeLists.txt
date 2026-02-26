@@ -37,6 +37,8 @@ add_library(
         include/Core/ECS/Systems/PhysicsSystem.h
         src/Core/ECS/Systems/PhysicsSystem.cpp
         include/Assets/Components/UITexture.h
+        include/Core/ECS/Systems/SweepAndPrunePhysicsSystem.h
+        src/Core/ECS/Systems/SweepAndPrunePhysicsSystem.cpp
 )
 
 EnableASANCompileOptions(${ENGINE_BINARY_NAME})

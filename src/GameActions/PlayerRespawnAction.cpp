@@ -63,7 +63,11 @@ void Asteroids::GameActions::PlayerRespawnAction::OnEnd()
 
         m_player->AddComponent<Assets::Components::Collider2D>();
         auto collider = m_player->GetComponent<Assets::Components::Collider2D>();
-        collider->HalfSize = m_player->GetComponent<Assets::Components::Transform>()->LocalScale * 0.5f;
+
+        if (collider != nullptr)
+        {
+            collider->HalfSize = m_player->GetComponent<Assets::Components::Transform>()->LocalScale * 0.5f;
+        }
     }
 }
 

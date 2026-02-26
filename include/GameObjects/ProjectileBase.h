@@ -42,7 +42,7 @@ namespace Asteroids::GameObjects
         float m_speed = 300.0f;
         float m_scale = 50.0f;
         float m_startingRotation = 0.0f;
-        float m_activeRadius = 600.0f;
+        float m_activeRadius = 650.0f;
         GameObject* m_instigator = nullptr;
         Assets::Components::Transform* m_transform = nullptr;
         Assets::Components::Collider2D* m_collider = nullptr;

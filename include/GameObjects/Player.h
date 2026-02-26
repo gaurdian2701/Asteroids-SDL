@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Actions/ActionStack.h"
 #include "Assets/Components/Transform.h"
+#include "GameEvents/GameEvents.h"
 #include "Scene/GameObject.h"
 
 namespace Asteroids::GameObjects
@@ -20,21 +21,21 @@ namespace Actions
 
 namespace Asteroids::GameObjects
 {
-	class SpaceShip : public Scene::GameObject
+	class Player : public Scene::GameObject
 	{
 	public:
-		SpaceShip() = default;
-		~SpaceShip() override
+		Player() = default;
+		~Player() override
 		{
 			m_projectileTexture = nullptr;
 			m_controlAction = nullptr;
-			m_actionStack->End();
 			delete m_actionStack;
 		}
 
 		void AddComponentsBeforeStartup() override;
 		void Start() override;
 		void Update(float deltaTime) override;
+		void End() override;
 		void OnHit();
 
 	private:
@@ -53,5 +54,6 @@ namespace Asteroids::GameObjects
 		Actions::ActionStack* m_actionStack = nullptr;
 		GameActions::PlayerControlAction* m_controlAction = nullptr;
 		PoolManager* m_poolManager = nullptr;
+		GameEvents::PlayerTookDamageEvent m_tookDamageEvent = GameEvents::PlayerTookDamageEvent();
 	};
 }

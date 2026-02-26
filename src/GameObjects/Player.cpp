@@ -1,4 +1,4 @@
-﻿#include "GameObjects/SpaceShip.h"
+﻿#include "GameObjects/Player.h"
 #include "Assets/Components/Transform.h"
 #include "Assets/Components/ParticleEmitter.h"
 #include "Assets/Components/Renderer2D.h"
@@ -10,20 +10,21 @@
 #include "../../include/GameObjects/PoolManager.h"
 #include "Assets/Components/Collider2D.h"
 #include "Core/HelperFunctions.h"
+#include "Core/CoreSystems/EventSystem/EventSystem.h"
 #include "GameActions/PlayerRespawnAction.h"
 
 constexpr inline glm::vec2 SPACESHIP_STARTING_POINT = glm::vec2(0, 0);
 const inline std::string SPACESHIP_IMAGE_FILEPATH = "images/img_spaceship.png";
 const inline std::string PROJECTILE_IMAGE_FILEPATH = "images/img_projectile.png";
 
-void Asteroids::GameObjects::SpaceShip::AddComponentsBeforeStartup()
+void Asteroids::GameObjects::Player::AddComponentsBeforeStartup()
 {
 	AddComponent<Assets::Components::Transform>();
 	AddComponent<Assets::Components::Renderer2D>();
 	AddComponent<Assets::Components::Collider2D>();
 }
 
-void Asteroids::GameObjects::SpaceShip::Start()
+void Asteroids::GameObjects::Player::Start()
 {
 	GameObject::Start();
 
@@ -32,7 +33,7 @@ void Asteroids::GameObjects::SpaceShip::Start()
 
 	auto renderer = GetComponent<Assets::Components::Renderer2D>();
 	m_spaceShipTexture = GetSceneReference().GetResourceManager()
-	.TryLoadAndGetTexture(SPACESHIP_IMAGE_FILEPATH);
+			.TryLoadAndGetTexture(SPACESHIP_IMAGE_FILEPATH);
 
 	renderer->RenderTexture = m_spaceShipTexture;
 
@@ -57,7 +58,7 @@ void Asteroids::GameObjects::SpaceShip::Start()
 		PROJECTILE_IMAGE_FILEPATH);
 
 	m_poolManager = GetSceneReference().GetGameObjectUsingType<PoolManager>();
-	
+
 	m_poolManager->RegisterPoolMap<PlayerProjectile>();
 
 #ifdef _DEBUG
@@ -65,7 +66,7 @@ void Asteroids::GameObjects::SpaceShip::Start()
 #endif
 }
 
-void Asteroids::GameObjects::SpaceShip::Update(const float deltaTime)
+void Asteroids::GameObjects::Player::Update(const float deltaTime)
 {
 	//Get Components for current update
 	m_transform = GetComponent<Assets::Components::Transform>();
@@ -74,8 +75,7 @@ void Asteroids::GameObjects::SpaceShip::Update(const float deltaTime)
 	m_actionStack->UpdateActions(deltaTime);
 
 	//Do Shooting
-	if (m_controlAction->GetIsShooting() && m_shootTimer >= m_timePerShot)
-	{
+	if (m_controlAction->GetIsShooting() && m_shootTimer >= m_timePerShot) {
 		m_shootTimer = 0.0f;
 		DoShooting();
 	}
@@ -84,41 +84,41 @@ void Asteroids::GameObjects::SpaceShip::Update(const float deltaTime)
 	WrapPosition();
 }
 
-void Asteroids::GameObjects::SpaceShip::WrapPosition()
+void Asteroids::GameObjects::Player::End()
+{
+	m_actionStack->End();
+}
+
+void Asteroids::GameObjects::Player::WrapPosition()
 {
 	//Check for out of bounds and wrap position if necessary
-	if (m_transform->LocalPosition.x > m_maxCartesianLimits.x)
-	{
+	if (m_transform->LocalPosition.x > m_maxCartesianLimits.x) {
 		m_transform->LocalPosition.x = m_minCartesianLimits.x;
-	}
-	else if (m_transform->LocalPosition.x < m_minCartesianLimits.x)
-	{
+	} else if (m_transform->LocalPosition.x < m_minCartesianLimits.x) {
 		m_transform->LocalPosition.x = m_maxCartesianLimits.x;
 	}
-	if (m_transform->LocalPosition.y > m_maxCartesianLimits.y)
-	{
+	if (m_transform->LocalPosition.y > m_maxCartesianLimits.y) {
 		m_transform->LocalPosition.y = m_minCartesianLimits.y;
-	}
-	else if (m_transform->LocalPosition.y < m_minCartesianLimits.y)
-	{
+	} else if (m_transform->LocalPosition.y < m_minCartesianLimits.y) {
 		m_transform->LocalPosition.y = m_maxCartesianLimits.y;
 	}
 }
 
 
-void Asteroids::GameObjects::SpaceShip::DoShooting()
+void Asteroids::GameObjects::Player::DoShooting()
 {
 	auto projectile = m_poolManager->GetObjectFromPool<PlayerProjectile>();
 
 	projectile->Initialize(this, m_transform->LocalPosition + m_transform->Up * m_bulletLaunchOffset,
-	                             std::forward<glm::vec2>(m_transform->Up),
-	                             m_projectileTexture,
-	                             m_transform->LocalRotation);
+	                       std::forward<glm::vec2>(m_transform->Up),
+	                       m_projectileTexture,
+	                       m_transform->LocalRotation);
 }
 
-void Asteroids::GameObjects::SpaceShip::OnHit()
+void Asteroids::GameObjects::Player::OnHit()
 {
+	Core::Events::EventSystem::GetInstance().PublishEvent<GameEvents::PlayerTookDamageEvent>(
+		Core::Events::EventType::GameEvent,
+		m_tookDamageEvent);
 	m_actionStack->PushAction(new GameActions::PlayerRespawnAction(this, m_spaceShipTexture));
 }
-
-

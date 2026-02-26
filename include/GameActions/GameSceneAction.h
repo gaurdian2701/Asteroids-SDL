@@ -5,7 +5,7 @@
 
 namespace Asteroids::GameActions
 {
-    template<typename GameSceneType, std::uint32_t entityCount>
+    template<typename GameSceneType>
     class GameSceneAction : public Actions::IAction
     {
     public:
@@ -14,7 +14,7 @@ namespace Asteroids::GameActions
 
         void OnBegin(bool isFirstTime) override
         {
-            m_gameSceneHeld = new GameSceneType(entityCount);
+            m_gameSceneHeld = new GameSceneType(m_entityCount);
             m_gameSceneHeld->InitializeScene();
             m_gameSceneHeld->Start();
         }
@@ -43,5 +43,8 @@ namespace Asteroids::GameActions
     public:
         GameSceneType* m_gameSceneHeld = nullptr;
         bool m_sceneUnloadInitiated = false;
+
+    private:
+        uint32_t m_entityCount = 100;
     };
 }

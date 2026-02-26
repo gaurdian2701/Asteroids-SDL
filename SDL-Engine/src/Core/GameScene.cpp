@@ -7,6 +7,7 @@
 #include "imgui.h"
 #include "../../../include/Asteroids_App.h"
 #include "Assets/Components/Collider2D.h"
+#include "Assets/Components/UITexture.h"
 #include "Core/HelperFunctions.h"
 #include "Core/CoreSystems/ResourceManager.h"
 
@@ -34,6 +35,7 @@ void Core::GameScene::RegisterComponents()
 	ECS::ECSManager::GetInstance().RegisterComponent<Assets::Components::Renderer2D>();
 	ECS::ECSManager::GetInstance().RegisterComponent<Assets::Components::ParticleEmitter>();
 	ECS::ECSManager::GetInstance().RegisterComponent<Assets::Components::Collider2D>();
+	ECS::ECSManager::GetInstance().RegisterComponent<Assets::Components::UITexture>();
 }
 
 void Core::GameScene::InitializeGameObject(Scene::GameObject *someGameObject)
@@ -221,6 +223,7 @@ void Core::GameScene::CleanupScene()
 
 	m_gameObjectsInScene.erase(m_gameObjectsInScene.begin(), m_gameObjectsInScene.end());
 	m_resourceManager->ClearData();
+	ECS::ECSManager::GetInstance().CleanupManager();
 }
 
 #ifdef _DEBUG

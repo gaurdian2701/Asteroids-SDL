@@ -1,8 +1,8 @@
 ﻿#include "Core/ECS/ECSManager.h"
 #include "Core/ECS/Systems/ParticleSystem.h"
-#include "Core/ECS/Systems/PhysicsSystem.h"
 #include "Core/ECS/Systems/RenderingSystem.h"
 #include "Core/ECS/Systems/TransformSolverSystem.h"
+#include "Core/ECS/Systems/SweepAndPrunePhysicsSystem.h"
 
 std::vector<void(*)(Core::ECS::ECSManager &, const std::uint32_t)>&
 Core::ECS::ECSManager::GetComponentRemovalHandlesArray()
@@ -27,7 +27,7 @@ void Core::ECS::ECSManager::CreateSystems()
 {
 	m_SystemsList.push_back(new Systems::TransformSolverSystem());
 	m_SystemsList.push_back(new Systems::ParticleSystem());
-	m_SystemsList.push_back(new Systems::PhysicsSystem());
+	m_SystemsList.push_back(new Systems::SweepAndPrunePhysicsSystem());
 	m_SystemsList.push_back(new Systems::RenderingSystem());
 }
 
@@ -52,6 +52,14 @@ void Core::ECS::ECSManager::UpdateManager(const float deltaTime)
 	for (auto& system : m_SystemsList)
 	{
 		system->UpdateSystem(deltaTime);
+	}
+}
+
+void Core::ECS::ECSManager::CleanupManager()
+{
+	for (auto& system : m_SystemsList)
+	{
+		system->CleanupSystem();
 	}
 }
 

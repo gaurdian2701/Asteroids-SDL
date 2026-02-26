@@ -5,10 +5,11 @@
 #include "Assets/Components/Renderer2D.h"
 #include "Assets/Components/Transform.h"
 #include "Core/CoreSystems/ResourceManager.h"
+#include "Core/CoreSystems/EventSystem/EventSystem.h"
 #include "GameObjects/Asteroid.h"
-#include "GameObjects/EnemySpaceship.h"
+#include "GameObjects/Enemyship.h"
 #include "GameObjects/PoolManager.h"
-#include "GameObjects/SpaceShip.h"
+#include "GameObjects/Player.h"
 
 void Asteroids::GameObjects::PlayerProjectile::Start()
 {
@@ -17,7 +18,7 @@ void Asteroids::GameObjects::PlayerProjectile::Start()
 	auto renderer = GetComponent<Assets::Components::Renderer2D>();
 	renderer->Color = SDL_FColor(255, 0, 0, 255);
 
-	m_player = GetSceneReference().GetGameObjectUsingType<SpaceShip>();
+	m_player = GetSceneReference().GetGameObjectUsingType<Player>();
 	m_poolManager = GetSceneReference().GetGameObjectUsingType<PoolManager>();
 
 #ifdef _DEBUG
@@ -40,6 +41,8 @@ void Asteroids::GameObjects::PlayerProjectile::CheckForCollisions()
 
 		if (IHostile* hostile = dynamic_cast<IHostile*>(collidedObject))
 		{
+			Core::Events::EventSystem::GetInstance().PublishEvent<GameEvents::PlayerScoredEvent>(Core::Events::EventType::GameEvent,
+				GameEvents::PlayerScoredEvent());
 			hostile->OnHit();
 		}
 

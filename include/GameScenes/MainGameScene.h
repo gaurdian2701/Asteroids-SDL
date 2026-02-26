@@ -3,11 +3,12 @@
 
 namespace Asteroids::GameObjects
 {
-    class EnemySpaceship;
-    class SpaceShip;
+    class Enemyship;
+    class Player;
     class SpaceShipParticleEmitter;
     class UnitManager;
     class PoolManager;
+    class ScoreAndHealthUI;
 }
 
 namespace Asteroids::GameScenes
@@ -18,19 +19,21 @@ namespace Asteroids::GameScenes
         explicit MainGameScene(int maxGameObjects) : GameScene(maxGameObjects) {}
         ~MainGameScene() override
         {
+            m_poolManager = nullptr;
             m_spaceShip = nullptr;
             m_loneEmitter = nullptr;
+            m_unitManager = nullptr;
+            m_scoreUI = nullptr;
         }
 
         void CreateGameObjects() override;
         void InitializeGameObjectReferences() override;
-        void Start() override;
-        void Update(const float deltaTime) override;
 
     private:
         GameObjects::PoolManager* m_poolManager = nullptr;
-        GameObjects::SpaceShip* m_spaceShip = nullptr;
+        GameObjects::Player* m_spaceShip = nullptr;
         GameObjects::SpaceShipParticleEmitter* m_loneEmitter = nullptr;
         GameObjects::UnitManager* m_unitManager = nullptr;
+        GameObjects::ScoreAndHealthUI* m_scoreUI = nullptr;
     };
 }

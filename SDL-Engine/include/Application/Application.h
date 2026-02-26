@@ -28,6 +28,8 @@ public:
 		m_backgroundColor = someColor;
 	}
 
+	SDL_Color GetBackgroundColor() const{ return m_backgroundColor; }
+
 private:
 	void InitiateShutdown();
 	void RefreshBackground();
@@ -46,10 +48,10 @@ public:
 protected:
 	SDL_Window* m_mainWindow = nullptr;
 	SDL_Renderer* m_mainRenderer = nullptr;
+	bool m_isRunning = true;
 
 private:
 	SDL_Color m_backgroundColor = { 0, 0, 0, 255 };
-	bool m_isRunning = true;
 	SDL_Event m_mainEventCatcher = SDL_Event {};
 };
 

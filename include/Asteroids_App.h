@@ -35,6 +35,7 @@ private:
     void StartGame();
 
 public:
+    uint32_t m_playerScore = 0;
     Asteroids::GameActionStack* m_mainGameActionStack = nullptr;
 };
 

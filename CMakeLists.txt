@@ -9,7 +9,7 @@ add_executable(
         ${EXE_NAME}
             ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/Asteroids_App.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SpaceShip.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/Player.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/SpaceShipParticleEmitter.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameScenes/MainGameScene.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/Actions/ActionStack.cpp
@@ -20,10 +20,23 @@ add_executable(
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/UnitManager.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/PlayerProjectile.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameActions/EnemyControlAction.cpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/EnemySpaceship.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/Enemyship.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/ProjectileBase.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameObjects/EnemyProjectile.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/GameActions/PlayerRespawnAction.cpp
+        include/GameObjects/UI/ScoreAndHealthUI.h
+        src/GameObjects/UI/ScoreAndHealthUI.cpp
+        include/GameEvents/GameEvents.h
+        include/GameScenes/MainMenuScene.h
+        include/GameObjects/UI/Button.h
+        src/GameObjects/UI/Button.cpp
+        include/GameObjects/UI/ButtonManager.h
+        src/GameObjects/UI/ButtonManager.cpp
+        src/GameScenes/MainMenuScene.cpp
+        include/GameScenes/GameOverScene.h
+        src/GameScenes/GameOverScene.cpp
+        include/GameObjects/UI/UIText.h
+        src/GameObjects/UI/UIText.cpp
 )
 
 set_target_properties(

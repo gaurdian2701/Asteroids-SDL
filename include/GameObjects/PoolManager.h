@@ -130,7 +130,7 @@ namespace Asteroids::GameObjects
         }
 
     private:
-        uint32_t m_maxPoolSize = 20;
+        uint32_t m_maxPoolSize = 30;
         std::unordered_map<std::type_index, std::vector<PoolObject>> m_poolMap =
             std::unordered_map<std::type_index, std::vector<PoolObject>>();
     };

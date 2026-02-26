@@ -2,6 +2,8 @@
 #include "vec2.hpp"
 #include "Application/Application.h"
 #include <bitset>
+#include <set>
+
 #include "Core/ECS/ECSData.h"
 #include <vector>
 
@@ -21,10 +23,14 @@ namespace Core::ECS
 			m_initializationQueue.clear();
 		}
 		virtual void EndSystem(){}
+		void CleanupSystem()
+		{
+			m_initializationQueue.clear();
+		}
 
 	protected:
 		std::bitset<MAX_COMPONENT_TYPES> m_systemBitSet = std::bitset<MAX_COMPONENT_TYPES>();
-		std::vector<uint32_t> m_initializationQueue = std::vector<uint32_t>();
+		std::set<uint32_t> m_initializationQueue = std::set<uint32_t>();
 		friend class ECSManager;
 	};
 }

@@ -29,8 +29,9 @@ namespace Core::ECS
         }
 
         void InitializeManager(uint32_t someMaxEntities);
-        void UpdateManager(const float deltaTime);
         void BeginSystems();
+        void UpdateManager(const float deltaTime);
+        void CleanupManager();
 
         std::vector<void(*)(ECSManager &, const std::uint32_t)>& GetComponentRemovalHandlesArray();
 
@@ -74,7 +75,7 @@ namespace Core::ECS
             {
                 if ((componentsBitSetForEntity & system->m_systemBitSet) == system->m_systemBitSet)
                 {
-                    system->m_initializationQueue.push_back(someEntityID);
+                    system->m_initializationQueue.insert(someEntityID);
                 }
             }
         }
@@ -184,14 +185,21 @@ namespace Core::ECS
             }
         }
 
-        //Query Dense Components for a list of entities
         template<typename FirstComponentType, typename ... OtherComponentTypes, typename Functor>
-        void ForEachUsingEntities(const std::vector<uint32_t>& someEntityIDs, const Functor& someFunctor)
+        void ForEachUsingEntities(const std::set<uint32_t>& someEntityIDs, const Functor& someFunctor)
         {
-            for (uint32_t index = 0; index < someEntityIDs.size(); ++index)
+            for (auto entityID : someEntityIDs)
             {
-                uint32_t entityID = someEntityIDs[index];
                 someFunctor(GetComponent<FirstComponentType>(entityID), GetComponent<OtherComponentTypes>(entityID) ...);
+            }
+        }
+
+        template<typename FirstComponentType, typename ... OtherComponentTypes, typename Functor>
+        void ForEachUsingEntitiesWithEntityID(const std::set<uint32_t>& someEntityIDs, const Functor& someFunctor)
+        {
+            for (auto entityID : someEntityIDs)
+            {
+                someFunctor(entityID, GetComponent<FirstComponentType>(entityID), GetComponent<OtherComponentTypes>(entityID) ...);
             }
         }
 

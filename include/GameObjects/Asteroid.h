@@ -5,7 +5,7 @@
 
 namespace Asteroids::GameObjects
 {
-	class SpaceShip;
+	class Player;
 }
 
 namespace Assets::Components
@@ -48,7 +48,7 @@ namespace Asteroids::GameObjects
 		float m_moveSpeed = 100.0f;
 		float m_rotationSpeed = 3.0f;
 		float m_particleSpeed = 100.0f;
-		SpaceShip* m_player = nullptr;
+		Player* m_player = nullptr;
 		std::default_random_engine m_randomGenerator;
 		Assets::Components::Collider2D* m_collider = nullptr;
 		UnitManager::UnitLeftActiveRadiusEvent m_onLeftActiveRadiusEvent =

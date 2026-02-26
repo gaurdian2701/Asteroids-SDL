@@ -13,10 +13,6 @@ namespace Scene
 
         virtual void AddComponentsBeforeStartup(){}
 
-#ifdef _DEBUG
-        virtual void SetDebugName(){}
-#endif
-
         virtual void Start(){}
 
         void UpdateObject(const float deltaTime)
