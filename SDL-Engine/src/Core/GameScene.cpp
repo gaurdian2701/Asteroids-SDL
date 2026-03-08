@@ -121,9 +121,9 @@ Core::ECS::ECSManager &Core::GameScene::GetECSManager()
 	return ECS::ECSManager::GetInstance();
 }
 
-Scene::GameObject *Core::GameScene::GetGameObjectFromEntityID(std::uint32_t someEntityID)
+Scene::GameObject* Core::GameScene::GetGameObjectFromEntityID(std::uint32_t someEntityID)
 {
-	auto gameObjectFound = std::find_if(m_gameObjectsInScene.begin(),
+	auto gameObjectIterator = std::find_if(m_gameObjectsInScene.begin(),
 		m_gameObjectsInScene.end(),
 		[&](Scene::GameObject* gameObjectInList)
 		{
@@ -133,9 +133,9 @@ Scene::GameObject *Core::GameScene::GetGameObjectFromEntityID(std::uint32_t some
 			return false;
 		});
 
-	if (gameObjectFound != m_gameObjectsInScene.end() && *gameObjectFound != nullptr)
+	if (gameObjectIterator != m_gameObjectsInScene.end() && *gameObjectIterator != nullptr)
 	{
-		return *gameObjectFound;
+		return *gameObjectIterator;
 	}
 	return nullptr;
 }
