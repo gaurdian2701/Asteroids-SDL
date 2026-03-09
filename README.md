@@ -3,7 +3,7 @@
 This is a project made using C++ 20, SDL3 and CMake.\
 The following are links to my **ECS Code** .h and .cpp files in this repository:\
 [ECS Headers](SDL-Engine/include/Core/ECS)\
-[ECS Source Files](SDL-Engine/src/Core/ECS)\
+[ECS Source Files](SDL-Engine/src/Core/ECS)
 
 If you want to take a look at the Components, [here is a link to them](SDL-Engine/include/Assets/Components).
 
